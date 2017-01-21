@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class ConsonantCollection : List<Consonant>
+    public class ConsonantCollection : List<Consonant>
     {
         /*
                 |BL   |LD   |D    |AV   |PA   |RF   |AP   |PL   |VE   |UV   |PH   |GL      |LV

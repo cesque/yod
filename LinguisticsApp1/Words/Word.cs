@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class Word
+    public class Word
     {
         Language language;
         public int SyllableLength;

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class Consonant : Phoneme
+    public class Consonant : Phoneme
     {
         public enum Place
         {

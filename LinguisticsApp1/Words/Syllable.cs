@@ -4,16 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class Syllable
+    public class Syllable
     {
         internal Language language;
         internal SyllableStructure structure;
         public List<Phoneme> Phonemes;
-
-        float chanceForConsonant = 0.33f;
-        float chanceForVowel = 0.33f;
 
         public Syllable(Language l)
         {

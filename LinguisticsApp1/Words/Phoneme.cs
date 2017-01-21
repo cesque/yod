@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    abstract class Phoneme
+    public abstract class Phoneme
     {
         public string Symbol;
         public PhonemeType Type;

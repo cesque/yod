@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class SyllableStructure
+    public class SyllableStructure
     {
         public List<SyllableStructureOption> OnsetStructure;
         public List<SyllableStructureOption> NucleusStructure;

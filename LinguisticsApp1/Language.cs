@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class Language
+    public class Language
     {
         public SyllableStructure SyllableStructure;
         public PhonemeCollection Phonemes;

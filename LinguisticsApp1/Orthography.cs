@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class Orthography
+    public class Orthography
     {
         public Dictionary<string, string> Rules;
         Language language;

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    static class Globals
+    public static class Globals
     {
         public static Random Random = new Random();
-        public static bool ShowIPA = false;
 
         public static T WeightedRandom<T>(Dictionary<T, float> options)
         {

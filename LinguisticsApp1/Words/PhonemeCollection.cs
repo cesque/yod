@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class PhonemeCollection
+    public class PhonemeCollection
     {
         public List<Phoneme> AllPhonemes
         {

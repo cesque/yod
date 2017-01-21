@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class VowelCollection : List<Vowel>
+    public class VowelCollection : List<Vowel>
     {
         private static readonly List<Vowel> IPAVowels = new List<Vowel>
         {

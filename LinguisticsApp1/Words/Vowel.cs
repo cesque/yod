@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yodWords
+namespace yod
 {
-    class Vowel : Phoneme
+    public class Vowel : Phoneme
     {
         public enum FrontToBack
         {
