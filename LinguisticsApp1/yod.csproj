@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grammar\DictionaryWord.cs" />
+    <Compile Include="Grammar\Lexeme.cs" />
+    <Compile Include="Grammar\Lexicon.cs" />
+    <Compile Include="Grammar\PartOfSpeech.cs" />
     <Compile Include="Phonology\Consonant.cs" />
     <Compile Include="Phonology\ConsonantCollection.cs" />
     <Compile Include="Globals.cs" />
