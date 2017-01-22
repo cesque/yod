@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yod
+namespace yod.Phonology
 {
     public class Syllable
     {
-        internal Language language;
+        internal LanguagePhonology language;
         internal SyllableStructure structure;
         public List<Phoneme> Phonemes;
 
-        public Syllable(Language l)
+        public Syllable(LanguagePhonology l)
         {
             language = l;
             structure = l.SyllableStructure;

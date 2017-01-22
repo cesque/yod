@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yod
+using yod.Phonology;
+
+namespace yod.Orthography
 {
-    public class Orthography
+    public class LanguageOrthography
     {
         public Dictionary<string, string> Rules;
-        Language language;
+        LanguagePhonology language;
 
         public static readonly Dictionary<string, string> DefaultOrthography = new Dictionary<string, string>()
         {
@@ -102,12 +104,12 @@ namespace yod
             #endregion
         };
 
-        public Orthography(Language lang) : this(DefaultOrthography, lang)
+        public LanguageOrthography(LanguagePhonology lang) : this(DefaultOrthography, lang)
         {
 
         }
 
-        public Orthography(Dictionary<string, string> rules, Language lang)
+        public LanguageOrthography(Dictionary<string, string> rules, LanguagePhonology lang)
         {
             Rules = rules;
             language = lang;

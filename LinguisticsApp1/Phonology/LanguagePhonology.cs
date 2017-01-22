@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yod
+namespace yod.Phonology
 {
-    public class Language
+    public class LanguagePhonology
     {
         public SyllableStructure SyllableStructure;
         public PhonemeCollection Phonemes;
@@ -17,7 +17,7 @@ namespace yod
         public int WordLengthMin = 1;
         public int WordLengthMax = 3;
 
-        public Language() : this(
+        public LanguagePhonology() : this(
             new SyllableStructure()
             {
                 OnsetStructure = new List<SyllableStructure.SyllableStructureOption>()
@@ -35,19 +35,19 @@ namespace yod
             })
         { }
 
-        public Language(SyllableStructure sylStructure)
+        public LanguagePhonology(SyllableStructure sylStructure)
         {
             SyllableStructure = sylStructure;
             Phonemes = new PhonemeCollection();
         }
 
-        public Language(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd)
+        public LanguagePhonology(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd)
         {
             SyllableStructure = sylStructure;
             Phonemes = new PhonemeCollection(consonantsToAdd, vowelsToAdd);
         }
 
-        public Language(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd, List<Consonant> onsetConsonants, List<Consonant> codaConsonants) : this(sylStructure, consonantsToAdd, vowelsToAdd)
+        public LanguagePhonology(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd, List<Consonant> onsetConsonants, List<Consonant> codaConsonants) : this(sylStructure, consonantsToAdd, vowelsToAdd)
         {
             OnsetConsonants = onsetConsonants;
             CodaConsonants = codaConsonants;

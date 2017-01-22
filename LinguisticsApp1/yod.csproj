@@ -46,26 +46,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Words\Consonant.cs" />
-    <Compile Include="Words\ConsonantCollection.cs" />
+    <Compile Include="Grammar\DictionaryWord.cs" />
+    <Compile Include="Phonology\Consonant.cs" />
+    <Compile Include="Phonology\ConsonantCollection.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="Language.cs" />
-    <Compile Include="Orthography.cs" />
-    <Compile Include="Words\Phoneme.cs" />
-    <Compile Include="Words\PhonemeCollection.cs" />
+    <Compile Include="Phonology\LanguagePhonology.cs" />
+    <Compile Include="Orthography\LanguageOrthography.cs" />
+    <Compile Include="Phonology\Phoneme.cs" />
+    <Compile Include="Phonology\PhonemeCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Words\Syllable.cs" />
-    <Compile Include="Words\SyllableStructure.cs" />
-    <Compile Include="Words\Vowel.cs" />
-    <Compile Include="Words\VowelCollection.cs" />
-    <Compile Include="Words\Word.cs" />
+    <Compile Include="Phonology\Syllable.cs" />
+    <Compile Include="Phonology\SyllableStructure.cs" />
+    <Compile Include="Phonology\Vowel.cs" />
+    <Compile Include="Phonology\VowelCollection.cs" />
+    <Compile Include="Phonology\Word.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Grammar\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

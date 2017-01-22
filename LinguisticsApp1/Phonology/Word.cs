@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace yod
+namespace yod.Phonology
 {
     public class Word
     {
-        Language language;
+        LanguagePhonology language;
         public int SyllableLength;
         public List<Syllable> Syllables;
 
-        public Word(Language l)
+        public Word(LanguagePhonology l)
         {
             language = l;
             Generate();
