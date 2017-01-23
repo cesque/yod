@@ -9,6 +9,7 @@ using System.Diagnostics;
 using yod;
 using yod.Phonology;
 using yod.Orthography;
+using yod.Grammar;
 
 namespace yodTest
 {
@@ -16,64 +17,47 @@ namespace yodTest
     {
         static void Main(string[] args)
         {
-
-                var syllableStructure = new SyllableStructure()
-                {
-                    OnsetStructure = new List<SyllableStructure.SyllableStructureOption>() {
+            var syllableStructure = new SyllableStructure()
+            {
+                OnsetStructure = new List<SyllableStructure.SyllableStructureOption>() {
                     new SyllableStructure.SyllableStructureOption(1, 1f),
                 },
-                    NucleusStructure = new List<SyllableStructure.SyllableStructureOption>() {
+                NucleusStructure = new List<SyllableStructure.SyllableStructureOption>() {
                     new SyllableStructure.SyllableStructureOption(1, 1f),
                 },
-                    CodaStructure = new List<SyllableStructure.SyllableStructureOption>() {
+                CodaStructure = new List<SyllableStructure.SyllableStructureOption>() {
                     new SyllableStructure.SyllableStructureOption(0, 0.3f),
                     new SyllableStructure.SyllableStructureOption(1, 0.7f),
                 }
-                };
+            };
 
 
-                var language = new LanguagePhonology(syllableStructure);//new Language(syllableStructure);
-                var orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, language);
-                language.WordLengthMin = 1;
-                language.WordLengthMax = 4;
-                language.OnsetConsonants = new List<Consonant>(language.Phonemes.Consonants.Where(
-                    c => true
-                ));
-                language.CodaConsonants = new List<Consonant>(language.Phonemes.Consonants.Where(
-                    c => true
-                ));
+            var language = new LanguagePhonology(syllableStructure);//new Language(syllableStructure);
+            var orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, language);
+            language.WordLengthMin = 1;
+            language.WordLengthMax = 4;
+            language.OnsetConsonants = new List<Consonant>(language.Phonemes.Consonants.Where(
+                c => true
+            ));
+            language.CodaConsonants = new List<Consonant>(language.Phonemes.Consonants.Where(
+                c => true
+            ));
 
-                var s = "";
+            var s = "";
 
-                var line1 = "  ";
-                var line2 = "[ ";
+            Lexicon lexicon = new Lexicon();
+            lexicon.Fill("./input.txt", language);
 
-                for (var i = 0; i < 14; i++)
-                {
-                    var word1 = language.GetWord();
-                    var word2 = orthography.Orthographize(word1);
+            var maxEnglish = lexicon.Max(x => x.English.Length);
+            foreach(var lexeme in lexicon)
+            {
+                s += lexeme.English.PadLeft(maxEnglish) + " : " + lexeme.Lemma.ToString() + Environment.NewLine;
+            }
 
-                    var length1 = LanguagePhonology.GetCharacterLength(word1.ToString());
-                    var length2 = word2.Length;
-                    var maxlength = Math.Max(length1, length2);
+            File.WriteAllText("./words.txt", s);
+            Process.Start("notepad.exe", "./words.txt");
 
-                    line1 += word2.PadRight(maxlength) + " ";
-                    line2 += word1.ToString().PadRight(maxlength + (word1.ToString().Length - length1)) + " ";
 
-                    var a = word1.ToString().ToCharArray();
-                }
-
-                s = line1 + Environment.NewLine + line2 + "]" + Environment.NewLine;
-
-                foreach (var phoneme in language.Phonemes.AllPhonemes)
-                {
-                    //s += phoneme.Symbol + " ";
-                }
-
-                File.WriteAllText("./words.txt", s);
-                Process.Start("notepad.exe", "./words.txt");
-            
-          
         }
     }
 }
