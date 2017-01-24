@@ -50,7 +50,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LinguisticsApp1\yod.csproj">
+    <ProjectReference Include="..\yod\yod.csproj">
       <Project>{1c61ec3b-1e32-4f06-a4ed-64df9bf22048}</Project>
       <Name>yod</Name>
     </ProjectReference>
