@@ -78,8 +78,8 @@ namespace yodTest
             s += line1 + Environment.NewLine;
             s += line2 + Environment.NewLine;
 
-            File.WriteAllText("./words.txt", s);
-            Process.Start("notepad.exe", "./words.txt");
+            File.WriteAllText("./output.txt", s);
+            Process.Start("notepad.exe", "./output.txt");
 
 
         }

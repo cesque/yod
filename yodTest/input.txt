@@ -1,0 +1,45 @@
+﻿PRON: i
+PRON: he
+PRON: she
+PRON: we
+PRON: you
+
+NOUN: dog
+NOUN: cat
+NOUN: human
+NOUN: book
+NOUN: house
+NOUN: ball
+
+VERB: own
+VERB: see
+VERB: like
+VERB: be
+VERB: love
+
+ADVB: quickly
+ADVB: really
+ADVB: slowly
+ADVB: usually
+
+ADJC: big
+ADJC: small
+ADJC: red
+ADJC: blue
+ADJC: old
+ADJC: young
+
+CONJ: and
+CONJ: but
+CONJ: because
+CONJ: so
+
+INTJ: alas
+INTJ: hello
+INTJ: goodbye
+INTJ: lo
+
+DETM: the
+DETM: a
+DETM: this
+DETM: that
