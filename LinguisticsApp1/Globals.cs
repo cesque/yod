@@ -10,6 +10,11 @@ namespace yod
     {
         public static Random Random = new Random();
 
+        public static void SeedRandom(int seed)
+        {
+            Random = new Random(seed);
+        }
+
         public static T WeightedRandom<T>(Dictionary<T, float> options)
         {
             if (options.Count == 0) throw new Exception("Cannot get a random weighted value from an empty list");
