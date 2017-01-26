@@ -46,12 +46,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grammar\InputSentence.cs" />
     <Compile Include="Grammar\InputWord.cs" />
     <Compile Include="Grammar\Lexeme.cs" />
     <Compile Include="Grammar\Lexicon.cs" />
     <Compile Include="Grammar\PartOfSpeech.cs" />
-    <Compile Include="Grammar\Sentence.cs" />
+    <Compile Include="Grammar\Structure\Adjective.cs" />
+    <Compile Include="Grammar\Structure\Adverb.cs" />
+    <Compile Include="Grammar\Structure\Conjunction.cs" />
+    <Compile Include="Grammar\Structure\Determiner.cs" />
+    <Compile Include="Grammar\Structure\GrammarPhrase.cs" />
+    <Compile Include="Grammar\Structure\Noun.cs" />
+    <Compile Include="Grammar\Structure\NounPhrase.cs" />
+    <Compile Include="Grammar\Structure\Preposition.cs" />
+    <Compile Include="Grammar\Structure\PrepositionalPhrase.cs" />
+    <Compile Include="Grammar\Structure\Pronoun.cs" />
+    <Compile Include="Grammar\Structure\RelativeClause.cs" />
+    <Compile Include="Grammar\Structure\Relativizer.cs" />
+    <Compile Include="Grammar\Structure\Sentence.cs" />
+    <Compile Include="Grammar\Structure\Verb.cs" />
+    <Compile Include="Grammar\Structure\VerbPhrase.cs" />
     <Compile Include="Grammar\Word.cs" />
     <Compile Include="Phonology\Consonant.cs" />
     <Compile Include="Phonology\ConsonantCollection.cs" />

@@ -17,11 +17,11 @@ namespace yod.Grammar
             Lexemes = new List<Lexeme>();
         }
 
-        public Lexeme this[string englishLemma]
+        public Lexeme this[string englishLemma, PartOfSpeech pos]
         {
             get
             {
-                return Lexemes.Find(x => x.English == englishLemma);
+                return Lexemes.Find(x => x.English == englishLemma && x.POS == pos);
             }
         }
 
@@ -73,7 +73,8 @@ namespace yod.Grammar
                 {"CONJ", PartOfSpeech.CONJUNCTION },
                 {"PREP", PartOfSpeech.PREPOSITION },
                 {"INTJ", PartOfSpeech.INTERJECTION },
-                {"DETM", PartOfSpeech.DETERMINER }
+                {"DETM", PartOfSpeech.DETERMINER },
+                {"RLTV", PartOfSpeech.RELATIVIZER }
             };
 
             var words = new List<Tuple<string, PartOfSpeech>>();

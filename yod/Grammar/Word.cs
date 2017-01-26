@@ -11,7 +11,7 @@ namespace yod.Grammar
         public Phonology.Word Phonemes;
         public string EnglishLemma;
         public List<string> Tags;
-        public List<InputWord> SubWords;
+        public List<Word> SubWords;
 
         public Word(Phonology.Word phonemes, string english, List<string> tags)
         {

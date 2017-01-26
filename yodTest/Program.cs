@@ -10,6 +10,7 @@ using yod;
 using yod.Phonology;
 using yod.Orthography;
 using yod.Grammar;
+using yod.Grammar.Structure;
 
 namespace yodTest
 {
@@ -50,12 +51,12 @@ namespace yodTest
             Lexicon lexicon = new Lexicon();
             lexicon.Fill("./input.txt", phonology);
 
-            InputSentence input = new InputSentence();
+            /*InputSentence input = new InputSentence();
             input.Subject = new InputWord("i", PartOfSpeech.PRONOUN, "SBJ");
             input.Verb = new InputWord("love", PartOfSpeech.VERB, "PRS");
             input.Object = new InputWord("you", PartOfSpeech.PRONOUN, "OBJ");
 
-            Sentence sentence = new Sentence(input, lexicon, phonology);
+            yod.Grammar.Sentence sentence = new yod.Grammar.Sentence(input, lexicon, phonology);
 
             List<string> s1 = new List<string>();
             List<string> s2 = new List<string>();
@@ -79,9 +80,55 @@ namespace yodTest
             s += line2 + Environment.NewLine;
 
             File.WriteAllText("./output.txt", s);
-            Process.Start("notepad.exe", "./output.txt");
+            Process.Start("notepad.exe", "./output.txt");*/
 
+            var sentence = new yod.Grammar.Structure.Sentence(new List<GrammarPhrase>()
+            {
+                new NounPhrase(new List<GrammarPhrase>()
+                {
+                    new Pronoun("I","")
+                }),
+                new VerbPhrase(new List<GrammarPhrase>()
+                {
+                    new Verb("found",""),
+                    new NounPhrase(new List<GrammarPhrase>()
+                    {
+                        new NounPhrase(new List<GrammarPhrase>()
+                        {
+                            new NounPhrase(new List<GrammarPhrase>()
+                            {
+                                new Determiner("a",""),
+                            new Noun("coin","")
+                            }),
+                            new PrepositionalPhrase(new List<GrammarPhrase>()
+                            {
+                                new Preposition("on",""),
+                                new NounPhrase(new List<GrammarPhrase>()
+                                {
+                                    new Determiner("the",""),
+                                    new Noun("playground","")
+                                })
+                            })
+                        }),
+                        new PrepositionalPhrase(new List<GrammarPhrase>()
+                        {
+                            new Preposition("after",""),
+                            new NounPhrase(new List<GrammarPhrase>() {
+                                new Noun("school","")
+                            })
+                        })
+                    })
+                })
+            });
 
+            var words = sentence.Flatten();
+
+            foreach (var word in words)
+            {
+                s += word.EnglishLemma + " ";
+            }
+            Console.WriteLine(s);
+            Console.ReadLine();
         }
     }
 }

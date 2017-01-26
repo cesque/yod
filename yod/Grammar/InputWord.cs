@@ -10,7 +10,6 @@ namespace yod.Grammar
     {
         public string EnglishLemma;
         public List<string> Tags;
-        public List<InputWord> SubWords;
         public PartOfSpeech POS;
 
         public InputWord(string lemma, PartOfSpeech pos)
@@ -18,7 +17,6 @@ namespace yod.Grammar
             POS = pos;
             EnglishLemma = lemma;
             Tags = new List<string>();
-            SubWords = new List<InputWord>();
         }
 
         public InputWord(string lemma, PartOfSpeech pos, List<string> tags) : this(lemma, pos)
@@ -29,11 +27,6 @@ namespace yod.Grammar
         public InputWord(string lemma, PartOfSpeech pos, string tags) : this(lemma, pos)
         {
             Tags = tags.Split(',').ToList();
-        }
-
-        public void AddWord(InputWord word)
-        {
-            SubWords.Add(word);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace yod.Grammar
         PREPOSITION,
         CONJUNCTION,
         INTERJECTION,
-        DETERMINER
+        DETERMINER,
+        RELATIVIZER
     }
 }
