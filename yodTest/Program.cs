@@ -46,7 +46,7 @@ namespace yodTest
                 c => true
             ));
 
-            var s = "";
+            //var s = "";
 
             Lexicon lexicon = new Lexicon();
             lexicon.Fill("./input.txt", phonology);
@@ -82,53 +82,28 @@ namespace yodTest
             File.WriteAllText("./output.txt", s);
             Process.Start("notepad.exe", "./output.txt");*/
 
-            var sentence = new yod.Grammar.Structure.Sentence(new List<GrammarPhrase>()
-            {
-                new NounPhrase(new List<GrammarPhrase>()
-                {
-                    new Pronoun("I","")
-                }),
-                new VerbPhrase(new List<GrammarPhrase>()
-                {
-                    new Verb("found",""),
-                    new NounPhrase(new List<GrammarPhrase>()
-                    {
-                        new NounPhrase(new List<GrammarPhrase>()
-                        {
-                            new NounPhrase(new List<GrammarPhrase>()
-                            {
-                                new Determiner("a",""),
-                            new Noun("coin","")
-                            }),
-                            new PrepositionalPhrase(new List<GrammarPhrase>()
-                            {
-                                new Preposition("on",""),
-                                new NounPhrase(new List<GrammarPhrase>()
-                                {
-                                    new Determiner("the",""),
-                                    new Noun("playground","")
-                                })
-                            })
-                        }),
-                        new PrepositionalPhrase(new List<GrammarPhrase>()
-                        {
-                            new Preposition("after",""),
-                            new NounPhrase(new List<GrammarPhrase>() {
-                                new Noun("school","")
-                            })
-                        })
-                    })
-                })
-            });
+            NounPhrase thedog = new NounPhrase("Det N") { Det = new Determiner("the", "SBJ"), N = new Noun("dog", "DEF,SBJ,SG") };
+            VerbPhrase isbig = new VerbPhrase("V Adj") { V = new Verb("be", "3,SG,PRS"), Adj = new Adjective("big", "") };
+            RelativeClause thatisbig = new RelativeClause("Rel VP") { Rel = new Relativizer("that", ""), VP = isbig };
+            NounPhrase thedogthatisbig = new NounPhrase("NP RC") { NP = thedog, RC = thatisbig };
+            NounPhrase me = new NounPhrase("Pro") { Pro = new Pronoun("i", "1,SG,OBJ") };
+            VerbPhrase lovesme = new VerbPhrase("V NP") { V = new Verb("love", "3,SG,PRS"), NP = me };
+            Sentence thedogthatisbiglovesme = new Sentence("NP VP") { NP = thedogthatisbig, VP = lovesme };
 
-            var words = sentence.Flatten();
+            thedogthatisbiglovesme.Fill(lexicon);
 
-            foreach (var word in words)
+            var words = thedogthatisbiglovesme.Flatten().Select(x => x.Phonemes);
+            var s = String.Join(" ", words);
+
+            s += Environment.NewLine + Environment.NewLine;
+
+            foreach(var w in lexicon)
             {
-                s += word.EnglishLemma + " ";
+                s += w.English + " : " + w.Lemma + Environment.NewLine;
             }
-            Console.WriteLine(s);
-            Console.ReadLine();
+
+            File.WriteAllText("./output.txt", s);
+            Process.Start("notepad.exe", "./output.txt");
         }
     }
 }

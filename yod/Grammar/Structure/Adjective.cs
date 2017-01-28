@@ -6,22 +6,9 @@ using System.Threading.Tasks;
 
 namespace yod.Grammar.Structure
 {
-    public class Adjective : GrammarPhrase
+    public class Adjective : TerminalPhrase
     {
-        public InputWord Word;
-
-        public Adjective(string english, List<string> tags)
-        {
-            IsTerminal = true;
-            Tag = "ADJC";
-            Word = new InputWord(english, PartOfSpeech.NOUN, tags);
-        }
-
-        public Adjective(string english, string tags) : this(english, tags.Split(',').ToList()) { }
-
-        public override List<InputWord> Flatten()
-        {
-            return new List<InputWord>() { Word };
-        }
+        public Adjective(string english, List<string> tags) : base(english, PartOfSpeech.ADJECTIVE, tags) { }
+        public Adjective(string english, string tags) : base(english, PartOfSpeech.ADJECTIVE, tags) { }
     }
 }

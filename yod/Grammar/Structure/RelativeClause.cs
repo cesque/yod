@@ -6,50 +6,75 @@ using System.Threading.Tasks;
 
 namespace yod.Grammar.Structure
 {
-    public class RelativeClause : GrammarPhrase
+    public class RelativeClause : NonTerminalPhrase
     {
-        static readonly List<string> Rules = new List<string>()
+        public Relativizer Rel
         {
-            "RLTV VP"
-        };
-
-
-        public string Rule;
-        public List<GrammarPhrase> Parts;
-
-        public RelativeClause(List<GrammarPhrase> parts)
-        {
-            Tag = "RC";
-            IsTerminal = false;
-
-            var list = parts.Select(x => x.Tag).ToList();
-            foreach (var rule in Rules)
+            get
             {
-                var q = rule.Split(' ').ToList();
-                if (q.Count == list.Count && !q.Except(list).Any())
-                {
-                    Rule = rule;
-                }
+                if (!relativizerEnabled) throw new Exception("Rel is disabled for rule " + Rule);
+                return relativizer;
             }
-            if (Rule == "") throw new Exception("Rule not found to match parts: " + String.Join(",", list));
-            Parts = parts;
+            set
+            {
+                if (!relativizerEnabled) throw new Exception("Rel is disabled for rule " + Rule);
+                relativizer = value;
+            }
+        }
+        private Relativizer relativizer;
+        private bool relativizerEnabled;
+
+        public VerbPhrase VP
+        {
+            get
+            {
+                if (!verbPhraseEnabled) throw new Exception("VP is disabled for rule " + Rule);
+                return verbPhrase;
+            }
+            set
+            {
+                if (!verbPhraseEnabled) throw new Exception("VP is disabled for rule " + Rule);
+                verbPhrase = value;
+            }
+        }
+        private VerbPhrase verbPhrase;
+        private bool verbPhraseEnabled;
+
+        public RelativeClause(string rule) : base(rule)
+        {
+            relativizerEnabled = false;
+            verbPhraseEnabled = false;
+
+            switch (Rule)
+            {
+                case "Rel VP":
+                    relativizerEnabled = true;
+                    verbPhraseEnabled = true;
+                    break;
+                default:
+                    throw new Exception("Unrecognised rule " + Rule + "!");
+            }
         }
 
-        public override List<InputWord> Flatten()
+        public override void Fill(Lexicon lexicon)
         {
-            var list = new List<InputWord>();
-
-            if (Parts.Count == 1)
+            switch (Rule)
             {
-                list.AddRange(Parts[0].Flatten());
+                case "Rel VP":
+                    Rel.Fill(lexicon);
+                    VP.Fill(lexicon);
+                    break;
+                default: throw new Exception("Couldn't find current rule! Probably a typo here.");
             }
-            else if (Rule == "RLTV VP")
-            {
-                list.AddRange(Parts.Find(x => x.Tag == "RLTV").Flatten());
-                list.AddRange(Parts.Find(x => x.Tag == "VP").Flatten());
-            }
+        }
 
-            return list;
+        public override List<Word> Flatten()
+        {
+            switch (Rule)
+            {
+                case "Rel VP": return Rel.Flatten().Concat(VP.Flatten()).ToList();
+                default: throw new Exception("Couldn't find current rule! Probably a typo here.");
+            }
         }
     }
 }

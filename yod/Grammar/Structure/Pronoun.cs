@@ -6,22 +6,9 @@ using System.Threading.Tasks;
 
 namespace yod.Grammar.Structure
 {
-    public class Pronoun : GrammarPhrase
+    public class Pronoun : TerminalPhrase
     {
-        public InputWord Word;
-
-        public Pronoun(string english, List<string> tags)
-        {
-            IsTerminal = true;
-            Tag = "PRON";
-            Word = new InputWord(english, PartOfSpeech.PRONOUN, tags);
-        }
-
-        public Pronoun(string english, string tags) : this(english, tags.Split(',').ToList()) { }
-
-        public override List<InputWord> Flatten()
-        {
-            return new List<InputWord>() { Word };
-        }
+        public Pronoun(string english, List<string> tags) : base(english, PartOfSpeech.PRONOUN, tags) { }
+        public Pronoun(string english, string tags) : base(english, PartOfSpeech.PRONOUN, tags) { }
     }
 }

@@ -8,41 +8,26 @@ namespace yod.Grammar
 {
     public class Word
     {
-        public Phonology.Word Phonemes;
+        public yod.Phonology.Word Phonemes;
         public string EnglishLemma;
         public List<string> Tags;
-        public List<Word> SubWords;
+        public PartOfSpeech POS;
 
-        public Word(Phonology.Word phonemes, string english, List<string> tags)
+        public Word(string lemma, PartOfSpeech pos)
         {
-            Phonemes = phonemes;
-            EnglishLemma = english;
+            POS = pos;
+            EnglishLemma = lemma;
+            Tags = new List<string>();
+        }
+
+        public Word(string lemma, PartOfSpeech pos, List<string> tags) : this(lemma, pos)
+        {
             Tags = tags;
         }
 
-        public List<string> GetSmallCapsTags()
+        public Word(string lemma, PartOfSpeech pos, string tags) : this(lemma, pos)
         {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var small = "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘ ʀꜱᴛᴜᴠᴡ ʏᴢ";
-            var dict = new Dictionary<char, char>();
-            for(var i = 0; i<chars.Length; i++)
-            {
-                dict.Add(chars[i], small[i]);
-            }
-
-            var list = new List<string>();
-
-            foreach(var tag in Tags)
-            {
-                var t = "";
-                foreach(char c in tag)
-                {
-                    t += dict[c];
-                }
-                list.Add(t);
-            }
-
-            return list;
+            Tags = tags.Split(',').ToList();
         }
     }
 }

@@ -6,22 +6,9 @@ using System.Threading.Tasks;
 
 namespace yod.Grammar.Structure
 {
-    public class Adverb : GrammarPhrase
+    public class Adverb : TerminalPhrase
     {
-        public InputWord Word;
-
-        public Adverb(string english, List<string> tags)
-        {
-            IsTerminal = true;
-            Tag = "ADVB";
-            Word = new InputWord(english, PartOfSpeech.NOUN, tags);
-        }
-
-        public Adverb(string english, string tags) : this(english, tags.Split(',').ToList()) { }
-
-        public override List<InputWord> Flatten()
-        {
-            return new List<InputWord>() { Word };
-        }
+        public Adverb(string english, List<string> tags) : base(english, PartOfSpeech.ADVERB, tags) { }
+        public Adverb(string english, string tags) : base(english, PartOfSpeech.ADVERB, tags) { }
     }
 }

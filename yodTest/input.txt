@@ -43,3 +43,11 @@ DETM: the
 DETM: a
 DETM: this
 DETM: that
+
+PREP: on
+PREP: in
+PREP: with
+PREP: outside
+PREP: inside
+
+RLTV: that

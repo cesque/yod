@@ -6,62 +6,160 @@ using System.Threading.Tasks;
 
 namespace yod.Grammar.Structure
 {
-    public class VerbPhrase : GrammarPhrase
+    public class VerbPhrase : NonTerminalPhrase
     {
-        static readonly List<string> Rules = new List<string>()
+        public Verb V
         {
-            "VERB", "VERB NP", "VERB ADJC", "VERB PP", "VERB ADVB"
-        };
-
-
-        public string Rule;
-        public List<GrammarPhrase> Parts;
-
-        public VerbPhrase(List<GrammarPhrase> parts)
-        {
-            Tag = "VP";
-            IsTerminal = false;
-
-            var list = parts.Select(x => x.Tag).ToList();
-            foreach (var rule in Rules)
+            get
             {
-                var q = rule.Split(' ').ToList();
-                if (q.Count == list.Count && !q.Except(list).Any())
-                {
-                    Rule = rule;
-                }
+                if (!verbEnabled) throw new Exception("V is disabled for rule " + Rule);
+                return verb;
             }
-            if (Rule == "") throw new Exception("Rule not found to match parts: " + String.Join(",", list));
-            Parts = parts;
+            set
+            {
+                if (!verbEnabled) throw new Exception("V is disabled for rule " + Rule);
+                verb = value;
+            }
+        }
+        private Verb verb;
+        private bool verbEnabled;
+
+        public NounPhrase NP
+        {
+            get
+            {
+                if (!nounPhraseEnabled) throw new Exception("NP is disabled for rule " + Rule);
+                return nounPhrase;
+            }
+            set
+            {
+                if (!nounPhraseEnabled) throw new Exception("NP is disabled for rule " + Rule);
+                nounPhrase = value;
+            }
+        }
+        private NounPhrase nounPhrase;
+        private bool nounPhraseEnabled;
+
+        public Adjective Adj
+        {
+            get
+            {
+                if (!adjectiveEnabled) throw new Exception("Adj is disabled for rule " + Rule);
+                return adjective;
+            }
+            set
+            {
+                if (!adjectiveEnabled) throw new Exception("Adj is disabled for rule " + Rule);
+                adjective = value;
+            }
+        }
+        private Adjective adjective;
+        private bool adjectiveEnabled;
+
+        public PrepositionalPhrase PP
+        {
+            get
+            {
+                if (!prepositionalPhraseEnabled) throw new Exception("PP is disabled for rule " + Rule);
+                return prepositionalPhrase;
+            }
+            set
+            {
+                if (!prepositionalPhraseEnabled) throw new Exception("PP is disabled for rule " + Rule);
+                prepositionalPhrase = value;
+            }
+        }
+        private PrepositionalPhrase prepositionalPhrase;
+        private bool prepositionalPhraseEnabled;
+
+        public Adverb Adv
+        {
+            get
+            {
+                if (!adverbEnabled) throw new Exception("Adv is disabled for rule " + Rule);
+                return adverb;
+            }
+            set
+            {
+                if (!adverbEnabled) throw new Exception("Adv is disabled for rule " + Rule);
+                adverb = value;
+            }
+        }
+        private Adverb adverb;
+        private bool adverbEnabled;
+
+        public VerbPhrase(string rule) : base(rule)
+        {
+            verbEnabled = false;
+            nounPhraseEnabled = false;
+            adjectiveEnabled = false;
+            prepositionalPhraseEnabled = false;
+            adverbEnabled = false;
+
+            switch (Rule)
+            {
+                case "V":
+                    verbEnabled = true;
+                    break;
+                case "V NP":
+                    verbEnabled = true;
+                    nounPhraseEnabled = true;
+                    break;
+                case "V Adj":
+                    verbEnabled = true;
+                    adjectiveEnabled = true;
+                    break;
+                case "V PP":
+                    verbEnabled = true;
+                    prepositionalPhraseEnabled = true;
+                    break;
+                case "V Adv":
+                    verbEnabled = true;
+                    adverbEnabled = true;
+                    break;
+                default:
+                    throw new Exception("Unrecognised rule " + Rule + "!");
+            }
         }
 
-        public override List<InputWord> Flatten()
+        public override void Fill(Lexicon lexicon)
         {
-            var list = new List<InputWord>();
-
-            if (Parts.Count == 1)
+            switch (Rule)
             {
-                list.AddRange(Parts[0].Flatten());
+                case "V":
+                    V.Fill(lexicon);
+                    break;
+                case "V NP":
+                    V.Fill(lexicon);
+                    NP.Fill(lexicon);
+                    break;
+                case "V Adj":
+                    V.Fill(lexicon);
+                    Adj.Fill(lexicon);
+                    break;
+                case "V PP":
+                    V.Fill(lexicon);
+                    PP.Fill(lexicon);
+                    break;
+                case "V Adv":
+                    V.Fill(lexicon);
+                    Adv.Fill(lexicon);
+                    break;
+                default: throw new Exception("Couldn't find current rule! Probably a typo here.");
             }
-            else if (Rule == "VERB NP")
-            {
-                list.AddRange(Parts.Find(x => x.Tag == "VERB").Flatten());
-                list.AddRange(Parts.Find(x => x.Tag == "NP").Flatten());
-            } else if(Rule == "VERB ADJC")
-            {
-                list.AddRange(Parts.Find(x => x.Tag == "VERB").Flatten());
-                list.AddRange(Parts.Find(x => x.Tag == "ADJC").Flatten());
-            } else if(Rule == "VERB PP")
-            {
-                list.AddRange(Parts.Find(x => x.Tag == "VERB").Flatten());
-                list.AddRange(Parts.Find(x => x.Tag == "PP").Flatten());
-            } else if(Rule == "VERB ADVB")
-            {
-                list.AddRange(Parts.Find(x => x.Tag == "VERB").Flatten());
-                list.AddRange(Parts.Find(x => x.Tag == "ADVB").Flatten());
-            }
+        }
 
-            return list;
+        public override List<Word> Flatten()
+        {
+            switch(Rule)
+            {
+                case "V": return V.Flatten();
+                case "V NP": return V.Flatten().Concat(NP.Flatten()).ToList();
+                case "V Adj": return V.Flatten().Concat(Adj.Flatten()).ToList();
+                case "V PP": return V.Flatten().Concat(PP.Flatten()).ToList();
+                case "V Adv": return V.Flatten().Concat(Adv.Flatten()).ToList();
+                default: throw new Exception("Couldn't find current rule! Probably a typo here.");
+            }
         }
     }
 }

@@ -6,22 +6,9 @@ using System.Threading.Tasks;
 
 namespace yod.Grammar.Structure
 {
-    public class Verb : GrammarPhrase
+    public class Verb : TerminalPhrase
     {
-        public InputWord Word;
-
-        public Verb(string english, List<string> tags)
-        {
-            IsTerminal = true;
-            Tag = "VERB";
-            Word = new InputWord(english, PartOfSpeech.VERB, tags);
-        }
-
-        public Verb(string english, string tags) : this(english, tags.Split(',').ToList()) { }
-
-        public override List<InputWord> Flatten()
-        {
-            return new List<InputWord>() { Word };
-        }
+        public Verb(string english, List<string> tags) : base(english, PartOfSpeech.VERB, tags) { }
+        public Verb(string english, string tags) : base(english, PartOfSpeech.VERB, tags) { }
     }
 }
