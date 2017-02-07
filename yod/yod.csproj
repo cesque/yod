@@ -36,6 +36,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,23 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grammar\NonTerminalPhrase.cs" />
-    <Compile Include="Grammar\Phrase.cs" />
-    <Compile Include="Grammar\Structure\Adjective.cs" />
-    <Compile Include="Grammar\Structure\Adverb.cs" />
-    <Compile Include="Grammar\Structure\Conjunction.cs" />
-    <Compile Include="Grammar\Structure\Determiner.cs" />
-    <Compile Include="Grammar\Structure\Noun.cs" />
-    <Compile Include="Grammar\Structure\NounPhrase.cs" />
-    <Compile Include="Grammar\Structure\Preposition.cs" />
-    <Compile Include="Grammar\Structure\PrepositionalPhrase.cs" />
-    <Compile Include="Grammar\Structure\Pronoun.cs" />
-    <Compile Include="Grammar\Structure\RelativeClause.cs" />
-    <Compile Include="Grammar\Structure\Relativizer.cs" />
-    <Compile Include="Grammar\Structure\Sentence.cs" />
-    <Compile Include="Grammar\Structure\Verb.cs" />
-    <Compile Include="Grammar\Structure\VerbPhrase.cs" />
-    <Compile Include="Grammar\TerminalPhrase.cs" />
+    <Compile Include="Grammar\Structure\Phrase.cs" />
     <Compile Include="Grammar\Word.cs" />
     <Compile Include="Grammar\Lexeme.cs" />
     <Compile Include="Grammar\Lexicon.cs" />
@@ -83,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

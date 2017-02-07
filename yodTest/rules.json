@@ -1,0 +1,7 @@
+﻿{
+  "S": [ "NP VP", "S CONJ S" ],
+  "NP": [ "PRON", "NOUN", "DETM NOUN", "NP PP", "NP RC" ],
+  "VP": [ "VERB", "VERB NP", "VERB ADJC", "VERB PP", "VERB ADVB", "VERB PRON" ],
+  "PP": [ "PREP NP" ],
+  "RC": [ "RLTV VP" ]
+}

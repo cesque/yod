@@ -1,0 +1,42 @@
+﻿{
+  "S": {
+    "NP": {
+      "NP": {
+        "DETM": {
+          "word": "the",
+          "tags": "SBJ"
+        },
+        "NOUN": {
+          "word": "dog",
+          "tags": "DEF,SBJ,SG"
+        }
+      },
+      "RC": {
+        "RLTV": {
+          "word": "that",
+          "tags": ""
+        },
+        "VP": {
+          "VERB": {
+            "word": "be",
+            "tags": "3,SG,PRS"
+          },
+          "ADJC": {
+            "word": "big",
+            "tags": ""
+          }
+        }
+      }
+    },
+    "VP": {
+      "VERB": {
+        "word": "love",
+        "tags": "3,SG,PRS"
+      },
+      "PRON": {
+        "word": "i",
+        "tags": "1,SG,OBJ"
+      }
+    }
+  }
+}

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+
+using Newtonsoft.Json;
 
 using yod;
 using yod.Phonology;
@@ -49,51 +52,13 @@ namespace yodTest
             //var s = "";
 
             Lexicon lexicon = new Lexicon();
-            lexicon.Fill("./input.txt", phonology);
+            lexicon.Fill("./dictionary.txt", phonology);
 
-            /*InputSentence input = new InputSentence();
-            input.Subject = new InputWord("i", PartOfSpeech.PRONOUN, "SBJ");
-            input.Verb = new InputWord("love", PartOfSpeech.VERB, "PRS");
-            input.Object = new InputWord("you", PartOfSpeech.PRONOUN, "OBJ");
+            Phrase p = new Phrase("./rules.json", "./input.json");
 
-            yod.Grammar.Sentence sentence = new yod.Grammar.Sentence(input, lexicon, phonology);
+            var input = JsonConvert.DeserializeObject(File.ReadAllText("./input.json"));
 
-            List<string> s1 = new List<string>();
-            List<string> s2 = new List<string>();
-            foreach (var word in sentence.Words)
-            {
-                s1.Add(word.Phonemes.ToString());
-                s2.Add(word.EnglishLemma.ToString());
-            }
-
-            string line1 = "", line2 = "";
-            for (var i = 0; i < s1.Count; i++)
-            {
-                var e = s2[i] + "-" + String.Join("-", sentence.Words[i].GetSmallCapsTags().ToArray());
-                var x = s1[i].Count(y => y == '\u0361');
-                var length = Math.Max(s1[i].Length - x, e.Length);
-                line1 += s1[i].PadRight(length + x) + " ";
-                line2 += e.PadRight(length) + " ";
-            }
-
-            s += line1 + Environment.NewLine;
-            s += line2 + Environment.NewLine;
-
-            File.WriteAllText("./output.txt", s);
-            Process.Start("notepad.exe", "./output.txt");*/
-
-            NounPhrase thedog = new NounPhrase("Det N") { Det = new Determiner("the", "SBJ"), N = new Noun("dog", "DEF,SBJ,SG") };
-            VerbPhrase isbig = new VerbPhrase("V Adj") { V = new Verb("be", "3,SG,PRS"), Adj = new Adjective("big", "") };
-            RelativeClause thatisbig = new RelativeClause("Rel VP") { Rel = new Relativizer("that", ""), VP = isbig };
-            NounPhrase thedogthatisbig = new NounPhrase("NP RC") { NP = thedog, RC = thatisbig };
-            NounPhrase me = new NounPhrase("Pro") { Pro = new Pronoun("i", "1,SG,OBJ") };
-            VerbPhrase lovesme = new VerbPhrase("V NP") { V = new Verb("love", "3,SG,PRS"), NP = me };
-            Sentence thedogthatisbiglovesme = new Sentence("NP VP") { NP = thedogthatisbig, VP = lovesme };
-
-            thedogthatisbiglovesme.Fill(lexicon);
-
-            var words = thedogthatisbiglovesme.Flatten().Select(x => x.Phonemes);
-            var s = String.Join(" ", words);
+            var s = "";
 
             s += Environment.NewLine + Environment.NewLine;
 
