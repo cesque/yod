@@ -1,41 +1,65 @@
 ﻿{
   "S": {
-    "NP": {
+    "S-1": {
       "NP": {
-        "DETM": {
-          "word": "the",
-          "tags": "SBJ"
+        "NP": {
+          "DETM": {
+            "word": "the",
+            "tags": "SBJ"
+          },
+          "NOUN": {
+            "word": "dog",
+            "tags": "DEF,SBJ,SG"
+          }
         },
-        "NOUN": {
-          "word": "dog",
-          "tags": "DEF,SBJ,SG"
+        "RC": {
+          "RLTV": {
+            "word": "that",
+            "tags": ""
+          },
+          "VP": {
+            "VERB": {
+              "word": "be",
+              "tags": "3,SG,PRS"
+            },
+            "ADJC": {
+              "word": "big",
+              "tags": ""
+            }
+          }
         }
       },
-      "RC": {
-        "RLTV": {
-          "word": "that",
-          "tags": ""
+      "VP": {
+        "VERB": {
+          "word": "love",
+          "tags": "3,SG,PRS"
         },
-        "VP": {
-          "VERB": {
-            "word": "be",
-            "tags": "3,SG,PRS"
-          },
-          "ADJC": {
-            "word": "big",
-            "tags": ""
-          }
+        "PRON": {
+          "word": "i",
+          "tags": "1,SG,OBJ"
         }
       }
     },
-    "VP": {
-      "VERB": {
-        "word": "love",
-        "tags": "3,SG,PRS"
+    "CONJ": {
+      "word": "and",
+      "tags": ""
+    },
+    "S-2": {
+      "NP": {
+        "PRON": {
+          "word": "i",
+          "tags": "1,SG,SBJ"
+        }
       },
-      "PRON": {
-        "word": "i",
-        "tags": "1,SG,OBJ"
+      "VP": {
+        "VERB": {
+          "word": "love",
+          "tags": "1,SG,PRS"
+        },
+        "PRON": {
+          "word": "he",
+          "tags": "3,SG,OBJ"
+        }
       }
     }
   }

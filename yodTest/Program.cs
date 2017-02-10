@@ -54,12 +54,16 @@ namespace yodTest
             Lexicon lexicon = new Lexicon();
             lexicon.Fill("./dictionary.txt", phonology);
 
-            Phrase p = new Phrase("./rules.json", "./input.json");
+            Phrase phrase = new Phrase("./rules.json", "./input.json");
+            phrase.Fill(lexicon);
 
-            var input = JsonConvert.DeserializeObject(File.ReadAllText("./input.json"));
+            var flattened = phrase.Flatten();
 
             var s = "";
 
+            flattened.ForEach(x => s += x.EnglishLemma + " ");
+            s += Environment.NewLine;
+            flattened.ForEach(x => s += x.Phonemes.ToString() + " ");
             s += Environment.NewLine + Environment.NewLine;
 
             foreach(var w in lexicon)

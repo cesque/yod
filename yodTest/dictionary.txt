@@ -21,6 +21,7 @@ ADVB: quickly
 ADVB: really
 ADVB: slowly
 ADVB: usually
+ADVB: also
 
 ADJC: big
 ADJC: small

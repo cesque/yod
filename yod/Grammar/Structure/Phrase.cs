@@ -59,6 +59,8 @@ namespace yod.Grammar.Structure
         }
         List<Phrase> _phrases;
 
+        int Number = 0;
+
         public Phrase(string rulesPath, string inputPath)
             : this(JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(File.ReadAllText(rulesPath)),
               JObject.Parse(File.ReadAllText(inputPath)))
@@ -71,10 +73,20 @@ namespace yod.Grammar.Structure
         {
             if (jobj.Parent == null)
             {
-                jobj = jobj["S"];
+                // seems to be a weird quirk of parsing JSON, this accesses the first element of json object
+                jobj = jobj.First.First;
             }
-
-            Tag = ((JProperty)jobj.Parent).Name;
+            var name = ((JProperty)jobj.Parent).Name;
+            if (name.Contains("-"))
+            {
+                var parts = name.Split('-');
+                Tag = parts[0];
+                Number = int.Parse(parts[1]);
+            }
+            else
+            {
+                Tag = name;
+            }
 
             rules = rulesDict;
             if (jobj["word"] != null)
@@ -93,25 +105,65 @@ namespace yod.Grammar.Structure
                 IsTerminal = false;
                 Phrases = new List<Phrase>();
                 var subphrases = ((JObject)jobj).Properties().Select(x => x.Name).ToList();
-                var b = false;
+                var matchesRule = false;
                 foreach (var rule in rules[Tag])
                 {
                     var parts = rule.Split(' ').ToList();
 
                     if (subphrases.Count == parts.Count && subphrases.All(y => subphrases.Count(p => p == y) == parts.Count(p => p == y)))
                     {
-                        b = true;
+                        matchesRule = true;
                         Rule = rule;
                         break;
                     }
                 }
 
-                if (b == false) throw new Exception("Couldn't create phrase " + Tag);
+                if (matchesRule == false) throw new Exception("Couldn't create phrase " + Tag);
                 subphrases.ForEach(x =>
                 {
                     Phrases.Add(new Phrase(rules, jobj[x]));
                 });
             }
+        }
+
+        public void Fill(Lexicon lexicon)
+        {
+            if (IsTerminal)
+            {
+                var word = lexicon.First(w => w.English == Word.EnglishLemma && w.POS == Word.POS);
+                Word.Phonemes = word.Lemma;
+            }
+            else
+            {
+                Phrases.ForEach(x => x.Fill(lexicon));
+            }
+        }
+
+        public List<Word> Flatten()
+        {
+            var list = new List<Word>();
+            if (IsTerminal)
+            {
+                list.Add(Word);
+            }
+            else
+            {
+                var ruleParts = Rule.Split(' ').ToList();
+                ruleParts.ForEach(phrase =>
+                {
+                    if(phrase.Contains('-'))
+                    {
+                        var parts = phrase.Split('-');
+                        var tag = parts[0];
+                        var num = int.Parse(parts[1]);
+                        list.AddRange(Phrases.Find(x => x.Tag == tag && x.Number == num).Flatten());
+                    } else
+                    {
+                        list.AddRange(Phrases.Find(x => x.Tag == phrase).Flatten());
+                    }
+                });
+            }
+            return list;
         }
     }
 }
