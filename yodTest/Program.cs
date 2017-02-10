@@ -63,7 +63,9 @@ namespace yodTest
 
             flattened.ForEach(x => s += x.EnglishLemma + " ");
             s += Environment.NewLine;
+            s += "/";
             flattened.ForEach(x => s += x.Phonemes.ToString() + " ");
+            s += "/";
             s += Environment.NewLine + Environment.NewLine;
 
             foreach(var w in lexicon)
