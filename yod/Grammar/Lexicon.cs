@@ -99,5 +99,68 @@ namespace yod.Grammar
 
             this.Fill(words, phonology);
         }
+
+        public override string ToString()
+        {
+            var posDict = new Dictionary<PartOfSpeech, string>()
+            {
+                   { PartOfSpeech.NOUN, "n" },
+                   { PartOfSpeech.VERB, "v" },
+                   { PartOfSpeech.PRONOUN, "pron" },
+                   { PartOfSpeech.ADVERB, "adv" },
+                   { PartOfSpeech.ADJECTIVE, "adj" },
+                   { PartOfSpeech.PREPOSITION, "prep" },
+                   { PartOfSpeech.CONJUNCTION, "conj" },
+                   { PartOfSpeech.INTERJECTION, "intj" },
+                   { PartOfSpeech.DETERMINER, "art" },
+                   { PartOfSpeech.RELATIVIZER, "rel" }
+            };
+
+            var s = "";
+            var maxEnglish = this.Max(x => x.English.Length);
+            var maxIpa = this.Max(x => x.Lemma.ToString().Length);
+            foreach (var w in this)
+            {
+                var lDiff = w.Lemma.ToString().Length - Globals.StripTies(w.Lemma.ToString()).Length;
+                s += (w.Lemma.ToString() + " (" + posDict[w.POS] + ")").PadRight(maxIpa + lDiff + 8);
+                s += ": ";
+                s += w.English;
+                s += Environment.NewLine;
+            }
+
+            return s;
+        }
+
+        public string ToString(Orthography.LanguageOrthography orthography)
+        {
+            var posDict = new Dictionary<PartOfSpeech, string>()
+            {
+                   { PartOfSpeech.NOUN, "n" },
+                   { PartOfSpeech.VERB, "v" },
+                   { PartOfSpeech.PRONOUN, "pron" },
+                   { PartOfSpeech.ADVERB, "adv" },
+                   { PartOfSpeech.ADJECTIVE, "adj" },
+                   { PartOfSpeech.PREPOSITION, "prep" },
+                   { PartOfSpeech.CONJUNCTION, "conj" },
+                   { PartOfSpeech.INTERJECTION, "intj" },
+                   { PartOfSpeech.DETERMINER, "art" },
+                   { PartOfSpeech.RELATIVIZER, "rel" }
+            };
+
+            var s = "";
+            var maxEnglish = this.Max(x => x.English.Length);
+            var maxIpa = this.Max(x => x.Lemma.ToString().Length);
+            var maxOrth = this.Max(x => orthography.Orthographize(x.Lemma).Length);
+            foreach (var w in this)
+            {
+                var lDiff = w.Lemma.ToString().Length - Globals.StripTies(w.Lemma.ToString()).Length;
+                s += (orthography.Orthographize(w.Lemma) + " /" + w.Lemma.ToString() + "/ (" + posDict[w.POS] + ")").PadRight(maxIpa + maxOrth + lDiff + 8);
+                s += ": ";
+                s += w.English;
+                s += Environment.NewLine;
+            }
+
+            return s;
+        }
     }
 }

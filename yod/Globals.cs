@@ -31,5 +31,10 @@ namespace yod
 
             throw new Exception("Weighted Random failed to return a value somehow");
         }
+
+        public static string StripTies(string ipa)
+        {
+            return ipa.Replace("\u0361", "");
+        }
     }
 }
