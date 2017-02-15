@@ -8,7 +8,8 @@ namespace yod.Grammar
 {
     public class Word
     {
-        public yod.Phonology.Word Phonemes;
+        public Phonology.Word Lemma;
+        public Phonology.Word Inflected;
         public string EnglishLemma;
         public List<string> Tags;
         public PartOfSpeech POS;
@@ -28,6 +29,26 @@ namespace yod.Grammar
         public Word(string lemma, PartOfSpeech pos, string tags) : this(lemma, pos)
         {
             Tags = tags.Split(',').ToList();
+        }
+
+        public void Inflect(Inflection inflection)
+        {
+            if (POS == inflection.POS && Tags.Contains(inflection.Tag))
+            {
+                Inflected = new Phonology.Word(Lemma);
+                Inflected.Syllables.Add(inflection.Suffix);
+            }
+        }
+
+        public void Inflect(List<Inflection> inflections)
+        {
+            inflections.ForEach(Inflect);
+        }
+
+        public void Fill(Phonology.Word lemma)
+        {
+            Lemma = new Phonology.Word(lemma);
+            Inflected = new Phonology.Word(lemma);
         }
     }
 }

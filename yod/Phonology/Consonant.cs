@@ -54,6 +54,16 @@ namespace yod.Phonology
         public Manner MannerOfArticulation;
         public Phonation Voicing;
 
+        public Consonant(Consonant consonant)
+        {
+            Type = PhonemeType.CONSONANT;
+            PlaceOfArticulation = consonant.PlaceOfArticulation;
+            MannerOfArticulation = consonant.MannerOfArticulation;
+            Voicing = consonant.Voicing;
+            Symbol = consonant.Symbol;
+            Sonority = consonant.Sonority;
+        }
+
         public Consonant(string symbol, Place place, Manner manner, Phonation voiced, int sonority)
         {
             Symbol = symbol;

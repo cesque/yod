@@ -38,6 +38,16 @@ namespace yod.Phonology
         public OpenToClose Openness;
         public Rounded Roundedness;
 
+        public Vowel(Vowel vowel)
+        {
+            Frontedness = vowel.Frontedness;
+            Openness = vowel.Openness;
+            Roundedness = vowel.Roundedness;
+            Symbol = vowel.Symbol;
+            Type = vowel.Type;
+            Sonority = vowel.Sonority;
+        }
+
         public Vowel(string symbol, FrontToBack frontness, OpenToClose openness, Rounded roundedness, int sonority)
         {
             Symbol = symbol;

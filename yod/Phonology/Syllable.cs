@@ -12,6 +12,19 @@ namespace yod.Phonology
         internal SyllableStructure structure;
         public List<Phoneme> Phonemes;
 
+        public Syllable(Syllable syllable)
+        {
+            language = syllable.language;
+            structure = syllable.structure;
+            Phonemes = new List<Phoneme>();
+            syllable.Phonemes.ForEach(x =>
+            {
+                Phonemes.Add(x.Type == Phoneme.PhonemeType.CONSONANT
+                    ? (Phoneme)new Consonant((Consonant) x)
+                    : (Phoneme)new Vowel((Vowel) x));
+            });
+        }
+        
         public Syllable(LanguagePhonology l)
         {
             language = l;

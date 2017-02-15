@@ -24,7 +24,7 @@ namespace yodTest
 
         public Tests()
         {
-            Globals.SeedRandom(3);
+            Globals.SeedRandom(4);
 
             var syllableStructure = new SyllableStructure()
             {
@@ -44,7 +44,7 @@ namespace yodTest
             phonology = new LanguagePhonology(syllableStructure);//new Language(syllableStructure);
             orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, phonology);
             phonology.WordLengthMin = 1;
-            phonology.WordLengthMax = 4;
+            phonology.WordLengthMax = 3;
             phonology.OnsetConsonants = new List<Consonant>(phonology.Phonemes.Consonants.Where(
                 c => true
             ));
@@ -70,7 +70,37 @@ namespace yodTest
             flattened.ForEach(x => s += x.EnglishLemma + " ");
             s += Environment.NewLine;
             s += "/";
-            flattened.ForEach(x => s += x.Phonemes.ToString() + " ");
+            flattened.ForEach(x => s += x.Lemma.ToString() + " ");
+            s += "/";
+
+            return s;
+        }
+
+        public string TestInflectedPhrase()
+        {
+            Phrase phrase = new Phrase("./rules.json", "./input.json");
+            phrase.Fill(lexicon);
+
+            var subjectSyllable = phonology.GetSyllable();
+            var objectSyllable = phonology.GetSyllable();
+
+            List<Inflection> inflections = new List<Inflection>()
+            {
+                new Inflection(phonology, PartOfSpeech.NOUN, "SBJ") { Suffix = subjectSyllable },
+                new Inflection(phonology, PartOfSpeech.NOUN, "OBJ") { Suffix = objectSyllable },
+                new Inflection(phonology, PartOfSpeech.PRONOUN, "SBJ") { Suffix = subjectSyllable },
+                new Inflection(phonology, PartOfSpeech.PRONOUN, "OBJ") { Suffix = objectSyllable },
+            };
+
+            phrase.InflectAll(inflections);
+            var flattened = phrase.Flatten();
+
+            var s = "";
+
+            flattened.ForEach(x => s += x.EnglishLemma + " ");
+            s += Environment.NewLine;
+            s += "/";
+            flattened.ForEach(x => s += x.Inflected.ToString() + " ");
             s += "/";
 
             return s;
@@ -91,6 +121,8 @@ namespace yodTest
             var s = "";
 
             s += TestPhrase();
+            s += Environment.NewLine + Environment.NewLine;
+            s += TestInflectedPhrase();
             s += Environment.NewLine + Environment.NewLine;
             s += TestLexiconOrthographized();
 

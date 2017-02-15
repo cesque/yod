@@ -131,7 +131,7 @@ namespace yod.Grammar.Structure
             if (IsTerminal)
             {
                 var word = lexicon.First(w => w.English == Word.EnglishLemma && w.POS == Word.POS);
-                Word.Phonemes = word.Lemma;
+                Word.Fill(word.Lemma);
             }
             else
             {
@@ -151,19 +151,32 @@ namespace yod.Grammar.Structure
                 var ruleParts = Rule.Split(' ').ToList();
                 ruleParts.ForEach(phrase =>
                 {
-                    if(phrase.Contains('-'))
+                    if (phrase.Contains('-'))
                     {
                         var parts = phrase.Split('-');
                         var tag = parts[0];
                         var num = int.Parse(parts[1]);
                         list.AddRange(Phrases.Find(x => x.Tag == tag && x.Number == num).Flatten());
-                    } else
+                    }
+                    else
                     {
                         list.AddRange(Phrases.Find(x => x.Tag == phrase).Flatten());
                     }
                 });
             }
             return list;
+        }
+
+        public void InflectAll(List<Inflection> inflections)
+        {
+            if (IsTerminal)
+            {
+                Word.Inflect(inflections);
+            }
+            else
+            {
+                Phrases.ForEach(x => x.InflectAll(inflections));
+            }
         }
     }
 }
