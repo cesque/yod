@@ -5,20 +5,20 @@
         public enum FrontToBack
         {
             Front,
-            Nearfront,
+            NearFront,
             Central,
-            Nearback,
+            NearBack,
             Back
         }
 
         public enum OpenToClose
         {
             Close,
-            Nearclose,
-            Closemid,
+            NearClose,
+            CloseMid,
             Mid,
-            Openmid,
-            Nearopen,
+            OpenMid,
+            NearOpen,
             Open
         }
 

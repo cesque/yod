@@ -25,17 +25,17 @@
         {
             Nasal,
             Stop,
-            Sibilantaffricate,
-            Nonsibilantaffricate,
-            Sibilantfricative,
-            Nonsibilantfricative,
+            SibilantAffricate,
+            NonsibilantAffricate,
+            SibilantFricative,
+            NonsibilantFricative,
             Approximant,
-            Flaportap,
+            FlapOrTap,
             Trill,
-            Lateralaffricate,
-            Lateralfricative,
-            Lateralapproximant,
-            Lateralflap
+            LateralAffricate,
+            LateralFricative,
+            LateralApproximant,
+            LateralFlap
         }
 
         public enum Phonation
