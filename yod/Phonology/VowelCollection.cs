@@ -8,11 +8,12 @@ namespace yod.Phonology
     {
         private static readonly List<Vowel> IPAVowels = new List<Vowel>
         {
+            // todo: add more vowels
             new Vowel("i", Vowel.FrontToBack.Front, Vowel.OpenToClose.Close, Vowel.Rounded.Unrounded, 2),
-            new Vowel("e", Vowel.FrontToBack.Nearfront, Vowel.OpenToClose.Closemid, Vowel.Rounded.Unrounded, 1),
+            new Vowel("e", Vowel.FrontToBack.NearFront, Vowel.OpenToClose.CloseMid, Vowel.Rounded.Unrounded, 1),
             new Vowel("a", Vowel.FrontToBack.Central, Vowel.OpenToClose.Open, Vowel.Rounded.Unrounded, 0),
             new Vowel("u", Vowel.FrontToBack.Back, Vowel.OpenToClose.Close, Vowel.Rounded.Rounded, 2),
-            new Vowel("o", Vowel.FrontToBack.Back, Vowel.OpenToClose.Closemid, Vowel.Rounded.Rounded, 1)
+            new Vowel("o", Vowel.FrontToBack.Back, Vowel.OpenToClose.CloseMid, Vowel.Rounded.Rounded, 1)
         };
 
         public static VowelCollection AllVowels => new VowelCollection();

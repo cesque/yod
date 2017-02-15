@@ -32,6 +32,8 @@ namespace yod.Phonology
             })
         { }
 
+        // todo: load phonology from json file
+
         public LanguagePhonology(SyllableStructure sylStructure)
         {
             SyllableStructure = sylStructure;

@@ -105,6 +105,8 @@ namespace yod.Orthography
 
         }
 
+        // todo: load orthography from json file
+
         public LanguageOrthography(Dictionary<string, string> rules, LanguagePhonology lang)
         {
             Rules = rules;
