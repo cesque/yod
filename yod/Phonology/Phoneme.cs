@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace yod.Phonology
+﻿namespace yod.Phonology
 {
     public abstract class Phoneme
     {
@@ -12,15 +6,15 @@ namespace yod.Phonology
         public PhonemeType Type;
         public int Sonority;
 
-        override public string ToString()
+        public override string ToString()
         {
             return Symbol;
         }
 
         public enum PhonemeType
         {
-            CONSONANT,
-            VOWEL
+            Consonant,
+            Vowel
         }
     }
 }

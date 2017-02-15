@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace yod.Phonology
 {
     public class Word
     {
-        LanguagePhonology language;
+        readonly LanguagePhonology language;
 
-        public int SyllableLength { get { return Syllables.Count; } }
+        public int SyllableLength => Syllables.Count;
         public List<Syllable> Syllables;
 
         public Word(Word w)

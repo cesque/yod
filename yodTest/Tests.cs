@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.IO;
-
-using Newtonsoft.Json;
-
+using System.Linq;
 using yod;
-using yod.Phonology;
-using yod.Orthography;
 using yod.Grammar;
 using yod.Grammar.Structure;
-using System.Diagnostics;
+using yod.Orthography;
+using yod.Phonology;
 
 namespace yodTest
 {
@@ -26,17 +21,20 @@ namespace yodTest
         {
             Globals.SeedRandom(4);
 
-            var syllableStructure = new SyllableStructure()
+            var syllableStructure = new SyllableStructure
             {
-                OnsetStructure = new List<SyllableStructure.SyllableStructureOption>() {
-                    new SyllableStructure.SyllableStructureOption(1, 1f),
+                OnsetStructure = new List<SyllableStructure.SyllableStructureOption>
+                {
+                    new SyllableStructure.SyllableStructureOption(1, 1f)
                 },
-                NucleusStructure = new List<SyllableStructure.SyllableStructureOption>() {
-                    new SyllableStructure.SyllableStructureOption(1, 1f),
+                NucleusStructure = new List<SyllableStructure.SyllableStructureOption>
+                {
+                    new SyllableStructure.SyllableStructureOption(1, 1f)
                 },
-                CodaStructure = new List<SyllableStructure.SyllableStructureOption>() {
+                CodaStructure = new List<SyllableStructure.SyllableStructureOption>
+                {
                     new SyllableStructure.SyllableStructureOption(0, 0.3f),
-                    new SyllableStructure.SyllableStructureOption(1, 0.7f),
+                    new SyllableStructure.SyllableStructureOption(1, 0.7f)
                 }
             };
 
@@ -84,12 +82,12 @@ namespace yodTest
             var subjectSyllable = phonology.GetSyllable();
             var objectSyllable = phonology.GetSyllable();
 
-            List<Inflection> inflections = new List<Inflection>()
+            List<Inflection> inflections = new List<Inflection>
             {
-                new Inflection(phonology, PartOfSpeech.NOUN, "SBJ") { Suffix = subjectSyllable },
-                new Inflection(phonology, PartOfSpeech.NOUN, "OBJ") { Suffix = objectSyllable },
-                new Inflection(phonology, PartOfSpeech.PRONOUN, "SBJ") { Suffix = subjectSyllable },
-                new Inflection(phonology, PartOfSpeech.PRONOUN, "OBJ") { Suffix = objectSyllable },
+                new Inflection(phonology, PartOfSpeech.Noun, "SBJ") { Suffix = subjectSyllable },
+                new Inflection(phonology, PartOfSpeech.Noun, "OBJ") { Suffix = objectSyllable },
+                new Inflection(phonology, PartOfSpeech.Pronoun, "SBJ") { Suffix = subjectSyllable },
+                new Inflection(phonology, PartOfSpeech.Pronoun, "OBJ") { Suffix = objectSyllable }
             };
 
             phrase.InflectAll(inflections);

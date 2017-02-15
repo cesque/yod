@@ -1,37 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace yod.Phonology
+﻿namespace yod.Phonology
 {
     public class Vowel : Phoneme
     {
         public enum FrontToBack
         {
-            FRONT,
-            NEARFRONT,
-            CENTRAL,
-            NEARBACK,
-            BACK
+            Front,
+            Nearfront,
+            Central,
+            Nearback,
+            Back
         }
 
         public enum OpenToClose
         {
-            CLOSE,
-            NEARCLOSE,
-            CLOSEMID,
-            MID,
-            OPENMID,
-            NEAROPEN,
-            OPEN
+            Close,
+            Nearclose,
+            Closemid,
+            Mid,
+            Openmid,
+            Nearopen,
+            Open
         }
 
         public enum Rounded
         {
-            ROUNDED,
-            UNROUNDED
+            Rounded,
+            Unrounded
         }
 
         public FrontToBack Frontedness;
@@ -54,7 +48,7 @@ namespace yod.Phonology
             Frontedness = frontness;
             Openness = openness;
             Roundedness = roundedness;
-            Type = PhonemeType.VOWEL;
+            Type = PhonemeType.Vowel;
             Sonority = sonority;
         }
     }

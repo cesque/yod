@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace yod.Phonology
 {
@@ -18,19 +15,19 @@ namespace yod.Phonology
         public int WordLengthMax = 3;
 
         public LanguagePhonology() : this(
-            new SyllableStructure()
+            new SyllableStructure
             {
-                OnsetStructure = new List<SyllableStructure.SyllableStructureOption>()
+                OnsetStructure = new List<SyllableStructure.SyllableStructureOption>
                 {
-                    { new SyllableStructure.SyllableStructureOption(1,1) }
+                    new SyllableStructure.SyllableStructureOption(1,1)
                 },
-                NucleusStructure = new List<SyllableStructure.SyllableStructureOption>()
+                NucleusStructure = new List<SyllableStructure.SyllableStructureOption>
                 {
-                    {new SyllableStructure.SyllableStructureOption (1,1) }
+                    new SyllableStructure.SyllableStructureOption (1,1)
                 },
-                CodaStructure = new List<SyllableStructure.SyllableStructureOption>()
+                CodaStructure = new List<SyllableStructure.SyllableStructureOption>
                 {
-                    {new SyllableStructure.SyllableStructureOption (0,1) }
+                    new SyllableStructure.SyllableStructureOption (0,1)
                 }
             })
         { }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace yod.Phonology
 {
@@ -28,66 +26,66 @@ namespace yod.Phonology
         {
             #region consonants
             #region nasals
-            new Consonant("m", Consonant.Place.BILABIAL, Consonant.Manner.NASAL, Consonant.Phonation.VOICED, 5),
-            new Consonant("n", Consonant.Place.ALVEOLAR, Consonant.Manner.NASAL, Consonant.Phonation.VOICED, 5),
-            new Consonant("ɲ", Consonant.Place.PALATAL, Consonant.Manner.NASAL, Consonant.Phonation.VOICED, 5),
-            new Consonant("ŋ", Consonant.Place.VELAR, Consonant.Manner.NASAL, Consonant.Phonation.VOICED, 5),
+            new Consonant("m", Consonant.Place.Bilabial, Consonant.Manner.Nasal, Consonant.Phonation.Voiced, 5),
+            new Consonant("n", Consonant.Place.Alveolar, Consonant.Manner.Nasal, Consonant.Phonation.Voiced, 5),
+            new Consonant("ɲ", Consonant.Place.Palatal, Consonant.Manner.Nasal, Consonant.Phonation.Voiced, 5),
+            new Consonant("ŋ", Consonant.Place.Velar, Consonant.Manner.Nasal, Consonant.Phonation.Voiced, 5),
             #endregion
             #region stops
-            new Consonant("p", Consonant.Place.BILABIAL, Consonant.Manner.STOP, Consonant.Phonation.UNVOICED, 9),
-            new Consonant("b", Consonant.Place.BILABIAL, Consonant.Manner.STOP, Consonant.Phonation.VOICED, 8),
-            new Consonant("t", Consonant.Place.ALVEOLAR, Consonant.Manner.STOP, Consonant.Phonation.UNVOICED, 9),
-            new Consonant("d", Consonant.Place.ALVEOLAR, Consonant.Manner.STOP, Consonant.Phonation.VOICED, 8),
-            new Consonant("k", Consonant.Place.VELAR, Consonant.Manner.STOP, Consonant.Phonation.UNVOICED, 9),
-            new Consonant("g", Consonant.Place.VELAR, Consonant.Manner.STOP, Consonant.Phonation.VOICED, 8),
-            new Consonant("ʔ", Consonant.Place.GLOTTAL, Consonant.Manner.STOP, Consonant.Phonation.UNVOICED, 9),
+            new Consonant("p", Consonant.Place.Bilabial, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
+            new Consonant("b", Consonant.Place.Bilabial, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
+            new Consonant("t", Consonant.Place.Alveolar, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
+            new Consonant("d", Consonant.Place.Alveolar, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
+            new Consonant("k", Consonant.Place.Velar, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
+            new Consonant("g", Consonant.Place.Velar, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
+            new Consonant("ʔ", Consonant.Place.Glottal, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
             #endregion
             #region sibilantaffricates
-            new Consonant("t͡s", Consonant.Place.ALVEOLAR, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("d͡z", Consonant.Place.ALVEOLAR, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.VOICED, 6),
-            new Consonant("t͡ʃ", Consonant.Place.PALATOALVEOLAR, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("d͡ʒ", Consonant.Place.PALATOALVEOLAR, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.VOICED, 6),
-            new Consonant("ʈ͡ʂ", Consonant.Place.RETROFLEX, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("ɖ͡ʐ", Consonant.Place.RETROFLEX, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.VOICED, 6),
-            new Consonant("t͡ɕ", Consonant.Place.ALVEOLOPALATAL, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("d͡ʑ", Consonant.Place.ALVEOLOPALATAL, Consonant.Manner.SIBILANTAFFRICATE, Consonant.Phonation.VOICED, 6),
+            new Consonant("t͡s", Consonant.Place.Alveolar, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("d͡z", Consonant.Place.Alveolar, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Voiced, 6),
+            new Consonant("t͡ʃ", Consonant.Place.Palatoalveolar, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("d͡ʒ", Consonant.Place.Palatoalveolar, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Voiced, 6),
+            new Consonant("ʈ͡ʂ", Consonant.Place.Retroflex, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("ɖ͡ʐ", Consonant.Place.Retroflex, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Voiced, 6),
+            new Consonant("t͡ɕ", Consonant.Place.Alveolopalatal, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("d͡ʑ", Consonant.Place.Alveolopalatal, Consonant.Manner.Sibilantaffricate, Consonant.Phonation.Voiced, 6),
             
             #endregion
             #region nonsibilantaffricates
-            new Consonant("t͡θ", Consonant.Place.DENTAL, Consonant.Manner.NONSIBILANTAFFRICATE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("d͡ð", Consonant.Place.DENTAL, Consonant.Manner.NONSIBILANTAFFRICATE, Consonant.Phonation.VOICED, 6),
+            new Consonant("t͡θ", Consonant.Place.Dental, Consonant.Manner.Nonsibilantaffricate, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("d͡ð", Consonant.Place.Dental, Consonant.Manner.Nonsibilantaffricate, Consonant.Phonation.Voiced, 6),
             #endregion
             #region sibilantfricatives
-            new Consonant("s", Consonant.Place.ALVEOLAR, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("z", Consonant.Place.ALVEOLAR, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.VOICED, 6),
-            new Consonant("ʃ", Consonant.Place.PALATAL, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("ʒ", Consonant.Place.PALATAL, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.VOICED, 6),
-            new Consonant("ʂ", Consonant.Place.RETROFLEX, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("ʐ", Consonant.Place.RETROFLEX, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.VOICED, 6),
-            new Consonant("ɕ", Consonant.Place.ALVEOLOPALATAL, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("ʑ", Consonant.Place.ALVEOLOPALATAL, Consonant.Manner.SIBILANTFRICATIVE, Consonant.Phonation.VOICED, 6),         
+            new Consonant("s", Consonant.Place.Alveolar, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("z", Consonant.Place.Alveolar, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Voiced, 6),
+            new Consonant("ʃ", Consonant.Place.Palatal, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("ʒ", Consonant.Place.Palatal, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Voiced, 6),
+            new Consonant("ʂ", Consonant.Place.Retroflex, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("ʐ", Consonant.Place.Retroflex, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Voiced, 6),
+            new Consonant("ɕ", Consonant.Place.Alveolopalatal, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("ʑ", Consonant.Place.Alveolopalatal, Consonant.Manner.Sibilantfricative, Consonant.Phonation.Voiced, 6),         
             #endregion
             #region nonsibilantfricatives
-            new Consonant("f", Consonant.Place.LABIODENTAL, Consonant.Manner.NONSIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("v", Consonant.Place.LABIODENTAL, Consonant.Manner.NONSIBILANTFRICATIVE, Consonant.Phonation.VOICED, 6),
-            new Consonant("θ", Consonant.Place.DENTAL, Consonant.Manner.NONSIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("ð", Consonant.Place.DENTAL, Consonant.Manner.NONSIBILANTFRICATIVE, Consonant.Phonation.VOICED, 6),
-            new Consonant("x", Consonant.Place.VELAR, Consonant.Manner.NONSIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
-            new Consonant("h", Consonant.Place.GLOTTAL, Consonant.Manner.NONSIBILANTFRICATIVE, Consonant.Phonation.UNVOICED, 7),
+            new Consonant("f", Consonant.Place.Labiodental, Consonant.Manner.Nonsibilantfricative, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("v", Consonant.Place.Labiodental, Consonant.Manner.Nonsibilantfricative, Consonant.Phonation.Voiced, 6),
+            new Consonant("θ", Consonant.Place.Dental, Consonant.Manner.Nonsibilantfricative, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("ð", Consonant.Place.Dental, Consonant.Manner.Nonsibilantfricative, Consonant.Phonation.Voiced, 6),
+            new Consonant("x", Consonant.Place.Velar, Consonant.Manner.Nonsibilantfricative, Consonant.Phonation.Unvoiced, 7),
+            new Consonant("h", Consonant.Place.Glottal, Consonant.Manner.Nonsibilantfricative, Consonant.Phonation.Unvoiced, 7),
             #endregion
             #region approximants
-            new Consonant("ʋ", Consonant.Place.LABIODENTAL, Consonant.Manner.APPROXIMANT, Consonant.Phonation.VOICED, 6),
-            new Consonant("ɹ", Consonant.Place.ALVEOLAR, Consonant.Manner.APPROXIMANT, Consonant.Phonation.VOICED, 3),
-            new Consonant("j", Consonant.Place.PALATAL, Consonant.Manner.APPROXIMANT, Consonant.Phonation.VOICED, 2),
-            new Consonant("ʍ", Consonant.Place.LABIALIZEDVELAR, Consonant.Manner.APPROXIMANT, Consonant.Phonation.UNVOICED, 2),
-            new Consonant("w", Consonant.Place.LABIALIZEDVELAR, Consonant.Manner.APPROXIMANT, Consonant.Phonation.VOICED, 2),
+            new Consonant("ʋ", Consonant.Place.Labiodental, Consonant.Manner.Approximant, Consonant.Phonation.Voiced, 6),
+            new Consonant("ɹ", Consonant.Place.Alveolar, Consonant.Manner.Approximant, Consonant.Phonation.Voiced, 3),
+            new Consonant("j", Consonant.Place.Palatal, Consonant.Manner.Approximant, Consonant.Phonation.Voiced, 2),
+            new Consonant("ʍ", Consonant.Place.Labializedvelar, Consonant.Manner.Approximant, Consonant.Phonation.Unvoiced, 2),
+            new Consonant("w", Consonant.Place.Labializedvelar, Consonant.Manner.Approximant, Consonant.Phonation.Voiced, 2),
             #endregion
             #region flap or tap
             #endregion
             #region trills
-            new Consonant("B", Consonant.Place.BILABIAL, Consonant.Manner.TRILL, Consonant.Phonation.VOICED, 3),
-            new Consonant("r", Consonant.Place.ALVEOLAR, Consonant.Manner.TRILL, Consonant.Phonation.VOICED, 3),
-            new Consonant("R", Consonant.Place.UVULAR, Consonant.Manner.TRILL, Consonant.Phonation.VOICED, 3),
+            new Consonant("B", Consonant.Place.Bilabial, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
+            new Consonant("r", Consonant.Place.Alveolar, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
+            new Consonant("R", Consonant.Place.Uvular, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
             #endregion
             #region lateral affricate
             #endregion
@@ -95,32 +93,26 @@ namespace yod.Phonology
             #endregion
 
             #region lateral approximants
-            new Consonant("l", Consonant.Place.ALVEOLAR, Consonant.Manner.LATERALAPPROXIMANT, Consonant.Phonation.VOICED, 4),
-            new Consonant("ʎ", Consonant.Place.PALATAL, Consonant.Manner.LATERALAPPROXIMANT, Consonant.Phonation.VOICED, 4),
+            new Consonant("l", Consonant.Place.Alveolar, Consonant.Manner.Lateralapproximant, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʎ", Consonant.Place.Palatal, Consonant.Manner.Lateralapproximant, Consonant.Phonation.Voiced, 4),
             #endregion
             #region lateral flap
             #endregion
             #endregion
         };
 
-        public static ConsonantCollection AllConsonants
-        {
-            get
-            {
-                return new ConsonantCollection();
-            }
-        }
+        public static ConsonantCollection AllConsonants => new ConsonantCollection();
 
         public static ConsonantCollection DefaultConsonants
         {
             get
             {
-                var c = new ConsonantCollection(new List<Predicate<Consonant>>()
+                var c = new ConsonantCollection(new List<Predicate<Consonant>>
                 {
-                    consonant => (consonant.PlaceOfArticulation != Consonant.Place.DENTAL)
-                    && (consonant.PlaceOfArticulation != Consonant.Place.RETROFLEX)
-                    && (consonant.PlaceOfArticulation != Consonant.Place.ALVEOLOPALATAL)
-                    && (consonant.MannerOfArticulation != Consonant.Manner.TRILL)
+                    consonant => (consonant.PlaceOfArticulation != Consonant.Place.Dental)
+                    && (consonant.PlaceOfArticulation != Consonant.Place.Retroflex)
+                    && (consonant.PlaceOfArticulation != Consonant.Place.Alveolopalatal)
+                    && (consonant.MannerOfArticulation != Consonant.Manner.Trill)
                     && (consonant.Symbol != "ʔ")
                     && (consonant.Symbol != "ʋ")
                 });
@@ -136,13 +128,13 @@ namespace yod.Phonology
         {
             add.ForEach(pred =>
             {
-                this.AddRange(IPAConsonants.Where(c => pred(c)));
+                AddRange(IPAConsonants.Where(c => pred(c)));
             });
         }
 
         public Consonant GetRandom()
         {
-            return this[Globals.Random.Next(this.Count)];
+            return this[Globals.Random.Next(Count)];
         }
 
         public Consonant GetRandomInSonorityRange(int sonorityMin, int sonorityMax)

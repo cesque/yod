@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -11,19 +9,18 @@ namespace yod.Grammar.Structure
 {
     public class Phrase
     {
-        List<string> terminals = "PRON,NOUN,VERB,ADVB,ADJC,CONJ,INTJ,DETM,PREP,RLTV".Split(',').ToList();
-        Dictionary<string, PartOfSpeech> posDict = new Dictionary<string, PartOfSpeech>()
-            {
-                {"PRON", PartOfSpeech.PRONOUN},
-                {"NOUN", PartOfSpeech.NOUN },
-                {"VERB", PartOfSpeech.VERB },
-                {"ADVB", PartOfSpeech.ADVERB },
-                {"ADJC", PartOfSpeech.ADJECTIVE },
-                {"CONJ", PartOfSpeech.CONJUNCTION },
-                {"PREP", PartOfSpeech.PREPOSITION },
-                {"INTJ", PartOfSpeech.INTERJECTION },
-                {"DETM", PartOfSpeech.DETERMINER },
-                {"RLTV", PartOfSpeech.RELATIVIZER }
+        Dictionary<string, PartOfSpeech> posDict = new Dictionary<string, PartOfSpeech>
+        {
+                {"PRON", PartOfSpeech.Pronoun},
+                {"NOUN", PartOfSpeech.Noun },
+                {"VERB", PartOfSpeech.Verb },
+                {"ADVB", PartOfSpeech.Adverb },
+                {"ADJC", PartOfSpeech.Adjective },
+                {"CONJ", PartOfSpeech.Conjunction },
+                {"PREP", PartOfSpeech.Preposition },
+                {"INTJ", PartOfSpeech.Interjection },
+                {"DETM", PartOfSpeech.Determiner },
+                {"RLTV", PartOfSpeech.Relativizer }
             };
         Dictionary<string, List<string>> rules;
 
@@ -59,7 +56,7 @@ namespace yod.Grammar.Structure
         }
         List<Phrase> _phrases;
 
-        int Number = 0;
+        int Number;
 
         public Phrase(string rulesPath, string inputPath)
             : this(JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(File.ReadAllText(rulesPath)),

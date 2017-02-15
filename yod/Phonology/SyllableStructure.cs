@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace yod.Phonology
 {
@@ -12,30 +8,25 @@ namespace yod.Phonology
         public List<SyllableStructureOption> NucleusStructure;
         public List<SyllableStructureOption> CodaStructure;
 
-        public SyllableStructure()
-        {
-
-        }
-
         public int GetOnsetLength()
         {
             var dict = new Dictionary<int, float>();
             OnsetStructure.ForEach(x => dict.Add(x.Length, x.Weight));
-            return Globals.WeightedRandom<int>(dict);
+            return Globals.WeightedRandom(dict);
         }
 
         public int GetNucleusLength()
         {
             var dict = new Dictionary<int, float>();
             NucleusStructure.ForEach(x => dict.Add(x.Length, x.Weight));
-            return Globals.WeightedRandom<int>(dict);
+            return Globals.WeightedRandom(dict);
         }
 
         public int GetCodaLength()
         {
             var dict = new Dictionary<int, float>();
             CodaStructure.ForEach(x => dict.Add(x.Length, x.Weight));
-            return Globals.WeightedRandom<int>(dict);
+            return Globals.WeightedRandom(dict);
         }
 
         public class SyllableStructureOption

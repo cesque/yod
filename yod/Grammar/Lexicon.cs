@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
+using yod.Orthography;
+using yod.Phonology;
 
 namespace yod.Grammar
 {
@@ -32,7 +32,7 @@ namespace yod.Grammar
 
         public void Add(string english, Phonology.Word lemma, PartOfSpeech pos)
         {
-            this.Add(new Lexeme(english, lemma, pos));
+            Add(new Lexeme(english, lemma, pos));
         }
 
         public bool Contains(string english)
@@ -47,34 +47,34 @@ namespace yod.Grammar
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator)this.GetEnumerator();
+            return GetEnumerator();
         }
 
-        public void Fill(List<Tuple<string, PartOfSpeech>> words, Phonology.LanguagePhonology phonology)
+        public void Fill(List<Tuple<string, PartOfSpeech>> words, LanguagePhonology phonology)
         {
             foreach (var tuple in words)
             {
                 var english = tuple.Item1;
                 var pos = tuple.Item2;
 
-                this.Add(english, phonology.GetWord(), pos);
+                Add(english, phonology.GetWord(), pos);
             }
         }
 
-        public void Fill(string filepath, Phonology.LanguagePhonology phonology)
+        public void Fill(string filepath, LanguagePhonology phonology)
         {
-            var posDict = new Dictionary<string, PartOfSpeech>()
+            var posDict = new Dictionary<string, PartOfSpeech>
             {
-                {"PRON", PartOfSpeech.PRONOUN},
-                {"NOUN", PartOfSpeech.NOUN },
-                {"VERB", PartOfSpeech.VERB },
-                {"ADVB", PartOfSpeech.ADVERB },
-                {"ADJC", PartOfSpeech.ADJECTIVE },
-                {"CONJ", PartOfSpeech.CONJUNCTION },
-                {"PREP", PartOfSpeech.PREPOSITION },
-                {"INTJ", PartOfSpeech.INTERJECTION },
-                {"DETM", PartOfSpeech.DETERMINER },
-                {"RLTV", PartOfSpeech.RELATIVIZER }
+                {"PRON", PartOfSpeech.Pronoun},
+                {"NOUN", PartOfSpeech.Noun },
+                {"VERB", PartOfSpeech.Verb },
+                {"ADVB", PartOfSpeech.Adverb },
+                {"ADJC", PartOfSpeech.Adjective },
+                {"CONJ", PartOfSpeech.Conjunction },
+                {"PREP", PartOfSpeech.Preposition },
+                {"INTJ", PartOfSpeech.Interjection },
+                {"DETM", PartOfSpeech.Determiner },
+                {"RLTV", PartOfSpeech.Relativizer }
             };
 
             var words = new List<Tuple<string, PartOfSpeech>>();
@@ -97,23 +97,23 @@ namespace yod.Grammar
                 }
             }
 
-            this.Fill(words, phonology);
+            Fill(words, phonology);
         }
 
         public override string ToString()
         {
-            var posDict = new Dictionary<PartOfSpeech, string>()
+            var posDict = new Dictionary<PartOfSpeech, string>
             {
-                   { PartOfSpeech.NOUN, "n" },
-                   { PartOfSpeech.VERB, "v" },
-                   { PartOfSpeech.PRONOUN, "pron" },
-                   { PartOfSpeech.ADVERB, "adv" },
-                   { PartOfSpeech.ADJECTIVE, "adj" },
-                   { PartOfSpeech.PREPOSITION, "prep" },
-                   { PartOfSpeech.CONJUNCTION, "conj" },
-                   { PartOfSpeech.INTERJECTION, "intj" },
-                   { PartOfSpeech.DETERMINER, "art" },
-                   { PartOfSpeech.RELATIVIZER, "rel" }
+                   { PartOfSpeech.Noun, "n" },
+                   { PartOfSpeech.Verb, "v" },
+                   { PartOfSpeech.Pronoun, "pron" },
+                   { PartOfSpeech.Adverb, "adv" },
+                   { PartOfSpeech.Adjective, "adj" },
+                   { PartOfSpeech.Preposition, "prep" },
+                   { PartOfSpeech.Conjunction, "conj" },
+                   { PartOfSpeech.Interjection, "intj" },
+                   { PartOfSpeech.Determiner, "art" },
+                   { PartOfSpeech.Relativizer, "rel" }
             };
 
             var s = "";
@@ -122,7 +122,7 @@ namespace yod.Grammar
             foreach (var w in this)
             {
                 var lDiff = w.Lemma.ToString().Length - Globals.StripTies(w.Lemma.ToString()).Length;
-                s += (w.Lemma.ToString() + " (" + posDict[w.POS] + ")").PadRight(maxIpa + lDiff + 8);
+                s += (w.Lemma + " (" + posDict[w.POS] + ")").PadRight(maxIpa + lDiff + 8);
                 s += ": ";
                 s += w.English;
                 s += Environment.NewLine;
@@ -131,20 +131,20 @@ namespace yod.Grammar
             return s;
         }
 
-        public string ToString(Orthography.LanguageOrthography orthography)
+        public string ToString(LanguageOrthography orthography)
         {
-            var posDict = new Dictionary<PartOfSpeech, string>()
+            var posDict = new Dictionary<PartOfSpeech, string>
             {
-                   { PartOfSpeech.NOUN, "n" },
-                   { PartOfSpeech.VERB, "v" },
-                   { PartOfSpeech.PRONOUN, "pron" },
-                   { PartOfSpeech.ADVERB, "adv" },
-                   { PartOfSpeech.ADJECTIVE, "adj" },
-                   { PartOfSpeech.PREPOSITION, "prep" },
-                   { PartOfSpeech.CONJUNCTION, "conj" },
-                   { PartOfSpeech.INTERJECTION, "intj" },
-                   { PartOfSpeech.DETERMINER, "art" },
-                   { PartOfSpeech.RELATIVIZER, "rel" }
+                   { PartOfSpeech.Noun, "n" },
+                   { PartOfSpeech.Verb, "v" },
+                   { PartOfSpeech.Pronoun, "pron" },
+                   { PartOfSpeech.Adverb, "adv" },
+                   { PartOfSpeech.Adjective, "adj" },
+                   { PartOfSpeech.Preposition, "prep" },
+                   { PartOfSpeech.Conjunction, "conj" },
+                   { PartOfSpeech.Interjection, "intj" },
+                   { PartOfSpeech.Determiner, "art" },
+                   { PartOfSpeech.Relativizer, "rel" }
             };
 
             var s = "";
@@ -154,7 +154,7 @@ namespace yod.Grammar
             foreach (var w in this)
             {
                 var lDiff = w.Lemma.ToString().Length - Globals.StripTies(w.Lemma.ToString()).Length;
-                s += (orthography.Orthographize(w.Lemma) + " /" + w.Lemma.ToString() + "/ (" + posDict[w.POS] + ")").PadRight(maxIpa + maxOrth + lDiff + 8);
+                s += (orthography.Orthographize(w.Lemma) + " /" + w.Lemma + "/ (" + posDict[w.POS] + ")").PadRight(maxIpa + maxOrth + lDiff + 8);
                 s += ": ";
                 s += w.English;
                 s += Environment.NewLine;

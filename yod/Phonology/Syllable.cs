@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace yod.Phonology
 {
     public class Syllable
     {
-        internal LanguagePhonology language;
-        internal SyllableStructure structure;
+        LanguagePhonology language;
+        SyllableStructure structure;
         public List<Phoneme> Phonemes;
 
         public Syllable(Syllable syllable)
@@ -19,8 +16,8 @@ namespace yod.Phonology
             Phonemes = new List<Phoneme>();
             syllable.Phonemes.ForEach(x =>
             {
-                Phonemes.Add(x.Type == Phoneme.PhonemeType.CONSONANT
-                    ? (Phoneme)new Consonant((Consonant) x)
+                Phonemes.Add(x.Type == Phoneme.PhonemeType.Consonant
+                    ? new Consonant((Consonant) x)
                     : (Phoneme)new Vowel((Vowel) x));
             });
         }

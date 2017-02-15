@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using yod.Phonology;
 
 namespace yod.Orthography
@@ -13,7 +9,7 @@ namespace yod.Orthography
         public Dictionary<string, string> Rules;
         LanguagePhonology language;
 
-        public static readonly Dictionary<string, string> DefaultOrthography = new Dictionary<string, string>()
+        public static readonly Dictionary<string, string> DefaultOrthography = new Dictionary<string, string>
         {
             #region rules
             { "m", "m" },
@@ -69,7 +65,7 @@ namespace yod.Orthography
             #endregion
         };
 
-        public static readonly Dictionary<string, string> CroatianOrthography = new Dictionary<string, string>()
+        public static readonly Dictionary<string, string> CroatianOrthography = new Dictionary<string, string>
         {
             #region rules
 	        { "a", "a" },

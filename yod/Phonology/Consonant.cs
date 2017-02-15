@@ -1,53 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace yod.Phonology
+﻿namespace yod.Phonology
 {
     public class Consonant : Phoneme
     {
         public enum Place
         {
-            BILABIAL,
-            LABIODENTAL,
-            LINGUOLABIAL,
-            DENTAL,
-            ALVEOLAR,
-            PALATOALVEOLAR,
-            RETROFLEX,
-            ALVEOLOPALATAL,
-            PALATAL,
-            VELAR,
-            UVULAR,
-            PHARYNGEAL,
-            GLOTTAL,
+            Bilabial,
+            Labiodental,
+            Linguolabial,
+            Dental,
+            Alveolar,
+            Palatoalveolar,
+            Retroflex,
+            Alveolopalatal,
+            Palatal,
+            Velar,
+            Uvular,
+            Pharyngeal,
+            Glottal,
 
-            LABIALIZEDVELAR
+            Labializedvelar
         }
 
         public enum Manner
         {
-            NASAL,
-            STOP,
-            SIBILANTAFFRICATE,
-            NONSIBILANTAFFRICATE,
-            SIBILANTFRICATIVE,
-            NONSIBILANTFRICATIVE,
-            APPROXIMANT,
-            FLAPORTAP,
-            TRILL,
-            LATERALAFFRICATE,
-            LATERALFRICATIVE,
-            LATERALAPPROXIMANT,
-            LATERALFLAP,
+            Nasal,
+            Stop,
+            Sibilantaffricate,
+            Nonsibilantaffricate,
+            Sibilantfricative,
+            Nonsibilantfricative,
+            Approximant,
+            Flaportap,
+            Trill,
+            Lateralaffricate,
+            Lateralfricative,
+            Lateralapproximant,
+            Lateralflap
         }
 
         public enum Phonation
         {
-            VOICED,
-            UNVOICED
+            Voiced,
+            Unvoiced
         }
 
         public Place PlaceOfArticulation;
@@ -56,7 +50,7 @@ namespace yod.Phonology
 
         public Consonant(Consonant consonant)
         {
-            Type = PhonemeType.CONSONANT;
+            Type = PhonemeType.Consonant;
             PlaceOfArticulation = consonant.PlaceOfArticulation;
             MannerOfArticulation = consonant.MannerOfArticulation;
             Voicing = consonant.Voicing;
@@ -70,7 +64,7 @@ namespace yod.Phonology
             PlaceOfArticulation = place;
             MannerOfArticulation = manner;
             Voicing = voiced;
-            Type = PhonemeType.CONSONANT;
+            Type = PhonemeType.Consonant;
             Sonority = sonority;
         }
     }

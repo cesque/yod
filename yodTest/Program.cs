@@ -1,21 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Diagnostics;
-
-using Newtonsoft.Json;
-
-using yod;
-using yod.Phonology;
-using yod.Orthography;
-using yod.Grammar;
-using yod.Grammar.Structure;
-
-namespace yodTest
+﻿namespace yodTest
 {
     class Program
     {
