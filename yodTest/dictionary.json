@@ -1,0 +1,78 @@
+﻿{
+	"words": {
+		"PRON": [
+			"i",
+			"she",
+			"he",
+			"we",
+			"you"
+		],
+		"NOUN": [
+			"dog",
+			"cat",
+			"human",
+			"book",
+			"house",
+			"ball",
+			"birthday"
+		],
+		"VERB": [
+			"be",
+			"see",
+			"own",
+			"like",
+			"love",
+			"dislike",
+			"hate"
+		],
+		"ADVB": [
+			"quickly",
+			"really",
+			"slowly",
+			"usually",
+			"also"
+		],
+		"ADJC": [
+			"big",
+			"small",
+			"red",
+			"blue",
+			"old",
+			"young",
+			"good",
+			"bad",
+			"happy",
+			"sad",
+			"dear"
+		],
+		"CONJ": [
+			"and",
+			"but",
+			"because",
+			"so"
+		],
+		"INTJ": [
+			"alas",
+			"hello",
+			"goodbye",
+			"lo"
+		],
+		"DETM": [
+			"the",
+			"a",
+			"this",
+			"that"
+		],
+		"PREP": [
+			"on",
+			"in",
+			"with",
+			"outside",
+			"to",
+			"from"
+		],
+		"RLTV": [
+			"that"
+		]
+	}
+}

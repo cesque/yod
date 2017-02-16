@@ -8,6 +8,7 @@ namespace yod.Phonology
         public SyllableStructure SyllableStructure;
         public PhonemeCollection Phonemes;
 
+        // todo: choose random onset and coda consonants
         public List<Consonant> OnsetConsonants;
         public List<Consonant> CodaConsonants;
 

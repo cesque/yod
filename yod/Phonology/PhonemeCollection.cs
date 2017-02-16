@@ -24,6 +24,8 @@ namespace yod.Phonology
             Vowels = VowelCollection.AllVowels;
         }
 
+        // todo: choose random phonemes
+
         public PhonemeCollection(List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd)
         {
             Consonants = new ConsonantCollection(consonantsToAdd);

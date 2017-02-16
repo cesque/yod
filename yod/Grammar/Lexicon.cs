@@ -80,6 +80,8 @@ namespace yod.Grammar
             var words = new List<Tuple<string, PartOfSpeech>>();
 
             // todo: load lexicon from json file instead of text file
+            // todo: make list of common words
+            // todo: make list of similar words
             var lines = File.ReadAllLines(filepath).ToList();
             foreach (var line in lines)
             {

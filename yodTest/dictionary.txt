@@ -10,6 +10,7 @@ NOUN: human
 NOUN: book
 NOUN: house
 NOUN: ball
+NOUN: birthday
 
 VERB: own
 VERB: see
@@ -29,6 +30,10 @@ ADJC: red
 ADJC: blue
 ADJC: old
 ADJC: young
+ADJC: good
+ADJC: bad
+ADJC: happy
+ADJC: dear
 
 CONJ: and
 CONJ: but
@@ -50,5 +55,6 @@ PREP: in
 PREP: with
 PREP: outside
 PREP: inside
+PREP: to
 
 RLTV: that
