@@ -53,7 +53,7 @@ namespace yodTest
             //var s = "";
 
             lexicon = new Lexicon();
-            lexicon.Fill("./dictionary.txt", phonology);
+            lexicon.Fill("./dictionary.json", phonology);
         }
 
         public string TestPhrase()
