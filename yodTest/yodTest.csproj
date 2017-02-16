@@ -71,9 +71,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dictionary.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="rules.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -12,6 +12,7 @@ namespace yod.Phonology
         public List<Consonant> OnsetConsonants;
         public List<Consonant> CodaConsonants;
 
+        // todo: allow for weighted word lengths
         public int WordLengthMin = 1;
         public int WordLengthMax = 3;
 
@@ -75,6 +76,11 @@ namespace yod.Phonology
         public Word GetWord()
         {
             return new Word(this);
+        }
+
+        public Word GetWord(int syllableLength)
+        {
+            return new Word(this, syllableLength);
         }
 
         public static int GetCharacterLength(string s)

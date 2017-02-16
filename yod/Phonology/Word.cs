@@ -17,16 +17,27 @@ namespace yod.Phonology
             w.Syllables.ForEach(x => Syllables.Add(new Syllable(x)));
         }
 
-        public Word(LanguagePhonology l)
+        public Word(LanguagePhonology language)
         {
-            language = l;
+            this.language = language;
             Generate();
+        }
+
+        public Word(LanguagePhonology language, int syllableLength)
+        {
+            this.language = language;
+            Generate(syllableLength);
         }
 
         public void Generate()
         {
-            Syllables = new List<Syllable>();
             var syllableLength = language.WordLengthMin + Globals.Random.Next(language.WordLengthMax - language.WordLengthMin);
+            Generate(syllableLength);
+        }
+
+        public void Generate(int syllableLength)
+        {
+            Syllables = new List<Syllable>();
             for (var i = 0; i < syllableLength; i++)
             {
                 var syl = new Syllable(language);
