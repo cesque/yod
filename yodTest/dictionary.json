@@ -46,6 +46,7 @@
 			"dear"
 		],
 		"CONJ": [
+			"or",
 			"and",
 			"but",
 			"because",
@@ -70,6 +71,49 @@
 			"outside",
 			"to",
 			"from"
+		],
+		"RLTV": [
+			"that"
+		]
+	},
+	"common": {
+		"PRON": [
+			"i",
+			"she",
+			"he",
+			"we",
+			"you"
+		],
+		"NOUN": [
+
+		],
+		"VERB": [
+			"be",
+		],
+		"ADVB": [
+
+		],
+		"ADJC": [
+
+		],
+		"CONJ": [
+			"or",
+			"and",
+			"but",
+			"because",
+			"so"
+		],
+		"INTJ": [
+
+		],
+		"DETM": [
+			"the",
+			"a",
+			"this",
+			"that"
+		],
+		"PREP": [
+
 		],
 		"RLTV": [
 			"that"

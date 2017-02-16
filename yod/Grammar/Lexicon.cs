@@ -49,14 +49,28 @@ namespace yod.Grammar
             return GetEnumerator();
         }
 
-        public void Fill(List<Tuple<string, PartOfSpeech>> words, LanguagePhonology phonology)
+        public void Fill(Dictionary<PartOfSpeech, List<string>> words, LanguagePhonology phonology)
         {
-            foreach (var tuple in words)
-            {
-                var english = tuple.Item1;
-                var pos = tuple.Item2;
+            Fill(words, new Dictionary<PartOfSpeech, List<string>>(), phonology);
+        }
 
-                Add(english, phonology.GetWord(), pos);
+        public void Fill(Dictionary<PartOfSpeech, List<string>> words,
+            Dictionary<PartOfSpeech, List<string>> commonWords,
+            LanguagePhonology phonology)
+        {
+            foreach (var pair in words)
+            {
+                foreach (var word in pair.Value)
+                {
+                    if (commonWords.ContainsKey(pair.Key) && commonWords[pair.Key].Contains(word))
+                    {
+                        Add(word, new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin), pair.Key);
+                    }
+                    else
+                    {
+                        Add(word, new Phonology.Word(phonology), pair.Key);
+                    }
+                }
             }
         }
 
@@ -76,24 +90,35 @@ namespace yod.Grammar
                 {"RLTV", PartOfSpeech.Relativizer}
             };
 
-            var words = new List<Tuple<string, PartOfSpeech>>();
-
-            // todo: make list of common words
+            var words = new Dictionary<PartOfSpeech, List<String>>();
             // todo: make list of similar words
 
             var jobj = JObject.Parse(File.ReadAllText(filepath));
-            var partsofspeech = (JObject)jobj.Value<JToken>("words");
+            var partsofspeech = (JObject) jobj.Value<JToken>("words");
+
+            // a bit hacky...
+            var commonwords = (JObject) jobj.Value<JToken>("common");
+            var commonDict = new Dictionary<PartOfSpeech, List<string>>();
+            posDict.Values.ToList().ForEach(x => commonDict.Add(x, new List<string>()));
+            foreach (var posString in commonwords)
+            {
+                var pos = posDict[posString.Key];
+                var list = posString.Value.Values<string>().ToList();
+                list.ForEach(x => { commonDict[pos].Add(x); });
+            }
+
             foreach (var posString in partsofspeech)
             {
                 var pos = posDict[posString.Key];
                 var wordList = posString.Value;
                 wordList.Values<string>().ToList().ForEach(w =>
                 {
-                    words.Add(new Tuple<string, PartOfSpeech>(w, pos));
+                    if (!words.ContainsKey(pos)) words.Add(pos, new List<string>());
+                    words[pos].Add(w);
                 });
             }
 
-            Fill(words, phonology);
+            Fill(words, commonDict, phonology);
         }
 
         public override string ToString()
