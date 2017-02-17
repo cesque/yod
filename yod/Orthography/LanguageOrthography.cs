@@ -62,6 +62,7 @@ namespace yod.Orthography
             { "i", "i" },
             { "o", "o" },
             { "u", "u" },
+            { "ə", "e" },
             #endregion
         };
 
