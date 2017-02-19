@@ -30,7 +30,7 @@ namespace yod.Grammar
 
         public void Inflect(Inflection inflection)
         {
-            if (POS == inflection.POS && Tags.Contains(inflection.Tag))
+            if (POS == inflection.POS && inflection.Tags.All(x => Tags.Contains(x)))
             {
                 Inflected = new Phonology.Word(Lemma);
                 Inflected.Syllables.Add(inflection.Suffix);
