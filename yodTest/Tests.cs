@@ -33,7 +33,7 @@ namespace yodTest
                 },
                 CodaStructure = new List<SyllableStructure.SyllableStructureOption>
                 {
-                    new SyllableStructure.SyllableStructureOption(0, 0.3f),
+                    new SyllableStructure.SyllableStructureOption(0, 0.7f),
                     new SyllableStructure.SyllableStructureOption(1, 0.7f)
                 }
             };
