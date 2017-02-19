@@ -129,7 +129,6 @@ namespace yod.Grammar
             };
 
             var words = new Dictionary<PartOfSpeech, List<String>>();
-            // todo: make list of similar words
 
             var jobj = JObject.Parse(File.ReadAllText(filepath));
             var partsofspeech = (JObject) jobj.Value<JToken>("words");

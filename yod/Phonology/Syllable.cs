@@ -153,7 +153,6 @@ namespace yod.Phonology
             Coda = GetCoda();
         }
 
-        // todo: add compare
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType()) return false;
