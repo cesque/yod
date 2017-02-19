@@ -118,11 +118,19 @@ namespace yodTest
         {
             var s = "";
 
-            s += TestPhrase();
-            s += Environment.NewLine + Environment.NewLine;
-            s += TestInflectedPhrase();
-            s += Environment.NewLine + Environment.NewLine;
-            s += TestLexiconOrthographized();
+            var tests = new List<Func<string>>
+            {
+                TestPhrase,
+                TestInflectedPhrase,
+                TestLexiconOrthographized
+            };
+
+            tests.ForEach(test =>
+            {
+                s += test();
+                s += Environment.NewLine + Environment.NewLine;
+            });
+            
 
             File.WriteAllText("./output.txt", s);
             Process.Start("notepad.exe", "./output.txt");

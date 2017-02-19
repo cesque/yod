@@ -138,5 +138,22 @@ namespace yod.Phonology
         {
             // todo: randomly pick how to morph syllable
         }
+
+        public void MorphOnset()
+        {
+            Onset = GetOnset();
+        }
+
+        public void MorphNucleus()
+        {
+            Nucleus = GetNucleus();
+        }
+
+        public void MorphCoda()
+        {
+            Coda = GetCoda();
+        }
+
+        // todo: add compare
     }
 }

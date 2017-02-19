@@ -51,18 +51,45 @@ namespace yod.Grammar
 
         public void Fill(Dictionary<PartOfSpeech, List<string>> words, LanguagePhonology phonology)
         {
-            Fill(words, new Dictionary<PartOfSpeech, List<string>>(), phonology);
+            Fill(words, null, null, phonology);
         }
 
         public void Fill(Dictionary<PartOfSpeech, List<string>> words,
             Dictionary<PartOfSpeech, List<string>> commonWords,
+            Dictionary<string, Tuple<PartOfSpeech, string>> relatedWords,
             LanguagePhonology phonology)
         {
+            commonWords = commonWords ?? new Dictionary<PartOfSpeech, List<string>>();
+            relatedWords = relatedWords ?? new Dictionary<string, Tuple<PartOfSpeech, string>>();
+
+            var baseWords = new Dictionary<string, Phonology.Word>();
+            foreach (var kp in relatedWords)
+            {
+                var word = kp.Key;
+                var pos = kp.Value.Item1;
+                var group = kp.Value.Item2;
+
+                var common = commonWords.ContainsKey(pos) && commonWords[pos].Contains(word);
+
+                var baseWord = common
+                    ? new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin)
+                    : new Phonology.Word(phonology);
+
+                if(!baseWords.ContainsKey(group)) baseWords.Add(group, baseWord);
+            }
+
             foreach (var pair in words)
             {
                 foreach (var word in pair.Value)
                 {
-                    if (commonWords.ContainsKey(pair.Key) && commonWords[pair.Key].Contains(word))
+                    if (relatedWords.ContainsKey(word) && relatedWords[word].Item1 == pair.Key)
+                    {
+                        var group = relatedWords[word].Item2;
+                        var w = new Phonology.Word(baseWords[group]);
+                        w.Syllables.Last().MorphCoda();
+                        Add(word, w, pair.Key);
+                    }
+                    else if (commonWords.ContainsKey(pair.Key) && commonWords[pair.Key].Contains(word))
                     {
                         Add(word, new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin), pair.Key);
                     }
@@ -107,6 +134,19 @@ namespace yod.Grammar
                 list.ForEach(x => { commonDict[pos].Add(x); });
             }
 
+            // 
+            var relatedwords = (JObject) jobj.Value<JToken>("related");
+            var relatedDict = new Dictionary<string, Tuple<PartOfSpeech, string>>();
+            foreach (var group in relatedwords)
+            {
+                foreach (var posString in (JObject) group.Value)
+                {
+                    var pos = posDict[posString.Key];
+                    var list = posString.Value.Values<string>().ToList();
+                    list.ForEach(x => { relatedDict.Add(x, new Tuple<PartOfSpeech, string>(pos, group.Key)); });
+                }
+            }
+
             foreach (var posString in partsofspeech)
             {
                 var pos = posDict[posString.Key];
@@ -118,7 +158,7 @@ namespace yod.Grammar
                 });
             }
 
-            Fill(words, commonDict, phonology);
+            Fill(words, commonDict, relatedDict, phonology);
         }
 
         public override string ToString()

@@ -118,5 +118,13 @@
 		"RLTV": [
 			"that"
 		]
+	},
+	"related": {
+		"3rd person singular pronouns": {
+			"PRON": ["she","he"]
+		},
+		"demonstrative articles": {
+			"DETM": ["this","that"]
+		}
 	}
 }
