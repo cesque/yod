@@ -75,29 +75,40 @@ namespace yod.Grammar
                     ? new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin)
                     : new Phonology.Word(phonology);
 
-                if(!baseWords.ContainsKey(group)) baseWords.Add(group, baseWord);
+                if (!baseWords.ContainsKey(group)) baseWords.Add(group, baseWord);
             }
 
             foreach (var pair in words)
             {
                 foreach (var word in pair.Value)
                 {
-                    if (relatedWords.ContainsKey(word) && relatedWords[word].Item1 == pair.Key)
-                    {
-                        var group = relatedWords[word].Item2;
-                        var w = new Phonology.Word(baseWords[group]);
-                        w.Syllables.Last().MorphCoda();
-                        Add(word, w, pair.Key);
-                    }
-                    else if (commonWords.ContainsKey(pair.Key) && commonWords[pair.Key].Contains(word))
-                    {
-                        Add(word, new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin), pair.Key);
-                    }
-                    else
-                    {
-                        Add(word, new Phonology.Word(phonology), pair.Key);
-                    }
+                    var w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
+                    while(Lexemes.Exists(x => x.Lemma.Equals(w))) w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
+                    Add(word, w, pair.Key);
                 }
+            }
+        }
+
+        Phonology.Word GenerateWordToAdd(string word, PartOfSpeech pos,
+            Dictionary<PartOfSpeech, List<string>> commonWords,
+            Dictionary<string, Tuple<PartOfSpeech, string>> relatedWords,
+            Dictionary<string, Phonology.Word> baseWords,
+            LanguagePhonology phonology)
+        {
+            if (relatedWords.ContainsKey(word) && relatedWords[word].Item1 == pos)
+            {
+                var group = relatedWords[word].Item2;
+                var w = new Phonology.Word(baseWords[group]);
+                w.Syllables.Last().MorphCoda();
+                return w;
+            }
+            else if (commonWords.ContainsKey(pos) && commonWords[pos].Contains(word))
+            {
+                return new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin);
+            }
+            else
+            {
+                return new Phonology.Word(phonology);
             }
         }
 

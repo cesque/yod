@@ -8,7 +8,6 @@ namespace yod.Phonology
         LanguagePhonology language;
         SyllableStructure structure;
 
-
         public List<Phoneme> Onset, Nucleus, Coda;
 
         public List<Phoneme> Phonemes => new List<Phoneme>()
@@ -155,5 +154,31 @@ namespace yod.Phonology
         }
 
         // todo: add compare
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType()) return false;
+
+            var syllable = (Syllable) obj;
+
+            if (Onset.Count != syllable.Onset.Count) return false;
+            for (var i = 0; i < Onset.Count; i++)
+            {
+                if (!Onset[i].Equals(syllable.Onset[i])) return false;
+            }
+
+            if (Nucleus.Count != syllable.Nucleus.Count) return false;
+            for (var i = 0; i < Nucleus.Count; i++)
+            {
+                if (!Nucleus[i].Equals(syllable.Nucleus[i])) return false;
+            }
+
+            if (Coda.Count != syllable.Coda.Count) return false;
+            for (var i = 0; i < Coda.Count; i++)
+            {
+                if (!Coda[i].Equals(syllable.Coda[i])) return false;
+            }
+
+            return true;
+        }
     }
 }

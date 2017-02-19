@@ -59,5 +59,17 @@ namespace yod.Phonology
             Syllables.ForEach(x => s += x.ToString());
             return s;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType()) return false;
+            var word = (Word) obj;
+            if (word.SyllableLength != SyllableLength) return false;
+            for (var i = 0; i < SyllableLength; i++)
+            {
+                if (!word.Syllables[i].Equals(Syllables[i])) return false;
+            }
+            return true;
+        }
     }
 }
