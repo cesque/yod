@@ -32,11 +32,12 @@ namespace yod.Grammar
         {
             if (POS == inflection.POS && inflection.Tags.All(x => Tags.Contains(x)))
             {
-                Inflected = new Phonology.Word(Lemma);
-                Inflected.Syllables.Add(inflection.Suffix);
+                if(Inflected == null) Inflected = new Phonology.Word(Lemma);
+                if(inflection.Suffix != null) Inflected.Syllables.Add(inflection.Suffix);
             }
         }
 
+        // todo: handle inflection heirarchy in better way
         public void Inflect(List<Inflection> inflections)
         {
             inflections.ForEach(Inflect);

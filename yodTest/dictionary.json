@@ -14,7 +14,12 @@
 			"book",
 			"house",
 			"ball",
-			"birthday"
+			"birthday",
+			"name",
+			"today",
+			"yesterday",
+			"tomorrow",
+			"Daniel"
 		],
 		"VERB": [
 			"be",

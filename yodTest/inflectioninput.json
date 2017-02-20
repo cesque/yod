@@ -1,0 +1,21 @@
+﻿{
+	"S": {
+		"NP": {
+			"PRON": { "word": "i", "tags": "1,SG,SBJ" }
+		},
+		"VP": {
+			"VERB": { "word": "love", "tags": "1,SG,PRS" },
+			"NP": {
+				"PS": {
+					"PRON": { "word": "i", "tags": "1,SG,OBJ,GEN" }
+				},
+				"NN": {
+					"ADJC": { "word": "big", "tags": "SBJ" },
+					"NN": {
+						"NOUN": { "word": "dog", "tags": "3,SG,OBJ" }
+					}
+				}
+			}
+		}
+	}
+}

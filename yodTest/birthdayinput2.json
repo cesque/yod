@@ -1,0 +1,20 @@
+﻿{
+	"S": {
+		"NP": {
+			"NN": {
+				"NOUN": { "word": "today", "tags": "SG,SBJ" }
+			}
+		},
+		"VP": {
+			"VERB": { "word": "be", "tags": "PRS" },
+			"NP": {
+				"PS": {
+					"NOUN": { "word": "Daniel", "tags": "3,SG,OBJ,GEN" }
+				},
+				"NN": {
+					"NOUN": { "word": "birthday", "tags": "3,SG,OBJ" }
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,18 @@
+﻿{
+	"NP": {
+		"NP": {
+			"NN": {
+				"ADJC": {"word": "happy", "tags": "1,SG,OBJ"},
+				"NN": {
+					"NOUN": { "word": "birthday", "tags": "2,SG,OBJ" }
+				}
+			}
+		},
+		"PP": {
+			"PREP": {"word": "to", "tags": ""},
+			"NP": {
+				"PRON": {"word": "you", "tags": "2,SG,OBJ"}
+			}
+		}
+	}
+}

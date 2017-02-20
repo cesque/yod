@@ -19,7 +19,7 @@ namespace yodTest
 
         public Tests()
         {
-            Globals.SeedRandom(3);
+            Globals.SeedRandom(100);
 
             var syllableStructure = new SyllableStructure
             {
@@ -39,7 +39,7 @@ namespace yodTest
             };
 
 
-            phonology = new LanguagePhonology(syllableStructure);//new Language(syllableStructure);
+            phonology = new LanguagePhonology(syllableStructure); //new Language(syllableStructure);
             orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, phonology);
             phonology.WordLengthMin = 1;
             phonology.WordLengthMax = 3;
@@ -58,7 +58,7 @@ namespace yodTest
 
         public string TestPhrase()
         {
-            Phrase phrase = new Phrase("./rules.json", "./input.json");
+            Phrase phrase = new Phrase("./rules3.json", "./inflectioninput.json");
             phrase.Fill(lexicon);
 
             var flattened = phrase.Flatten();
@@ -76,7 +76,7 @@ namespace yodTest
 
         public string TestInflectedPhrase()
         {
-            Phrase phrase = new Phrase("./rules.json", "./input.json");
+            Phrase phrase = new Phrase("./rules3.json", "./inflectioninput.json");
             phrase.Fill(lexicon);
 
             var subjectSyllable = phonology.GetSyllable();
@@ -84,10 +84,10 @@ namespace yodTest
 
             List<Inflection> inflections = new List<Inflection>
             {
-                new Inflection(phonology, PartOfSpeech.Noun, "SBJ") { Suffix = subjectSyllable },
-                new Inflection(phonology, PartOfSpeech.Noun, "OBJ") { Suffix = objectSyllable },
-                new Inflection(phonology, PartOfSpeech.Pronoun, "SBJ") { Suffix = subjectSyllable },
-                new Inflection(phonology, PartOfSpeech.Pronoun, "OBJ") { Suffix = objectSyllable }
+                new Inflection(phonology, PartOfSpeech.Noun, "GEN"),
+                new Inflection(phonology, PartOfSpeech.Noun, "OBJ"),
+                new Inflection(phonology, PartOfSpeech.Pronoun, "GEN"),
+                new Inflection(phonology, PartOfSpeech.Pronoun, "OBJ"),
             };
 
             phrase.InflectAll(inflections);
@@ -114,12 +114,50 @@ namespace yodTest
             return lexicon.ToString(orthography);
         }
 
+
+        public string TestBirthday()
+        {
+            Phrase birthday1 = new Phrase("./rules3.json", "./birthdayinput1.json");
+            Phrase birthday2 = new Phrase("./rules3.json", "./birthdayinput2.json");
+
+            birthday1.Fill(lexicon);
+            birthday2.Fill(lexicon);
+
+            List<Inflection> inflections = new List<Inflection>
+            {
+                new Inflection(phonology, PartOfSpeech.Noun, "OBJ"),
+                new Inflection(phonology, PartOfSpeech.Noun, "SBJ"),
+                new Inflection(phonology, PartOfSpeech.Pronoun, "SBJ"),
+                new Inflection(phonology, PartOfSpeech.Pronoun, "SBJ"),
+                new Inflection(phonology, PartOfSpeech.Pronoun, "GEN"),
+                new Inflection(phonology, PartOfSpeech.Noun, "GEN"),
+            };
+
+            birthday1.InflectAll(inflections);
+            birthday2.InflectAll(inflections);
+
+            var flattened1 = birthday1.Flatten();
+            var flattened2 = birthday2.Flatten();
+
+            var line1 = String.Join(" ", flattened1.Select(x => x.Inflected.ToString()));
+            var line2 = String.Join(" ", flattened2.Select(x => x.Inflected.ToString()));
+
+            var s = "";
+            s += line1 + Environment.NewLine;
+            s += line1 + Environment.NewLine;
+            s += line2 + Environment.NewLine;
+            s += line1 + Environment.NewLine;
+            return s;
+        }
+
         public void Run()
         {
             var s = "";
 
             var tests = new List<Func<string>>
             {
+                TestBirthday,
+
                 TestPhrase,
                 TestInflectedPhrase,
                 TestLexiconOrthographized
@@ -130,7 +168,7 @@ namespace yodTest
                 s += test();
                 s += Environment.NewLine + Environment.NewLine;
             });
-            
+
 
             File.WriteAllText("./output.txt", s);
             Process.Start("notepad.exe", "./output.txt");
