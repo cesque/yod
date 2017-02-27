@@ -19,7 +19,7 @@ namespace yodTest
 
         public Tests()
         {
-            Globals.SeedRandom(100);
+            Globals.SeedRandom(4);
 
             var syllableStructure = new SyllableStructure
             {

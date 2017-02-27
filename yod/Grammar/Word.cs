@@ -26,6 +26,7 @@ namespace yod.Grammar
         public Word(string lemma, PartOfSpeech pos, string tags) : this(lemma, pos)
         {
             Tags = tags.Split(',').ToList();
+            Tags.RemoveAll(x => x.Trim().Length == 0);
         }
 
         public void Inflect(Inflection inflection)
@@ -40,7 +41,13 @@ namespace yod.Grammar
         // todo: handle inflection heirarchy in better way
         public void Inflect(List<Inflection> inflections)
         {
-            inflections.ForEach(Inflect);
+            // get the specificity of the highest applicable inflection
+            var applicableInflections = inflections.Where(x => x.Tags.All(y => Tags.Contains(y))).ToList();
+            if (applicableInflections.Count > 0)
+            {
+                var maxSpecificity = applicableInflections.Max(x => x.Specificity);
+                inflections.Where(x => x.Specificity == maxSpecificity).ToList().ForEach(Inflect);
+            }           
         }
 
         public void Fill(Phonology.Word lemma)
