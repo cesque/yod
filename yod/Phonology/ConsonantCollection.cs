@@ -30,6 +30,7 @@ namespace yod.Phonology
             new Consonant("n", Consonant.Place.Alveolar, Consonant.Manner.Nasal, Consonant.Phonation.Voiced, 5),
             new Consonant("ɲ", Consonant.Place.Palatal, Consonant.Manner.Nasal, Consonant.Phonation.Voiced, 5),
             new Consonant("ŋ", Consonant.Place.Velar, Consonant.Manner.Nasal, Consonant.Phonation.Voiced, 5),
+
             #endregion
             #region stops
             new Consonant("p", Consonant.Place.Bilabial, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
@@ -39,6 +40,7 @@ namespace yod.Phonology
             new Consonant("k", Consonant.Place.Velar, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
             new Consonant("g", Consonant.Place.Velar, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
             new Consonant("ʔ", Consonant.Place.Glottal, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
+
             #endregion
             #region sibilantaffricates
             new Consonant("t͡s", Consonant.Place.Alveolar, Consonant.Manner.SibilantAffricate, Consonant.Phonation.Unvoiced, 7),
@@ -49,11 +51,12 @@ namespace yod.Phonology
             new Consonant("ɖ͡ʐ", Consonant.Place.Retroflex, Consonant.Manner.SibilantAffricate, Consonant.Phonation.Voiced, 6),
             new Consonant("t͡ɕ", Consonant.Place.Alveolopalatal, Consonant.Manner.SibilantAffricate, Consonant.Phonation.Unvoiced, 7),
             new Consonant("d͡ʑ", Consonant.Place.Alveolopalatal, Consonant.Manner.SibilantAffricate, Consonant.Phonation.Voiced, 6),
-            
+
             #endregion
             #region nonsibilantaffricates
             new Consonant("t͡θ", Consonant.Place.Dental, Consonant.Manner.NonsibilantAffricate, Consonant.Phonation.Unvoiced, 7),
             new Consonant("d͡ð", Consonant.Place.Dental, Consonant.Manner.NonsibilantAffricate, Consonant.Phonation.Voiced, 6),
+
             #endregion
             #region sibilantfricatives
             new Consonant("s", Consonant.Place.Alveolar, Consonant.Manner.SibilantFricative, Consonant.Phonation.Unvoiced, 7),
@@ -63,7 +66,8 @@ namespace yod.Phonology
             new Consonant("ʂ", Consonant.Place.Retroflex, Consonant.Manner.SibilantFricative, Consonant.Phonation.Unvoiced, 7),
             new Consonant("ʐ", Consonant.Place.Retroflex, Consonant.Manner.SibilantFricative, Consonant.Phonation.Voiced, 6),
             new Consonant("ɕ", Consonant.Place.Alveolopalatal, Consonant.Manner.SibilantFricative, Consonant.Phonation.Unvoiced, 7),
-            new Consonant("ʑ", Consonant.Place.Alveolopalatal, Consonant.Manner.SibilantFricative, Consonant.Phonation.Voiced, 6),         
+            new Consonant("ʑ", Consonant.Place.Alveolopalatal, Consonant.Manner.SibilantFricative, Consonant.Phonation.Voiced, 6),
+
             #endregion
             #region nonsibilantfricatives
             new Consonant("f", Consonant.Place.Labiodental, Consonant.Manner.NonsibilantFricative, Consonant.Phonation.Unvoiced, 7),
@@ -72,6 +76,7 @@ namespace yod.Phonology
             new Consonant("ð", Consonant.Place.Dental, Consonant.Manner.NonsibilantFricative, Consonant.Phonation.Voiced, 6),
             new Consonant("x", Consonant.Place.Velar, Consonant.Manner.NonsibilantFricative, Consonant.Phonation.Unvoiced, 7),
             new Consonant("h", Consonant.Place.Glottal, Consonant.Manner.NonsibilantFricative, Consonant.Phonation.Unvoiced, 7),
+
             #endregion
             #region approximants
             new Consonant("ʋ", Consonant.Place.Labiodental, Consonant.Manner.Approximant, Consonant.Phonation.Voiced, 6),
@@ -79,6 +84,7 @@ namespace yod.Phonology
             new Consonant("j", Consonant.Place.Palatal, Consonant.Manner.Approximant, Consonant.Phonation.Voiced, 2),
             new Consonant("ʍ", Consonant.Place.Labializedvelar, Consonant.Manner.Approximant, Consonant.Phonation.Unvoiced, 2),
             new Consonant("w", Consonant.Place.Labializedvelar, Consonant.Manner.Approximant, Consonant.Phonation.Voiced, 2),
+
             #endregion
             #region flap or tap
             #endregion
@@ -86,6 +92,7 @@ namespace yod.Phonology
             new Consonant("B", Consonant.Place.Bilabial, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
             new Consonant("r", Consonant.Place.Alveolar, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
             new Consonant("R", Consonant.Place.Uvular, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
+
             #endregion
             #region lateral affricate
             #endregion
@@ -95,6 +102,7 @@ namespace yod.Phonology
             #region lateral approximants
             new Consonant("l", Consonant.Place.Alveolar, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
             new Consonant("ʎ", Consonant.Place.Palatal, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
+
             #endregion
             #region lateral flap
             #endregion
@@ -109,12 +117,12 @@ namespace yod.Phonology
             {
                 var c = new ConsonantCollection(new List<Predicate<Consonant>>
                 {
-                    consonant => (consonant.PlaceOfArticulation != Consonant.Place.Dental)
-                    && (consonant.PlaceOfArticulation != Consonant.Place.Retroflex)
-                    && (consonant.PlaceOfArticulation != Consonant.Place.Alveolopalatal)
-                    && (consonant.MannerOfArticulation != Consonant.Manner.Trill)
-                    && (consonant.Symbol != "ʔ")
-                    && (consonant.Symbol != "ʋ")
+                    consonant => consonant.PlaceOfArticulation != Consonant.Place.Dental
+                                 && consonant.PlaceOfArticulation != Consonant.Place.Retroflex
+                                 && consonant.PlaceOfArticulation != Consonant.Place.Alveolopalatal
+                                 && consonant.MannerOfArticulation != Consonant.Manner.Trill
+                                 && consonant.Symbol != "ʔ"
+                                 && consonant.Symbol != "ʋ"
                 });
                 return c;
             }
@@ -126,10 +134,7 @@ namespace yod.Phonology
 
         public ConsonantCollection(List<Predicate<Consonant>> add)
         {
-            add.ForEach(pred =>
-            {
-                AddRange(IPAConsonants.Where(c => pred(c)));
-            });
+            add.ForEach(pred => { AddRange(IPAConsonants.Where(c => pred(c))); });
         }
 
         public Consonant GetRandom()
@@ -139,8 +144,47 @@ namespace yod.Phonology
 
         public Consonant GetRandomInSonorityRange(int sonorityMin, int sonorityMax)
         {
-            var sublist = this.Where(x => x.Sonority <= sonorityMax && x.Sonority >= sonorityMin);
-            return sublist.ElementAt(Globals.Random.Next(sublist.Count()));
+            var sublist = this.Where(x => x.Sonority <= sonorityMax && x.Sonority >= sonorityMin).ToList();
+            return sublist.ElementAt(Globals.Random.Next(sublist.Count));
+        }
+
+        public static ConsonantCollection Generate()
+        {
+            var places = new List<Consonant.Place>();
+            var minPlaces = 1;
+            var maxPlaces = Enum.GetNames(typeof(Consonant.Place)).Length;
+            var placesCount = Globals.Random.Next(minPlaces, maxPlaces);
+            var allPlaces = new Stack<Consonant.Place>(
+                Enum.GetValues(typeof(Consonant.Place))
+                    .Cast<Consonant.Place>()
+                    .ToList()
+                    .OrderBy(x => Globals.Random.Next())
+            );
+            for (var i = 0; i < placesCount; i++)
+            {
+                places.Add(allPlaces.Pop());
+            }
+
+
+            var manners = new List<Consonant.Manner>();
+            var minManners = 1;
+            var maxManners = Enum.GetNames(typeof(Consonant.Manner)).Length;
+            var mannersCount = Globals.Random.Next(minManners, maxManners);
+            var allManners = new Stack<Consonant.Manner>(
+                Enum.GetValues(typeof(Consonant.Manner))
+                    .Cast<Consonant.Manner>()
+                    .ToList()
+                    .OrderBy(x => Globals.Random.Next())
+            );
+            for (var i = 0; i < placesCount; i++)
+            {
+                manners.Add(allManners.Pop());
+            }
+
+            return new ConsonantCollection(new List<Predicate<Consonant>>
+            {
+                x => manners.Contains(x.MannerOfArticulation) && places.Contains(x.PlaceOfArticulation)
+            });
         }
     }
 }

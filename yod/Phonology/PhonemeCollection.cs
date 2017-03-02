@@ -20,7 +20,8 @@ namespace yod.Phonology
 
         public PhonemeCollection()
         {
-            Consonants = ConsonantCollection.DefaultConsonants;
+            //Consonants = ConsonantCollection.DefaultConsonants;
+            Consonants = ConsonantCollection.Generate();
             Vowels = VowelCollection.AllVowels;
         }
 
