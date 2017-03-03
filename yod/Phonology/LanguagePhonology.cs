@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace yod.Phonology
 {
@@ -9,8 +10,30 @@ namespace yod.Phonology
         public PhonemeCollection Phonemes;
 
         // todo: choose random onset and coda consonants
-        public List<Consonant> OnsetConsonants;
-        public List<Consonant> CodaConsonants;
+
+        public List<Consonant> OnsetConsonants
+        {
+            get { return _onsetConsonants; }
+            set
+            {
+                Predicate<Consonant> test = x => !Phonemes.Consonants.Contains(x);
+                if (value.Exists(test)) throw new Exception("Onset consonants list contains phoneme /" + value.Find(test).Symbol + "/ which is not in the phonology.");
+                _onsetConsonants = value;
+            }
+        }
+        public List<Consonant> CodaConsonants
+        {
+            get { return _codaConsonants; }
+            set
+            {
+                Predicate<Consonant> test = x => !Phonemes.Consonants.Contains(x);
+                if (value.Exists(test)) throw new Exception("Coda consonants list contains phoneme /" + value.Find(test).Symbol + "/ which is not in the phonology.");
+                _codaConsonants = value;
+            }
+        }
+
+        private List<Consonant> _onsetConsonants;
+        public List<Consonant> _codaConsonants;
 
         // todo: allow for weighted word lengths
         public int WordLengthMin = 1;
@@ -40,32 +63,22 @@ namespace yod.Phonology
         {
             SyllableStructure = sylStructure;
             Phonemes = new PhonemeCollection();
+            OnsetConsonants = Phonemes.Consonants;
+            CodaConsonants = Phonemes.Consonants;
         }
 
         public LanguagePhonology(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd)
         {
             SyllableStructure = sylStructure;
             Phonemes = new PhonemeCollection(consonantsToAdd, vowelsToAdd);
+            OnsetConsonants = Phonemes.Consonants;
+            CodaConsonants = Phonemes.Consonants;
         }
 
         public LanguagePhonology(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd, List<Consonant> onsetConsonants, List<Consonant> codaConsonants) : this(sylStructure, consonantsToAdd, vowelsToAdd)
         {
             OnsetConsonants = onsetConsonants;
-            CodaConsonants = codaConsonants;
-            OnsetConsonants.ForEach(c =>
-            {
-                if(!Phonemes.Consonants.Contains(c))
-                {
-                    throw new Exception("Onset consonants list contains phoneme /" + c.Symbol + "/ which is not in the phonology.");
-                }              
-            });
-            CodaConsonants.ForEach(c =>
-            {
-                if (!Phonemes.Consonants.Contains(c))
-                {
-                    throw new Exception("Coda consonants list contains phoneme /" + c.Symbol + "/ which is not in the phonology.");
-                }
-            });
+            CodaConsonants = codaConsonants;           
         }
 
         public Syllable GetSyllable()

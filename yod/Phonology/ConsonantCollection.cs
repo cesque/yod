@@ -115,20 +115,26 @@ namespace yod.Phonology
         {
             get
             {
+                var list = new List<string>
+                {
+                    "m", "n", "ŋ",
+                    "p", "t", "t͡ʃ", "k",
+                    "b", "d", "d͡ʒ", "g",
+                    "s", "ʃ",
+                    "z", "ʒ",
+                    "f", "θ",
+                    "v", "ð", "h",
+                    "l", "ɹ", "j", "w"
+                };
                 var c = new ConsonantCollection(new List<Predicate<Consonant>>
                 {
-                    consonant => consonant.PlaceOfArticulation != Consonant.Place.Dental
-                                 && consonant.PlaceOfArticulation != Consonant.Place.Retroflex
-                                 && consonant.PlaceOfArticulation != Consonant.Place.Alveolopalatal
-                                 && consonant.MannerOfArticulation != Consonant.Manner.Trill
-                                 && consonant.Symbol != "ʔ"
-                                 && consonant.Symbol != "ʋ"
+                    consonant => list.Contains(consonant.Symbol)
                 });
                 return c;
             }
         }
 
-        public ConsonantCollection() : base(IPAConsonants)
+        public ConsonantCollection() : base(DefaultConsonants)
         {
         }
 

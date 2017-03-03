@@ -43,12 +43,6 @@ namespace yodTest
             //orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, phonology);
             phonology.WordLengthMin = 1;
             phonology.WordLengthMax = 3;
-            phonology.OnsetConsonants = new List<Consonant>(phonology.Phonemes.Consonants.Where(
-                c => true
-            ));
-            phonology.CodaConsonants = new List<Consonant>(phonology.Phonemes.Consonants.Where(
-                c => true
-            ));
 
             //var s = "";
 

@@ -21,8 +21,8 @@ namespace yod.Phonology
         public PhonemeCollection()
         {
             //Consonants = ConsonantCollection.DefaultConsonants;
-            Consonants = ConsonantCollection.Generate();
-            Vowels = VowelCollection.AllVowels;
+            Consonants = new ConsonantCollection(); //ConsonantCollection.Generate();
+            Vowels = new VowelCollection();
         }
 
         // todo: choose random phonemes
