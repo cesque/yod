@@ -42,7 +42,7 @@
             Sonority = vowel.Sonority;
         }
 
-        public Vowel(string symbol, FrontToBack frontness, OpenToClose openness, Rounded roundedness, int sonority)
+        public Vowel(string symbol, OpenToClose openness, FrontToBack frontness, Rounded roundedness, int sonority)
         {
             Symbol = symbol;
             Frontedness = frontness;

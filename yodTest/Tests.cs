@@ -40,7 +40,7 @@ namespace yodTest
 
 
             phonology = new LanguagePhonology(syllableStructure); //new Language(syllableStructure);
-            orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, phonology);
+            //orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, phonology);
             phonology.WordLengthMin = 1;
             phonology.WordLengthMax = 3;
             phonology.OnsetConsonants = new List<Consonant>(phonology.Phonemes.Consonants.Where(
@@ -160,7 +160,7 @@ namespace yodTest
 
                 TestPhrase,
                 TestInflectedPhrase,
-                TestLexiconOrthographized
+                //TestLexiconOrthographized
             };
 
             tests.ForEach(test =>
