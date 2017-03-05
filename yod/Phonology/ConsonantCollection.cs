@@ -173,6 +173,42 @@ namespace yod.Phonology
             };
             var consonantsCount = Globals.WeightedRandom(probabilities);
 
+            // numbers again from WALS http://wals.info/chapter/4
+            var voicingProbs = new Dictionary<Tuple<bool, bool>, float>
+            {
+                {new Tuple<bool, bool>(false, false), 182f},
+                {new Tuple<bool, bool>(false, true), 189f},
+                {new Tuple<bool, bool>(true, false), 38f},
+                {new Tuple<bool, bool>(true, true), 158f},
+            };
+            var voicingRules = Globals.WeightedRandom(voicingProbs);
+
+            var fricVoiceContrast = voicingRules.Item1;
+            var stopVoiceContrast = voicingRules.Item2;
+
+            var fricDefaultVoicing = Globals.Random.Next(100) > 50 ? Consonant.Phonation.Unvoiced : Consonant.Phonation.Voiced;
+            var stopDefaultVoicing = Globals.Random.Next(100) > 50 ? Consonant.Phonation.Unvoiced : Consonant.Phonation.Voiced;
+
+            // check if the consonant is included in our places & manners
+            // if so, check if we want both voiced&unvoiced, or just the default
+            Func<Consonant, bool> test = x =>
+            {
+                var e = places.Contains(x.PlaceOfArticulation)
+                        && manners.Contains(x.MannerOfArticulation);
+
+                var b = false;
+                if (x.MannerOfArticulation == Consonant.Manner.Stop)
+                {
+                    b = stopVoiceContrast || x.Voicing == stopDefaultVoicing;
+                }
+                else if (x.MannerOfArticulation == Consonant.Manner.SibilantFricative || x.MannerOfArticulation == Consonant.Manner.NonsibilantFricative)
+                {
+                    b = fricVoiceContrast || x.Voicing == fricDefaultVoicing;
+                }
+
+                return b && e;
+            };
+
             var collection = new List<Consonant>();
             while (collection.Count < consonantsCount.Item1)
             {
@@ -193,10 +229,10 @@ namespace yod.Phonology
                     throw new Exception("Places and Manners lists are both empty.");
                 }
 
-                collection = IPAConsonants.Where(x => places.Contains(x.PlaceOfArticulation) && manners.Contains(x.MannerOfArticulation)).ToList();
+                collection = IPAConsonants.Where(test).ToList();
             }
 
-            return new ConsonantCollection(new List<Predicate<Consonant>> {x => places.Contains(x.PlaceOfArticulation) && manners.Contains(x.MannerOfArticulation)});
+            return new ConsonantCollection(new List<Predicate<Consonant>> {x => test(x)});
         }
     }
 }
