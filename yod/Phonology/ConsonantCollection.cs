@@ -157,40 +157,46 @@ namespace yod.Phonology
         public static ConsonantCollection Generate()
         {
             var places = new List<Consonant.Place>();
-            var minPlaces = 1;
-            var maxPlaces = Enum.GetNames(typeof(Consonant.Place)).Length;
-            var placesCount = Globals.Random.Next(minPlaces, maxPlaces);
-            var allPlaces = new Stack<Consonant.Place>(
-                Enum.GetValues(typeof(Consonant.Place))
-                    .Cast<Consonant.Place>()
-                    .ToList()
-                    .OrderBy(x => Globals.Random.Next())
-            );
-            for (var i = 0; i < placesCount; i++)
-            {
-                places.Add(allPlaces.Pop());
-            }
-
+            var allPlaces = new Queue<Consonant.Place>(IPAConsonants.Select(x => x.PlaceOfArticulation).Distinct().OrderBy(x => Globals.Random.Next()).ToList());
 
             var manners = new List<Consonant.Manner>();
-            var minManners = 1;
-            var maxManners = Enum.GetNames(typeof(Consonant.Manner)).Length;
-            var mannersCount = Globals.Random.Next(minManners, maxManners);
-            var allManners = new Stack<Consonant.Manner>(
-                Enum.GetValues(typeof(Consonant.Manner))
-                    .Cast<Consonant.Manner>()
-                    .ToList()
-                    .OrderBy(x => Globals.Random.Next())
-            );
-            for (var i = 0; i < placesCount; i++)
+            var allManners = new Queue<Consonant.Manner>(IPAConsonants.Select(x => x.MannerOfArticulation).Distinct().OrderBy(x => Globals.Random.Next()).ToList());
+
+            // numbers from WALS http://wals.info/chapter/1
+            var probabilities = new Dictionary<Tuple<int, int>, float>
             {
-                manners.Add(allManners.Pop());
+                {new Tuple<int, int>(6, 14), 89f / 563f},
+                {new Tuple<int, int>(15, 18), 122f / 563f},
+                {new Tuple<int, int>(19, 25), 201f / 563f},
+                {new Tuple<int, int>(26, 33), 94f / 563f},
+                {new Tuple<int, int>(34, IPAConsonants.Count), 57f / 563f}
+            };
+            var consonantsCount = Globals.WeightedRandom(probabilities);
+
+            var collection = new List<Consonant>();
+            while (collection.Count < consonantsCount.Item1)
+            {
+                if (Globals.Random.Next(100) < 50 || (allManners.Count == 0 && allPlaces.Count > 0))
+                {
+                    var p = allPlaces.Dequeue();
+
+                    places.Add(p);
+                }
+                else if (allManners.Count > 0)
+                {
+                    var m = allManners.Dequeue();
+
+                    manners.Add(m);
+                }
+                else
+                {
+                    throw new Exception("Places and Manners lists are both empty.");
+                }
+
+                collection = IPAConsonants.Where(x => places.Contains(x.PlaceOfArticulation) && manners.Contains(x.MannerOfArticulation)).ToList();
             }
 
-            return new ConsonantCollection(new List<Predicate<Consonant>>
-            {
-                x => manners.Contains(x.MannerOfArticulation) && places.Contains(x.PlaceOfArticulation)
-            });
+            return new ConsonantCollection(new List<Predicate<Consonant>> {x => places.Contains(x.PlaceOfArticulation) && manners.Contains(x.MannerOfArticulation)});
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace yodTest
+﻿using yod.Phonology;
+
+namespace yodTest
 {
     class Program
     {
@@ -6,8 +8,6 @@
         {
             var tests = new Tests();
             tests.Run();
-
-
         }
     }
 }

@@ -21,7 +21,7 @@ namespace yod.Phonology
         public PhonemeCollection()
         {
             //Consonants = ConsonantCollection.DefaultConsonants;
-            Consonants = new ConsonantCollection(); //ConsonantCollection.Generate();
+            Consonants = ConsonantCollection.Generate();
             Vowels = new VowelCollection();
         }
 
