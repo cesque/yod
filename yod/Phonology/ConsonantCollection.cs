@@ -176,7 +176,7 @@ namespace yod.Phonology
             var collection = new List<Consonant>();
             while (collection.Count < consonantsCount.Item1)
             {
-                if (Globals.Random.Next(100) < 50 || (allManners.Count == 0 && allPlaces.Count > 0))
+                if ((Globals.Random.Next(100) < 50 || allManners.Count == 0) && allPlaces.Count > 0)
                 {
                     var p = allPlaces.Dequeue();
 
