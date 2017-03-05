@@ -2,7 +2,7 @@
 {
     public class Vowel : Phoneme
     {
-        public enum FrontToBack
+        public enum Backness
         {
             Front,
             NearFront,
@@ -11,7 +11,7 @@
             Back
         }
 
-        public enum OpenToClose
+        public enum Height
         {
             Close,
             NearClose,
@@ -22,15 +22,15 @@
             Open
         }
 
-        public enum Rounded
+        public enum Rounding
         {
             Rounded,
             Unrounded
         }
 
-        public FrontToBack Frontedness;
-        public OpenToClose Openness;
-        public Rounded Roundedness;
+        public Backness Frontedness;
+        public Height Openness;
+        public Rounding Roundedness;
 
         public Vowel(Vowel vowel)
         {
@@ -42,7 +42,7 @@
             Sonority = vowel.Sonority;
         }
 
-        public Vowel(string symbol, OpenToClose openness, FrontToBack frontness, Rounded roundedness, int sonority)
+        public Vowel(string symbol, Height openness, Backness frontness, Rounding roundedness, int sonority)
         {
             Symbol = symbol;
             Frontedness = frontness;
