@@ -22,7 +22,7 @@ namespace yod.Phonology
         {
             //Consonants = ConsonantCollection.DefaultConsonants;
             Consonants = ConsonantCollection.Generate();
-            Vowels = new VowelCollection();
+            Vowels = VowelCollection.Generate();
         }
 
         // todo: choose random phonemes

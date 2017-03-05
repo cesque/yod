@@ -165,11 +165,11 @@ namespace yod.Phonology
             // numbers from WALS http://wals.info/chapter/1
             var probabilities = new Dictionary<Tuple<int, int>, float>
             {
-                {new Tuple<int, int>(6, 14), 89f / 563f},
-                {new Tuple<int, int>(15, 18), 122f / 563f},
-                {new Tuple<int, int>(19, 25), 201f / 563f},
-                {new Tuple<int, int>(26, 33), 94f / 563f},
-                {new Tuple<int, int>(34, IPAConsonants.Count), 57f / 563f}
+                {new Tuple<int, int>(6, 14), 89f},
+                {new Tuple<int, int>(15, 18), 122f},
+                {new Tuple<int, int>(19, 25), 201f},
+                {new Tuple<int, int>(26, 33), 94f},
+                {new Tuple<int, int>(34, IPAConsonants.Count), 57f}
             };
             var consonantsCount = Globals.WeightedRandom(probabilities);
 

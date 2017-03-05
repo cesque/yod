@@ -63,5 +63,28 @@ namespace yod.Phonology
         {
             return this[Globals.Random.Next(Count)];
         }
+
+        public static VowelCollection Generate()
+        {
+            var probabilities = new Dictionary<Tuple<int, int>, float>
+            {
+                {new Tuple<int, int>(2, 4), 93f},
+                {new Tuple<int, int>(5, 6), 287f},
+                {new Tuple<int, int>(7, 14), 184f}
+            };
+
+            var vowelProbability = Globals.WeightedRandom(probabilities);
+            var vowelCount = Globals.Random.Next(vowelProbability.Item1, vowelProbability.Item2);
+
+            var collection = new List<Vowel>();
+            for (var i = 0; i < vowelCount; i++)
+            {
+                var random = IPAVowels[Globals.Random.Next(IPAVowels.Count)];
+                while (collection.Contains(random)) random = IPAVowels[Globals.Random.Next(IPAVowels.Count)];
+                collection.Add(random);
+            }
+
+            return new VowelCollection(new List<Predicate<Vowel>> {x => collection.Contains(x)});
+        }
     }
 }
