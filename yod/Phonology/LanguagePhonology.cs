@@ -57,6 +57,8 @@ namespace yod.Phonology
             })
         { }
 
+        public StressLocation StressLocation;
+
         // todo: load phonology from json file
 
         public LanguagePhonology(SyllableStructure sylStructure)

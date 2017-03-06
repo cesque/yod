@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace yod.Phonology
@@ -51,6 +52,32 @@ namespace yod.Phonology
                     Syllables.Add(syl);
                 }
             }
+
+            if(SyllableLength > 1) ApplyStress();
+        }
+
+        private void ApplyStress()
+        {
+            var stressIndex = 0;
+            switch (language.StressLocation)
+            {
+                case StressLocation.Initial:
+                    stressIndex = 0;
+                    break;
+                case StressLocation.Second:
+                    stressIndex = 1;
+                    break;
+                case StressLocation.Penultimate:
+                    stressIndex = SyllableLength - 2;
+                    break;
+                case StressLocation.Ultimate:
+                    stressIndex = SyllableLength - 1;
+                    break;
+            }
+            stressIndex = stressIndex < 0 ? 0 : stressIndex;
+            stressIndex = stressIndex >= SyllableLength ? SyllableLength - 1 : stressIndex;
+
+            Syllables[stressIndex].Stressed = true;
         }
 
         public override string ToString()

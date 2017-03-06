@@ -63,6 +63,7 @@
     <Compile Include="Orthography\LanguageOrthography.cs" />
     <Compile Include="Phonology\Phoneme.cs" />
     <Compile Include="Phonology\PhonemeCollection.cs" />
+    <Compile Include="Phonology\StressLocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Phonology\Syllable.cs" />
     <Compile Include="Phonology\SyllableStructure.cs" />

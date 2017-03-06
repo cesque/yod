@@ -16,6 +16,8 @@ namespace yod.Phonology
             .Concat(Coda)
             .ToList();
 
+        public bool Stressed = false;
+
         public Syllable(Syllable syllable)
         {
             language = syllable.language;
@@ -23,6 +25,7 @@ namespace yod.Phonology
             Onset = new List<Phoneme>();
             Nucleus = new List<Phoneme>();
             Coda = new List<Phoneme>();
+            Stressed = syllable.Stressed;
             syllable.Onset.ForEach(x =>
             {
                 Onset.Add(x.Type == Phoneme.PhonemeType.Consonant
@@ -64,6 +67,7 @@ namespace yod.Phonology
         public override string ToString()
         {
             var s = "";
+            if (Stressed) s += "ˈ";
             Phonemes.ForEach(x => s += x.ToString());
             return s;
         }
@@ -176,6 +180,8 @@ namespace yod.Phonology
             {
                 if (!Coda[i].Equals(syllable.Coda[i])) return false;
             }
+
+            if (Stressed != syllable.Stressed) return false;
 
             return true;
         }
