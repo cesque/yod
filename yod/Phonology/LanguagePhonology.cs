@@ -124,6 +124,16 @@ namespace yod.Phonology
             phonology.WordLengthMin = Globals.Random.Next(100) > 75 ? 2 : 1;
             phonology.WordLengthMax = Globals.Random.Next(phonology.WordLengthMin, phonology.WordLengthMin + 4);
 
+            var stressDict = new Dictionary<StressLocation, float>
+            {
+                {StressLocation.Initial, 25f },
+                {StressLocation.Second, 25f },
+                {StressLocation.Penultimate, 25f },
+                {StressLocation.Ultimate, 25f }
+            };
+
+            phonology.StressLocation = Globals.WeightedRandom(stressDict);
+
             return phonology;
         }
     }
