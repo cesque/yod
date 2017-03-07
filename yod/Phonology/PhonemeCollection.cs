@@ -36,8 +36,8 @@ namespace yod.Phonology
         public static PhonemeCollection Generate()
         {
             PhonemeCollection pc = new PhonemeCollection();
-            pc.Consonants = ConsonantCollection.DefaultConsonants;
-            pc.Vowels = VowelCollection.DefaultVowels;
+            pc.Consonants = ConsonantCollection.Generate();
+            pc.Vowels = VowelCollection.Generate();
 
             return pc;
         }

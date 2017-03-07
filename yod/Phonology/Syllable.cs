@@ -157,12 +157,30 @@ namespace yod.Phonology
                 {MorphNucleus, 33f},
             };
 
-            if (structure.OnsetStructure.Max(x => x.Length) > 0) dict.Add(MorphOnset, 33f);
-            if (structure.CodaStructure.Max(x => x.Length) > 0) dict.Add(MorphCoda, 33f);
+            var onsetMax = structure.OnsetStructure.Max(x => x.Length);
+            var codaMax = structure.CodaStructure.Max(x => x.Length);
 
+            if (onsetMax > 0) dict.Add(MorphOnset, 33f);
+            if (codaMax > 0) dict.Add(MorphCoda, 33f);
 
-            var morph = Globals.WeightedRandom(dict);
-            morph();
+            // break the rules of syllable structure a little to prevent infinite
+            // loops when trying to morph monosyllabic, single vowel words
+            if (onsetMax == 0 && codaMax == 0 && Globals.Random.Next(100) > 50)
+            {
+                if (Globals.Random.Next(100) > 50)
+                {
+                    Coda = GetCoda(1);
+                }
+                else
+                {
+                    Onset = GetOnset(1);
+                }
+            }
+            else
+            {
+                var morph = Globals.WeightedRandom(dict);
+                morph();
+            }
         }
 
         public void MorphOnset()
