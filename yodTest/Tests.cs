@@ -21,25 +21,8 @@ namespace yodTest
         {
             //Globals.SeedRandom(4);
 
-            var syllableStructure = new SyllableStructure
-            {
-                OnsetStructure = new List<SyllableStructure.SyllableStructureOption>
-                {
-                    new SyllableStructure.SyllableStructureOption(1, 1f)
-                },
-                NucleusStructure = new List<SyllableStructure.SyllableStructureOption>
-                {
-                    new SyllableStructure.SyllableStructureOption(1, 1f)
-                },
-                CodaStructure = new List<SyllableStructure.SyllableStructureOption>
-                {
-                    new SyllableStructure.SyllableStructureOption(0, 0.7f),
-                    new SyllableStructure.SyllableStructureOption(1, 0.7f)
-                }
-            };
 
-
-            phonology = new LanguagePhonology(syllableStructure); //new Language(syllableStructure);
+            phonology = LanguagePhonology.Generate();
             //orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, phonology);
             phonology.WordLengthMin = 1;
             phonology.WordLengthMax = 3;

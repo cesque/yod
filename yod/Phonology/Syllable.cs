@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace yod.Phonology
@@ -29,20 +30,20 @@ namespace yod.Phonology
             syllable.Onset.ForEach(x =>
             {
                 Onset.Add(x.Type == Phoneme.PhonemeType.Consonant
-                    ? new Consonant((Consonant)x)
-                    : (Phoneme)new Vowel((Vowel)x));
+                    ? new Consonant((Consonant) x)
+                    : (Phoneme) new Vowel((Vowel) x));
             });
             syllable.Nucleus.ForEach(x =>
             {
                 Nucleus.Add(x.Type == Phoneme.PhonemeType.Consonant
-                    ? new Consonant((Consonant)x)
-                    : (Phoneme)new Vowel((Vowel)x));
+                    ? new Consonant((Consonant) x)
+                    : (Phoneme) new Vowel((Vowel) x));
             });
             syllable.Coda.ForEach(x =>
             {
                 Coda.Add(x.Type == Phoneme.PhonemeType.Consonant
-                    ? new Consonant((Consonant)x)
-                    : (Phoneme)new Vowel((Vowel)x));
+                    ? new Consonant((Consonant) x)
+                    : (Phoneme) new Vowel((Vowel) x));
             });
         }
 
@@ -62,6 +63,18 @@ namespace yod.Phonology
             Onset.AddRange(GetOnset());
             Nucleus.AddRange(GetNucleus());
             Coda.AddRange(GetCoda());
+
+            if(!IsValid()) Generate();
+        }
+
+        private bool IsValid()
+        {
+            var plocal = Phonemes;
+            for (var i = 0; i < plocal.Count - 1; i++)
+            {
+                if (plocal[i].Symbol == plocal[i + 1].Symbol) return false;
+            }
+            return true;
         }
 
         public override string ToString()
@@ -139,7 +152,17 @@ namespace yod.Phonology
 
         public void Morph()
         {
-            // todo: randomly pick how to morph syllable
+            var dict = new Dictionary<Action, float>
+            {
+                {MorphNucleus, 33f},
+            };
+
+            if (structure.OnsetStructure.Max(x => x.Length) > 0) dict.Add(MorphOnset, 33f);
+            if (structure.CodaStructure.Max(x => x.Length) > 0) dict.Add(MorphCoda, 33f);
+
+
+            var morph = Globals.WeightedRandom(dict);
+            morph();
         }
 
         public void MorphOnset()
@@ -168,8 +191,8 @@ namespace yod.Phonology
             {
                 if (!Onset[i].Equals(syllable.Onset[i])) return false;
             }
-
             if (Nucleus.Count != syllable.Nucleus.Count) return false;
+
             for (var i = 0; i < Nucleus.Count; i++)
             {
                 if (!Nucleus[i].Equals(syllable.Nucleus[i])) return false;

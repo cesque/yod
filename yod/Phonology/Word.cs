@@ -54,6 +54,11 @@ namespace yod.Phonology
             }
 
             if(SyllableLength > 1) ApplyStress();
+
+            if (!IsValid())
+            {
+                Generate();
+            }
         }
 
         private void ApplyStress()
@@ -78,6 +83,21 @@ namespace yod.Phonology
             stressIndex = stressIndex >= SyllableLength ? SyllableLength - 1 : stressIndex;
 
             Syllables[stressIndex].Stressed = true;
+        }
+
+        private bool IsValid()
+        {
+            var phonemes = new List<Phoneme>();
+            Syllables.ForEach(x => phonemes.AddRange(x.Phonemes));
+            for (var i = 0; i < phonemes.Count - 1; i++)
+            {
+                if (phonemes[i].Symbol == phonemes[i + 1].Symbol)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public override string ToString()

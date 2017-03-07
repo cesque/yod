@@ -21,6 +21,7 @@ namespace yod.Phonology
                 _onsetConsonants = value;
             }
         }
+
         public List<Consonant> CodaConsonants
         {
             get { return _codaConsonants; }
@@ -41,21 +42,22 @@ namespace yod.Phonology
 
         public LanguagePhonology() : this(
             new SyllableStructure
-            {
-                OnsetStructure = new List<SyllableStructure.SyllableStructureOption>
+            (
+                onsetStructure: new List<SyllableStructure.SyllableStructureOption>
                 {
-                    new SyllableStructure.SyllableStructureOption(1,1)
+                    new SyllableStructure.SyllableStructureOption(1, 1)
                 },
-                NucleusStructure = new List<SyllableStructure.SyllableStructureOption>
+                nucleusStructure: new List<SyllableStructure.SyllableStructureOption>
                 {
-                    new SyllableStructure.SyllableStructureOption (1,1)
+                    new SyllableStructure.SyllableStructureOption(1, 1)
                 },
-                CodaStructure = new List<SyllableStructure.SyllableStructureOption>
+                codaStructure: new List<SyllableStructure.SyllableStructureOption>
                 {
-                    new SyllableStructure.SyllableStructureOption (0,1)
+                    new SyllableStructure.SyllableStructureOption(0, 1)
                 }
-            })
-        { }
+            ))
+        {
+        }
 
         public StressLocation StressLocation;
 
@@ -77,10 +79,18 @@ namespace yod.Phonology
             CodaConsonants = Phonemes.Consonants;
         }
 
+        public LanguagePhonology(SyllableStructure sylStructure, PhonemeCollection phonemes)
+        {
+            SyllableStructure = sylStructure;
+            Phonemes = phonemes;
+            OnsetConsonants = Phonemes.Consonants;
+            CodaConsonants = Phonemes.Consonants;
+        }
+
         public LanguagePhonology(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd, List<Consonant> onsetConsonants, List<Consonant> codaConsonants) : this(sylStructure, consonantsToAdd, vowelsToAdd)
         {
             OnsetConsonants = onsetConsonants;
-            CodaConsonants = codaConsonants;           
+            CodaConsonants = codaConsonants;
         }
 
         public Syllable GetSyllable()
@@ -102,6 +112,19 @@ namespace yod.Phonology
         {
             var s2 = s.Replace("\u0316", "").Replace(('͡' + ""), "");
             return s2.Length;
+        }
+
+        public static LanguagePhonology Generate()
+        {
+            var syllStructure = SyllableStructure.Generate();
+            var phonemes = PhonemeCollection.Generate();
+
+            var phonology = new LanguagePhonology(syllStructure, phonemes);
+
+            phonology.WordLengthMin = Globals.Random.Next(100) > 75 ? 2 : 1;
+            phonology.WordLengthMax = Globals.Random.Next(phonology.WordLengthMin, phonology.WordLengthMin + 4);
+
+            return phonology;
         }
     }
 }

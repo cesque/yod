@@ -50,6 +50,8 @@ namespace yod.Phonology
 
         public static VowelCollection EnglishVowels => new VowelCollection(new List<Predicate<Vowel>> {x => "iɪuʊeɜəɔæʌɑɒ".Contains(x.Symbol)});
 
+        public static VowelCollection DefaultVowels => EnglishVowels;
+
         public VowelCollection() : base(EnglishVowels)
         {
         }

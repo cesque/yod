@@ -83,7 +83,11 @@ namespace yod.Grammar
                 foreach (var word in pair.Value)
                 {
                     var w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
-                    while(Lexemes.Exists(x => x.Lemma.Equals(w))) w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
+                    while (Lexemes.Exists(x => x.Lemma.Equals(w)))
+                    {
+                       w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
+                       Console.WriteLine(w.ToString()); 
+                    }
                     Add(word, w, pair.Key);
                 }
             }
@@ -99,7 +103,7 @@ namespace yod.Grammar
             {
                 var group = relatedWords[word].Item2;
                 var w = new Phonology.Word(baseWords[group]);
-                w.Syllables.Last().MorphCoda();
+                w.Syllables.Last().Morph();
                 return w;
             }
             else if (commonWords.ContainsKey(pos) && commonWords[pos].Contains(word))
