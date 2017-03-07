@@ -53,7 +53,7 @@ namespace yod.Phonology
                 }
             }
 
-            if(SyllableLength > 1) ApplyStress();
+            if(SyllableLength > 1) ReapplyStress();
 
             if (!IsValid())
             {
@@ -61,7 +61,7 @@ namespace yod.Phonology
             }
         }
 
-        private void ApplyStress()
+        public void ReapplyStress()
         {
             var stressIndex = 0;
             switch (language.StressLocation)
@@ -82,6 +82,10 @@ namespace yod.Phonology
             stressIndex = stressIndex < 0 ? 0 : stressIndex;
             stressIndex = stressIndex >= SyllableLength ? SyllableLength - 1 : stressIndex;
 
+            for (var i = 0; i < SyllableLength; i++)
+            {
+                Syllables[i].Stressed = false;
+            }
             Syllables[stressIndex].Stressed = true;
         }
 
