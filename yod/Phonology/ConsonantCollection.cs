@@ -151,6 +151,7 @@ namespace yod.Phonology
         public Consonant GetRandomInSonorityRange(int sonorityMin, int sonorityMax)
         {
             var sublist = this.Where(x => x.Sonority <= sonorityMax && x.Sonority >= sonorityMin).ToList();
+            if (sublist.Count == 0) return null;
             return sublist.ElementAt(Globals.Random.Next(sublist.Count));
         }
 

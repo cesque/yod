@@ -95,6 +95,7 @@ namespace yod.Phonology
             for (var i = 0; i < length; i++)
             {
                 var cons = language.Phonemes.Consonants.GetRandomInSonorityRange(minSonority, maxSonority);
+                if (cons == null) break;
                 minSonority--;
                 maxSonority = cons.Sonority - 1;
                 list.Add(cons);
@@ -137,6 +138,7 @@ namespace yod.Phonology
             for (var i = 0; i < length; i++)
             {
                 var cons = language.Phonemes.Consonants.GetRandomInSonorityRange(minSonority, maxSonority);
+                if (cons == null) break;
                 maxSonority++;
                 minSonority = cons.Sonority + 1;
                 list.Add(cons);
