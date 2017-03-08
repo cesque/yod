@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace yod.Phonology
 {
@@ -55,6 +56,14 @@ namespace yod.Phonology
             }
 
             return pc;
+        }
+
+        public JToken ToJSON()
+        {
+            var o = new JObject();
+            o.Add("consonants", Consonants.ToJSON());
+            o.Add("vowels", Vowels.ToJSON());
+            return o;
         }
     }
 }

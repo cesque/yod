@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace yod.Phonology
 {
@@ -36,6 +38,8 @@ namespace yod.Phonology
         private List<Consonant> _onsetConsonants;
         public List<Consonant> _codaConsonants;
 
+        public StressLocation StressLocation;
+
         // todo: allow for weighted word lengths
         public int WordLengthMin = 1;
         public int WordLengthMax = 3;
@@ -61,8 +65,6 @@ namespace yod.Phonology
             ))
         {
         }
-
-        public StressLocation StressLocation;
 
         // todo: load phonology from json file
 
@@ -142,6 +144,7 @@ namespace yod.Phonology
 
             if (Globals.Random.Next(100) > 50)
             {
+                phonology.OnsetConsonants = new List<Consonant>();
                 var num = Math.Max(3, Globals.Random.Next(phonology.Phonemes.Consonants.Count));
                 var stack = new Stack<Consonant>(new List<Consonant>(phonology.Phonemes.Consonants).OrderBy(x => Globals.Random.Next()));
                 for (var i = 0; i < num; i++)
@@ -151,6 +154,7 @@ namespace yod.Phonology
             }
             if (Globals.Random.Next(100) > 50)
             {
+                phonology.CodaConsonants = new List<Consonant>();
                 var num = Math.Max(3, Globals.Random.Next(phonology.Phonemes.Consonants.Count));
                 var stack = new Stack<Consonant>(new List<Consonant>(phonology.Phonemes.Consonants).OrderBy(x => Globals.Random.Next()));
                 for (var i = 0; i < num; i++)
@@ -160,6 +164,29 @@ namespace yod.Phonology
             }
 
             return phonology;
+        }
+
+        public JToken ToJSON()
+        {
+            var stressDict = new Dictionary<StressLocation, string>
+            {
+                {StressLocation.Initial, "initial"},
+                {StressLocation.Second, "second"},
+                {StressLocation.Penultimate, "penultimate"},
+                {StressLocation.Ultimate, "ultimate"},
+            };
+
+            JObject o = new JObject();
+            o.Add("wordlengthmin", new JValue(WordLengthMin));
+            o.Add("wordlengthmax", new JValue(WordLengthMax));
+            o.Add("geminateconsonants", new JValue(GeminateConsonants));
+            o.Add("longvowels", new JValue(LongVowels));
+            o.Add("stresslocation", new JValue(stressDict[StressLocation]));
+            o.Add("syllablestructure", SyllableStructure.ToJSON());
+            o.Add("phonemes", Phonemes.ToJSON());
+            o.Add("onsetconsonants", new JArray(OnsetConsonants.Select(x => x.Symbol)));
+            o.Add("codaconsonants", new JArray(CodaConsonants.Select(x => x.Symbol)));
+            return o;
         }
     }
 }

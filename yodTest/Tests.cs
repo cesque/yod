@@ -147,7 +147,7 @@ namespace yodTest
             });
 
 
-            File.WriteAllText("./output.txt", s);
+            File.WriteAllText("./output.txt", phonology.ToJSON().ToString());
             Process.Start("notepad.exe", "./output.txt");
         }
     }

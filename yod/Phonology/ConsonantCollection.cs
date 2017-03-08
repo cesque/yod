@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace yod.Phonology
 {
@@ -346,6 +347,11 @@ namespace yod.Phonology
                 list.Add(stack.Pop());
             }
             return new ConsonantCollection(new List<Predicate<Consonant>> {x => list.Contains(x)});
+        }
+
+        public JToken ToJSON()
+        {
+            return new JArray(this.Select(x => x.Symbol));
         }
     }
 }

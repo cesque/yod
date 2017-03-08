@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace yod.Phonology
 {
@@ -45,6 +47,13 @@ namespace yod.Phonology
             {
                 Length = length;
                 Weight = weight;
+            }
+
+            public JToken ToJSON()
+            {
+                var o = new JObject();
+                o.Add(Length.ToString(), new JValue(Weight));
+                return o;
             }
         }
 
@@ -94,6 +103,16 @@ namespace yod.Phonology
             {
                 return new SyllableStructure(onset, nucleus, coda);
             }
+        }
+
+        public JToken ToJSON()
+        {
+            return new JObject
+            {
+                {"onset", new JArray(OnsetStructure.Select(x => x.ToJSON()))},
+                {"nucleus", new JArray(NucleusStructure.Select(x => x.ToJSON()))},
+                {"coda", new JArray(CodaStructure.Select(x => x.ToJSON()))}
+            };
         }
     }
 }
