@@ -70,6 +70,7 @@ namespace yod.Phonology
 
         void ApplyGeminates()
         {
+            bool rerun = false;
             for (var i = 0; i < SyllableLength - 1; i++)
             {
                 if (Syllables[i].Phonemes.Last().Symbol == Syllables[i + 1].Phonemes.First().Symbol)
@@ -77,22 +78,31 @@ namespace yod.Phonology
                     if (Syllables[i].Coda.Count > 0)
                     {
                         Syllables[i].Coda.RemoveAt(Syllables[i].Coda.Count - 1);
+                        Syllables[i + 1].Onset.First().Long = true;
                     }
                     else
                     {
                         Syllables[i].Nucleus.RemoveAt(Syllables[i].Nucleus.Count - 1);
-
+                        if (Syllables[i].Nucleus.Count == 0)
+                        {
+                            Syllables[i + 1].Onset = Syllables[i].Onset;
+                            Syllables[i].Onset.Clear();
+                        }
+                        Syllables[i + 1].Nucleus.First().Long = true;
                     }
                     
-                    Syllables[i + 1].Phonemes.First().Long = true;
+                    
 
                     if (Syllables[i].Phonemes.Count == 0)
                     {
                         Syllables.RemoveAt(i);
-                        i--;
+                        rerun = true;
+                        break;
                     }
                 }
             }
+
+            if(rerun) ApplyGeminates();
         }
 
         void ApplyStress()
