@@ -140,6 +140,25 @@ namespace yod.Phonology
             phonology.GeminateConsonants = Globals.Random.Next(100) > 50;
             phonology.LongVowels = Globals.Random.Next(100) > 50;
 
+            if (Globals.Random.Next(100) > 50)
+            {
+                var num = Math.Max(3, Globals.Random.Next(phonology.Phonemes.Consonants.Count));
+                var stack = new Stack<Consonant>(new List<Consonant>(phonology.Phonemes.Consonants).OrderBy(x => Globals.Random.Next()));
+                for (var i = 0; i < num; i++)
+                {
+                    phonology.OnsetConsonants.Add(stack.Pop());
+                }
+            }
+            if (Globals.Random.Next(100) > 50)
+            {
+                var num = Math.Max(3, Globals.Random.Next(phonology.Phonemes.Consonants.Count));
+                var stack = new Stack<Consonant>(new List<Consonant>(phonology.Phonemes.Consonants).OrderBy(x => Globals.Random.Next()));
+                for (var i = 0; i < num; i++)
+                {
+                    phonology.CodaConsonants.Add(stack.Pop());
+                }
+            }
+
             return phonology;
         }
     }

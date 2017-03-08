@@ -65,6 +65,7 @@ namespace yod.Phonology
         // fixes stress placement and consecutive identical phonemes
         public void Fix()
         {
+            Syllables.RemoveAll(x => x.Phonemes.Count == 0);
             ApplyGeminates();
             ApplyStress();
         }

@@ -282,6 +282,9 @@ namespace yod.Phonology
             var fricDefaultVoicing = Globals.Random.Next(100) > 50 ? Consonant.Phonation.Unvoiced : Consonant.Phonation.Voiced;
             var stopDefaultVoicing = Globals.Random.Next(100) > 50 ? Consonant.Phonation.Unvoiced : Consonant.Phonation.Voiced;
 
+            // we have a list of extra additions in case we run out of places+manners
+            var listOfExtraConsonants = new List<Consonant>();
+
             // check if the consonant is included in our places & manners
             // if so, check if we want both voiced&unvoiced, or just the default
             Func<Consonant, bool> test = x =>
@@ -299,7 +302,7 @@ namespace yod.Phonology
                     b = fricVoiceContrast || x.Voicing == fricDefaultVoicing;
                 }
 
-                return b && e;
+                return (b && e) || listOfExtraConsonants.Contains(x);
             };
 
             var collection = new List<Consonant>();
@@ -319,7 +322,12 @@ namespace yod.Phonology
                 }
                 else
                 {
-                    throw new Exception("Places and Manners lists are both empty.");
+                    //places and manners lists are empty, add some random consonants
+                    var c = IPAConsonants[Globals.Random.Next(IPAConsonants.Count)];
+                    while(collection.Contains(c)) c = IPAConsonants[Globals.Random.Next(IPAConsonants.Count)];
+                    listOfExtraConsonants.Add(c);
+
+                    //throw new Exception("Places and Manners lists are both empty.");
                 }
 
                 collection = IPAConsonants.Where(test).ToList();
