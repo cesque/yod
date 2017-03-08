@@ -184,8 +184,8 @@ namespace yod.Phonology
             o.Add("stresslocation", new JValue(stressDict[StressLocation]));
             o.Add("syllablestructure", SyllableStructure.ToJSON());
             o.Add("phonemes", Phonemes.ToJSON());
-            o.Add("onsetconsonants", new JArray(OnsetConsonants.Select(x => x.Symbol)));
-            o.Add("codaconsonants", new JArray(CodaConsonants.Select(x => x.Symbol)));
+            o.Add("onsetconsonants", OnsetConsonants.Count < Phonemes.Consonants.Count ? new JArray(OnsetConsonants.Select(x => x.Symbol)) : new JArray());
+            o.Add("codaconsonants", CodaConsonants.Count < Phonemes.Consonants.Count ? new JArray(CodaConsonants.Select(x => x.Symbol)) : new JArray());
             return o;
         }
     }

@@ -62,6 +62,11 @@ namespace yod.Phonology
             add.ForEach(pred => { AddRange(IPAVowels.Where(v => pred(v))); });
         }
 
+        public VowelCollection(List<Vowel> vowels)
+        {
+            vowels.ForEach(x => Add(x));
+        }
+
         public Vowel GetRandom()
         {
             return this[Globals.Random.Next(Count)];
@@ -87,7 +92,7 @@ namespace yod.Phonology
                 collection.Add(random);
             }
 
-            return new VowelCollection(new List<Predicate<Vowel>> {x => collection.Contains(x)});
+            return new VowelCollection(collection);
         }
 
         public static VowelCollection GenerateSubset(VowelCollection collection)
@@ -99,7 +104,7 @@ namespace yod.Phonology
             {
                 list.Add(stack.Pop());
             }
-            return new VowelCollection(new List<Predicate<Vowel>> {x => list.Contains(x)});
+            return new VowelCollection(list);
         }
 
         public JToken ToJSON()
