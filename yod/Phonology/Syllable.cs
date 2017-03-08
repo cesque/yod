@@ -149,7 +149,7 @@ namespace yod.Phonology
 
         private List<Phoneme> GetCoda()
         {
-            return GetOnset(structure.GetCodaLength());
+            return GetCoda(structure.GetCodaLength());
         }
 
         public void Morph()

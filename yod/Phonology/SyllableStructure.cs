@@ -53,8 +53,8 @@ namespace yod.Phonology
             var onset = new List<SyllableStructureOption>();
             var maxOnset = Globals.WeightedRandom(new Dictionary<int, float>
             {
-                {0, 10f},
-                {1, 45f},
+                {0, 5f},
+                {1, 50f},
                 {2, 45f}
             });
             for (var i = 0; i <= maxOnset; i++)
