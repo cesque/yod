@@ -59,7 +59,7 @@ namespace yod.Phonology
             });
             for (var i = 0; i <= maxOnset; i++)
             {
-                onset.Add(new SyllableStructureOption(i, 10 + Globals.Random.Next(i == 0 ? 35 : 90)));
+                onset.Add(new SyllableStructureOption(i, 10 + Globals.Random.Next(i == 0 ? 35 : 40)));
             }
 
             var nucleus = new List<SyllableStructureOption>();
@@ -70,7 +70,7 @@ namespace yod.Phonology
             });
             for (var i = 1; i <= maxNucleus; i++)
             {
-                nucleus.Add(new SyllableStructureOption(i, 10 + Globals.Random.Next(90)));
+                nucleus.Add(new SyllableStructureOption(i, 10 + Globals.Random.Next(40)));
             }
 
             var coda = new List<SyllableStructureOption>();
@@ -83,10 +83,17 @@ namespace yod.Phonology
             });
             for (var i = 0; i <= maxCoda; i++)
             {
-                coda.Add(new SyllableStructureOption(i, 10 + Globals.Random.Next(90)));
+                coda.Add(new SyllableStructureOption(i, 10 + Globals.Random.Next(40)));
             }
 
-            return new SyllableStructure(onset, nucleus, coda);
+            if (maxOnset == 0 && maxCoda == 0)
+            {
+                return Generate();
+            }
+            else
+            {
+                return new SyllableStructure(onset, nucleus, coda);
+            }
         }
     }
 }
