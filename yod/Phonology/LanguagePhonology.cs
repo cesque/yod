@@ -127,9 +127,28 @@ namespace yod.Phonology
 
             var phonology = new LanguagePhonology(syllStructure, phonemes);
 
-            phonology.WordLengthMin = Globals.Random.Next(100) > 75 ? 2 : 1;
-            phonology.WordLengthMax = Globals.Random.Next(phonology.WordLengthMin, phonology.WordLengthMin + 4);
+            phonology.WordLengthMin = GenerateWordLengthMin();
+            phonology.WordLengthMax = GenerateWordLengthMax(phonology.WordLengthMin);
 
+            phonology.StressLocation = GenerateStressLocation();
+
+            phonology.GeminateConsonants = GenerateGeminateConsonants();
+            phonology.LongVowels = GenerateLongVowel();
+
+            phonology.OnsetConsonants = GenerateOnsetConsonants(phonology.Phonemes.Consonants);
+            phonology.CodaConsonants = GenerateCodaConsonants(phonology.Phonemes.Consonants);
+
+            return phonology;
+        }
+
+        static private int GenerateWordLengthMin() => Globals.Random.Next(100) > 75 ? 2 : 1;
+        static private int GenerateWordLengthMax(int min) => Globals.Random.Next(min, min + 4);
+
+        static private bool GenerateGeminateConsonants() => Globals.Random.Next(100) > 50;
+        static private bool GenerateLongVowel() => Globals.Random.Next(100) > 50;
+
+        static private StressLocation GenerateStressLocation()
+        {
             var stressDict = new Dictionary<StressLocation, float>
             {
                 {StressLocation.Initial, 25f},
@@ -138,33 +157,45 @@ namespace yod.Phonology
                 {StressLocation.Ultimate, 25f}
             };
 
-            phonology.StressLocation = Globals.WeightedRandom(stressDict);
+            return Globals.WeightedRandom(stressDict);
+        }
 
-            phonology.GeminateConsonants = Globals.Random.Next(100) > 50;
-            phonology.LongVowels = Globals.Random.Next(100) > 50;
-
+        static private List<Consonant> GenerateOnsetConsonants(ConsonantCollection consonants)
+        {
             if (Globals.Random.Next(100) > 50)
             {
-                phonology.OnsetConsonants = new List<Consonant>();
-                var num = Math.Max(3, Globals.Random.Next(phonology.Phonemes.Consonants.Count));
-                var stack = new Stack<Consonant>(new List<Consonant>(phonology.Phonemes.Consonants).OrderBy(x => Globals.Random.Next()));
+                var oc = new List<Consonant>();
+                var num = Math.Max(2, Globals.Random.Next(consonants.Count));
+                var stack = new Stack<Consonant>(new List<Consonant>(consonants).OrderBy(x => Globals.Random.Next()));
                 for (var i = 0; i < num; i++)
                 {
-                    phonology.OnsetConsonants.Add(stack.Pop());
+                    oc.Add(stack.Pop());
                 }
+                return oc;
             }
+            else
+            {
+                return consonants;
+            }
+        }
+
+        static private List<Consonant> GenerateCodaConsonants(ConsonantCollection consonants)
+        {
             if (Globals.Random.Next(100) > 50)
             {
-                phonology.CodaConsonants = new List<Consonant>();
-                var num = Math.Max(3, Globals.Random.Next(phonology.Phonemes.Consonants.Count));
-                var stack = new Stack<Consonant>(new List<Consonant>(phonology.Phonemes.Consonants).OrderBy(x => Globals.Random.Next()));
+                var oc = new List<Consonant>();
+                var num = Math.Max(2, Globals.Random.Next(consonants.Count));
+                var stack = new Stack<Consonant>(new List<Consonant>(consonants).OrderBy(x => Globals.Random.Next()));
                 for (var i = 0; i < num; i++)
                 {
-                    phonology.CodaConsonants.Add(stack.Pop());
+                    oc.Add(stack.Pop());
                 }
+                return oc;
             }
-
-            return phonology;
+            else
+            {
+                return consonants;
+            }
         }
 
         public JToken ToJSON()
@@ -203,21 +234,37 @@ namespace yod.Phonology
             var o = jtoken as JObject;
 
             var phonology = new LanguagePhonology();
-            phonology.WordLengthMin = (int) o["wordlengthmin"];
-            phonology.WordLengthMax = (int) o["wordlengthmax"];
-            phonology.GeminateConsonants = (bool) o["geminateconsonants"];
-            phonology.LongVowels = (bool) o["longvowels"];
-            phonology.StressLocation = stressDict[(string) o["stresslocation"]];
-            phonology.SyllableStructure = SyllableStructure.FromJSON(o["syllablestructure"]);
-            phonology.Phonemes = PhonemeCollection.FromJSON(o["phonemes"]);
 
-            var oc = (o["onsetconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
-            var onsetCons = ConsonantCollection.IPAConsonants.Where(x => oc.Contains(x.Symbol)).ToList();
-            phonology.OnsetConsonants = onsetCons.Count == 0 ? phonology.Phonemes.Consonants : onsetCons;
+            phonology.WordLengthMin = o["wordlengthmin"] == null ? GenerateWordLengthMin() : (int) o["wordlengthmin"];
+            phonology.WordLengthMax = o["wordlengthmax"] == null ? GenerateWordLengthMax(phonology.WordLengthMin) : (int) o["wordlengthmax"];
+            if (phonology.WordLengthMin > phonology.WordLengthMax) throw new Exception("Word length minimum must be smaller or equal to word length max.");
+            phonology.GeminateConsonants = o["geminateconsonants"] == null ? GenerateGeminateConsonants() : (bool) o["geminateconsonants"];
+            phonology.LongVowels = o["longvowels"] == null ? GenerateLongVowel() : (bool) o["longvowels"];
+            phonology.StressLocation = o["stresslocation"] == null ? GenerateStressLocation() : stressDict[(string) o["stresslocation"]];
+            phonology.SyllableStructure = o["syllablestructure"] == null ? SyllableStructure.Generate() : SyllableStructure.FromJSON(o["syllablestructure"]);
+            phonology.Phonemes = o["phonemes"] == null ? PhonemeCollection.Generate() : PhonemeCollection.FromJSON(o["phonemes"]);
 
-            var cc = (o["codaconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
-            var codaCons = ConsonantCollection.IPAConsonants.Where(x => cc.Contains(x.Symbol)).ToList();
-            phonology.CodaConsonants = codaCons.Count == 0 ? phonology.Phonemes.Consonants : codaCons;
+            if (o["onsetconsonants"] == null)
+            {
+                phonology.OnsetConsonants = GenerateOnsetConsonants(phonology.Phonemes.Consonants);
+            }
+            else
+            {
+                var oc = (o["onsetconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
+                var onsetCons = ConsonantCollection.IPAConsonants.Where(x => oc.Contains(x.Symbol)).ToList();
+                phonology.OnsetConsonants = onsetCons.Count == 0 ? phonology.Phonemes.Consonants : onsetCons;
+            }
+
+            if (o["codaconsonants"] == null)
+            {
+                phonology.CodaConsonants = GenerateCodaConsonants(phonology.Phonemes.Consonants);
+            }
+            else
+            {
+                var cc = (o["codaconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
+                var codaCons = ConsonantCollection.IPAConsonants.Where(x => cc.Contains(x.Symbol)).ToList();
+                phonology.CodaConsonants = codaCons.Count == 0 ? phonology.Phonemes.Consonants : codaCons;
+            }
 
             return phonology;
         }
