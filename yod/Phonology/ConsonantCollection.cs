@@ -152,21 +152,49 @@ namespace yod.Phonology
             #region trills
             new Consonant("B", Consonant.Place.Bilabial, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
             new Consonant("ʙ̪", Consonant.Place.Labiodental, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
+            new Consonant("r̥", Consonant.Place.Alveolar, Consonant.Manner.Trill, Consonant.Phonation.Unvoiced, 3),
             new Consonant("r", Consonant.Place.Alveolar, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
+            new Consonant("ʀ̥", Consonant.Place.Uvular, Consonant.Manner.Trill, Consonant.Phonation.Unvoiced, 3),
             new Consonant("R", Consonant.Place.Uvular, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
+            new Consonant("ʜ", Consonant.Place.Pharyngeal, Consonant.Manner.Trill, Consonant.Phonation.Unvoiced, 3),
+            new Consonant("ʢ", Consonant.Place.Pharyngeal, Consonant.Manner.Trill, Consonant.Phonation.Voiced, 3),
 
             #endregion
             #region lateral affricate
+            new Consonant("t͡ɬ", Consonant.Place.Alveolar, Consonant.Manner.LateralAffricate, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("d͡ɮ", Consonant.Place.Alveolar, Consonant.Manner.LateralAffricate, Consonant.Phonation.Voiced, 4),
+            new Consonant("c͡ʎ̥˔", Consonant.Place.Palatal, Consonant.Manner.LateralAffricate, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("k͡ʟ̝̊", Consonant.Place.Velar, Consonant.Manner.LateralAffricate, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("ɡ͡ʟ̝", Consonant.Place.Velar, Consonant.Manner.LateralAffricate, Consonant.Phonation.Voiced, 4),
+
             #endregion
             #region lateral fricative
+            new Consonant("ɬ", Consonant.Place.Alveolar, Consonant.Manner.LateralFricative, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("ɮ", Consonant.Place.Alveolar, Consonant.Manner.LateralFricative, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʎ̥˔", Consonant.Place.Palatal, Consonant.Manner.LateralFricative, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("ʎ̝", Consonant.Place.Palatal, Consonant.Manner.LateralFricative, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʟ̝̊", Consonant.Place.Velar, Consonant.Manner.LateralFricative, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("ʟ̝", Consonant.Place.Velar, Consonant.Manner.LateralFricative, Consonant.Phonation.Voiced, 4),
+
             #endregion
 
             #region lateral approximants
+            new Consonant("l̥", Consonant.Place.Alveolar, Consonant.Manner.LateralApproximant, Consonant.Phonation.Unvoiced, 4),
             new Consonant("l", Consonant.Place.Alveolar, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
+            new Consonant("ɭ̊", Consonant.Place.Retroflex, Consonant.Manner.LateralApproximant, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("ɭ", Consonant.Place.Retroflex, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʎ̥", Consonant.Place.Palatal, Consonant.Manner.LateralApproximant, Consonant.Phonation.Unvoiced, 4),
             new Consonant("ʎ", Consonant.Place.Palatal, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʟ̥", Consonant.Place.Velar, Consonant.Manner.LateralApproximant, Consonant.Phonation.Unvoiced, 4),
+            new Consonant("ʟ", Consonant.Place.Velar, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʟ̠", Consonant.Place.Palatal, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
 
             #endregion
             #region lateral flap
+            new Consonant("ɺ", Consonant.Place.Alveolar, Consonant.Manner.LateralFlap, Consonant.Phonation.Voiced, 4),
+            new Consonant("ɭ̆", Consonant.Place.Retroflex, Consonant.Manner.LateralFlap, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʎ̮", Consonant.Place.Palatal, Consonant.Manner.LateralFlap, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʟ̆", Consonant.Place.Velar, Consonant.Manner.LateralFlap, Consonant.Phonation.Voiced, 4),
             #endregion
             #endregion
         };

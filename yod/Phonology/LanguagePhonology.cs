@@ -120,7 +120,7 @@ namespace yod.Phonology
         public static LanguagePhonology Generate()
         {
             var syllStructure = SyllableStructure.Generate();
-            var phonemes = PhonemeCollection.GenerateEnglishSubset();
+            var phonemes = PhonemeCollection.Generate();
 
             var phonology = new LanguagePhonology(syllStructure, phonemes);
 
