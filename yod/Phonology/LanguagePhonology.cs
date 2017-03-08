@@ -40,6 +40,9 @@ namespace yod.Phonology
         public int WordLengthMin = 1;
         public int WordLengthMax = 3;
 
+        public bool GeminateConsonants;
+        public bool LongVowels;
+
         public LanguagePhonology() : this(
             new SyllableStructure
             (
@@ -126,13 +129,16 @@ namespace yod.Phonology
 
             var stressDict = new Dictionary<StressLocation, float>
             {
-                {StressLocation.Initial, 25f },
-                {StressLocation.Second, 25f },
-                {StressLocation.Penultimate, 25f },
-                {StressLocation.Ultimate, 25f }
+                {StressLocation.Initial, 25f},
+                {StressLocation.Second, 25f},
+                {StressLocation.Penultimate, 25f},
+                {StressLocation.Ultimate, 25f}
             };
 
             phonology.StressLocation = Globals.WeightedRandom(stressDict);
+
+            phonology.GeminateConsonants = Globals.Random.Next(100) > 50;
+            phonology.LongVowels = Globals.Random.Next(100) > 50;
 
             return phonology;
         }

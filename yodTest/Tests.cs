@@ -148,7 +148,7 @@ namespace yodTest
 
 
             File.WriteAllText("./output.txt", s);
-            //Process.Start("notepad.exe", "./output.txt");
+            Process.Start("notepad.exe", "./output.txt");
         }
     }
 }

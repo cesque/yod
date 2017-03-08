@@ -77,8 +77,7 @@ namespace yod.Phonology
                 {
                     if (Syllables[i].Coda.Count > 0)
                     {
-                        Syllables[i].Coda.RemoveAt(Syllables[i].Coda.Count - 1);
-                        Syllables[i + 1].Onset.First().Long = true;
+                        Syllables[i + 1].Onset.First().Long = language.GeminateConsonants;
                     }
                     else
                     {
@@ -88,10 +87,9 @@ namespace yod.Phonology
                             Syllables[i + 1].Onset = Syllables[i].Onset;
                             Syllables[i].Onset.Clear();
                         }
-                        Syllables[i + 1].Nucleus.First().Long = true;
+                        Syllables[i + 1].Nucleus.First().Long = language.LongVowels;
                     }
-                    
-                    
+
 
                     if (Syllables[i].Phonemes.Count == 0)
                     {
@@ -102,7 +100,7 @@ namespace yod.Phonology
                 }
             }
 
-            if(rerun) ApplyGeminates();
+            if (rerun) ApplyGeminates();
         }
 
         void ApplyStress()
