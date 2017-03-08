@@ -5,10 +5,11 @@
         public string Symbol;
         public PhonemeType Type;
         public int Sonority;
+        public bool Long;
 
         public override string ToString()
         {
-            return Symbol;
+            return Symbol + (Long ? "ː" : "");
         }
 
         public enum PhonemeType

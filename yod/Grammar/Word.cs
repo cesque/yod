@@ -35,9 +35,8 @@ namespace yod.Grammar
             {
                 if(Inflected == null) Inflected = new Phonology.Word(Lemma);
                 if(inflection.Suffix != null) Inflected.Syllables.Add(inflection.Suffix);
+                Inflected.Fix();
             }
-
-            Inflected.ReapplyStress();
         }
 
         // todo: handle inflection heirarchy in better way

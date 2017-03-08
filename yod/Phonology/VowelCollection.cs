@@ -88,5 +88,17 @@ namespace yod.Phonology
 
             return new VowelCollection(new List<Predicate<Vowel>> {x => collection.Contains(x)});
         }
+
+        public static VowelCollection GenerateSubset(VowelCollection collection)
+        {
+            var num = Math.Max(2, Globals.Random.Next(collection.Count));
+            var stack = new Stack<Vowel>(collection.OrderBy(x => Globals.Random.Next()));
+            var list = new List<Vowel>();
+            for (var i = 0; i < num; i++)
+            {
+                list.Add(stack.Pop());
+            }
+            return new VowelCollection(new List<Predicate<Vowel>> {x => list.Contains(x)});
+        }
     }
 }

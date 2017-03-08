@@ -173,7 +173,9 @@ namespace yod.Phonology
 
         public static ConsonantCollection AllConsonants => new ConsonantCollection();
 
-        public static ConsonantCollection DefaultConsonants
+        public static ConsonantCollection DefaultConsonants => EnglishConsonants;
+
+        public static ConsonantCollection EnglishConsonants
         {
             get
             {
@@ -296,6 +298,18 @@ namespace yod.Phonology
             }
 
             return new ConsonantCollection(new List<Predicate<Consonant>> {x => test(x)});
+        }
+
+        public static ConsonantCollection GenerateSubset(ConsonantCollection collection)
+        {
+            var num = Math.Max(2, Globals.Random.Next(collection.Count));
+            var stack = new Stack<Consonant>(collection.OrderBy(x => Globals.Random.Next()));
+            var list = new List<Consonant>();
+            for (var i = 0; i < num; i++)
+            {
+                list.Add(stack.Pop());
+            }
+            return new ConsonantCollection(new List<Predicate<Consonant>> {x => list.Contains(x)});
         }
     }
 }

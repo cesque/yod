@@ -15,6 +15,7 @@ namespace yod.Phonology
                 return list;
             }
         }
+
         public ConsonantCollection Consonants;
         public VowelCollection Vowels;
 
@@ -38,6 +39,20 @@ namespace yod.Phonology
             PhonemeCollection pc = new PhonemeCollection();
             pc.Consonants = ConsonantCollection.Generate();
             pc.Vowels = VowelCollection.Generate();
+
+            return pc;
+        }
+
+        public static PhonemeCollection GenerateEnglishSubset()
+        {
+            PhonemeCollection pc = new PhonemeCollection();
+            pc.Consonants = ConsonantCollection.GenerateSubset(ConsonantCollection.EnglishConsonants);
+            pc.Vowels = VowelCollection.GenerateSubset(VowelCollection.EnglishVowels);
+            while (pc.AllPhonemes.Count <= 5)
+            {
+                pc.Consonants = ConsonantCollection.GenerateSubset(ConsonantCollection.EnglishConsonants);
+                pc.Vowels = VowelCollection.GenerateSubset(VowelCollection.EnglishVowels);
+            }
 
             return pc;
         }

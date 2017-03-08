@@ -48,12 +48,12 @@ namespace yod.Phonology
                 }
                 else
                 {
-                    while (Syllables.Last().Phonemes.Last() == syl.Phonemes.First()) syl = new Syllable(language);
+                    //while (Syllables.Last().Phonemes.Last() == syl.Phonemes.First()) syl = new Syllable(language);
                     Syllables.Add(syl);
                 }
             }
 
-            ReapplyStress();
+            ApplyStress();
 
             if (!IsValid())
             {
@@ -61,7 +61,41 @@ namespace yod.Phonology
             }
         }
 
-        public void ReapplyStress()
+        // fixes stress placement and consecutive identical phonemes
+        public void Fix()
+        {
+            ApplyGeminates();
+            ApplyStress();
+        }
+
+        void ApplyGeminates()
+        {
+            for (var i = 0; i < SyllableLength - 1; i++)
+            {
+                if (Syllables[i].Phonemes.Last().Symbol == Syllables[i + 1].Phonemes.First().Symbol)
+                {
+                    if (Syllables[i].Coda.Count > 0)
+                    {
+                        Syllables[i].Coda.RemoveAt(Syllables[i].Coda.Count - 1);
+                    }
+                    else
+                    {
+                        Syllables[i].Nucleus.RemoveAt(Syllables[i].Nucleus.Count - 1);
+
+                    }
+                    
+                    Syllables[i + 1].Phonemes.First().Long = true;
+
+                    if (Syllables[i].Phonemes.Count == 0)
+                    {
+                        Syllables.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+        }
+
+        void ApplyStress()
         {
             if (SyllableLength == 1) return;
             var stressIndex = 0;

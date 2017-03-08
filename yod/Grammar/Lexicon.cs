@@ -82,11 +82,22 @@ namespace yod.Grammar
             {
                 foreach (var word in pair.Value)
                 {
+                    var loops = 0;
                     var w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
                     while (Lexemes.Exists(x => x.Lemma.Equals(w)))
                     {
-                       w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
-                       Console.WriteLine(w.ToString()); 
+                        loops++;
+                        if (loops < 50)
+                        {
+                            w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
+                            Console.WriteLine(w.ToString());
+                        }
+                        else
+                        {       
+                            // happens when phonemes + syllable structures + word length are all too restrictive 
+                            throw new Exception("Couldn't generate unique words for given language.");
+                        }
+
                     }
                     Add(word, w, pair.Key);
                 }
@@ -108,7 +119,8 @@ namespace yod.Grammar
             }
             else if (commonWords.ContainsKey(pos) && commonWords[pos].Contains(word))
             {
-                return new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin);
+                var length = Globals.Random.Next(phonology.WordLengthMin, Math.Min(phonology.WordLengthMax, phonology.WordLengthMin + 1));
+                return new Phonology.Word(phonology, syllableLength: length);
             }
             else
             {
