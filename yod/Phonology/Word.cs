@@ -65,15 +65,12 @@ namespace yod.Phonology
         // fixes stress placement and consecutive identical phonemes
         public void Fix()
         {
-            while (ApplyGeminates())
-            {
-            }
+            ApplyGeminates();
             ApplyStress();
         }
 
-        bool ApplyGeminates()
+        void ApplyGeminates()
         {
-            bool rerun = false;
             for (var i = 0; i < SyllableLength - 1; i++)
             {
                 if (Syllables[i].Phonemes.Last().Symbol == Syllables[i + 1].Phonemes.First().Symbol)
@@ -82,7 +79,6 @@ namespace yod.Phonology
                     {
                         Syllables[i].Coda.Clear();
                         Syllables[i + 1].Onset.First().Long = language.GeminateConsonants;
-                        rerun = true;
                     }
                     else
                     {
@@ -93,7 +89,6 @@ namespace yod.Phonology
                             Syllables[i].Onset.Clear();
                         }
                         Syllables[i + 1].Nucleus.First().Long = language.LongVowels;
-                        rerun = true;
                     }
 
                     if (Syllables[i].Phonemes.Count == 0)
@@ -104,7 +99,7 @@ namespace yod.Phonology
                 }
             }
 
-            return rerun;
+            return;
         }
 
         void ApplyStress()
