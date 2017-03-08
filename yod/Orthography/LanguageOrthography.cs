@@ -66,41 +66,6 @@ namespace yod.Orthography
             #endregion
         };
 
-        public static readonly Dictionary<string, string> CroatianOrthography = new Dictionary<string, string>
-        {
-            #region rules
-	        { "a", "a" },
-            { "b", "b" },
-            { "v", "v" },
-            { "g", "g" },
-            { "d", "d" },
-            { "d͡ʑ", "đ" },
-            { "e", "e" },
-            { "ʐ", "ž" },
-            { "z", "z" },
-            { "i", "i" },
-            { "j", "j" },
-            { "k", "k" },
-            { "l", "l" },
-            { "ʎ", "lj" },
-            { "m", "m" },
-            { "n", "n" },
-            { "ɲ", "nj" },
-            { "p", "p" },
-            { "r", "r" },
-            { "s", "s" },
-            { "t", "t" },
-            { "t͡ɕ", "ć" },
-            { "u", "u" },
-            { "f", "f" },
-            { "x", "h" },
-            { "t͡s", "c"},
-            { "ʈ͡ʂ", "č"},
-            { "ɖ͡ʐ", "dž"},
-            { "ʂ", "š"}
-            #endregion
-        };
-
         public LanguageOrthography(LanguagePhonology lang) : this(DefaultOrthography, lang)
         {
 
