@@ -111,5 +111,13 @@ namespace yod.Phonology
         {
             return new JArray(this.Select(x => x.Symbol));
         }
+
+        public static VowelCollection FromJSON(JToken jToken)
+        {
+            var a = (jToken as JArray).ToList().Select(x => x.Value<string>());
+            var vowels = IPAVowels.Where(x => a.Contains(x.Symbol)).ToList();
+            VowelCollection v = new VowelCollection(vowels);
+            return v;
+        }
     }
 }

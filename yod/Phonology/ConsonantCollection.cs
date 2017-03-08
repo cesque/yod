@@ -23,7 +23,7 @@ namespace yod.Phonology
         LA      |     |     |     | l   |     |     |     |ʎ    |     |     |     |        |                                                   
         */
 
-        private static readonly List<Consonant> IPAConsonants = new List<Consonant>
+        public static readonly List<Consonant> IPAConsonants = new List<Consonant>
         {
             #region consonants
             #region nasals
@@ -43,8 +43,8 @@ namespace yod.Phonology
             #region stops
             new Consonant("p", Consonant.Place.Bilabial, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
             new Consonant("b", Consonant.Place.Bilabial, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
-            new Consonant("p̪", Consonant.Place.Bilabial, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
-            new Consonant("b̪", Consonant.Place.Bilabial, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
+            new Consonant("p̪", Consonant.Place.Labiodental, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
+            new Consonant("b̪", Consonant.Place.Labiodental, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
             new Consonant("t̼", Consonant.Place.Linguolabial, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
             new Consonant("d̼", Consonant.Place.Linguolabial, Consonant.Manner.Stop, Consonant.Phonation.Voiced, 8),
             new Consonant("t", Consonant.Place.Alveolar, Consonant.Manner.Stop, Consonant.Phonation.Unvoiced, 9),
@@ -188,7 +188,7 @@ namespace yod.Phonology
             new Consonant("ʎ", Consonant.Place.Palatal, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
             new Consonant("ʟ̥", Consonant.Place.Velar, Consonant.Manner.LateralApproximant, Consonant.Phonation.Unvoiced, 4),
             new Consonant("ʟ", Consonant.Place.Velar, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
-            new Consonant("ʟ̠", Consonant.Place.Palatal, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
+            new Consonant("ʟ̠", Consonant.Place.Uvular, Consonant.Manner.LateralApproximant, Consonant.Phonation.Voiced, 4),
 
             #endregion
             #region lateral flap
@@ -196,6 +196,7 @@ namespace yod.Phonology
             new Consonant("ɭ̆", Consonant.Place.Retroflex, Consonant.Manner.LateralFlap, Consonant.Phonation.Voiced, 4),
             new Consonant("ʎ̮", Consonant.Place.Palatal, Consonant.Manner.LateralFlap, Consonant.Phonation.Voiced, 4),
             new Consonant("ʟ̆", Consonant.Place.Velar, Consonant.Manner.LateralFlap, Consonant.Phonation.Voiced, 4),
+
             #endregion
             #endregion
         };
@@ -234,6 +235,11 @@ namespace yod.Phonology
         public ConsonantCollection(List<Predicate<Consonant>> add)
         {
             add.ForEach(pred => { AddRange(IPAConsonants.Where(c => pred(c))); });
+        }
+
+        public ConsonantCollection(List<Consonant> consonants)
+        {
+            consonants.ForEach(x => this.Add(x));
         }
 
         public Consonant GetRandom()
@@ -325,7 +331,7 @@ namespace yod.Phonology
                 {
                     //places and manners lists are empty, add some random consonants
                     var c = IPAConsonants[Globals.Random.Next(IPAConsonants.Count)];
-                    while(collection.Contains(c)) c = IPAConsonants[Globals.Random.Next(IPAConsonants.Count)];
+                    while (collection.Contains(c)) c = IPAConsonants[Globals.Random.Next(IPAConsonants.Count)];
                     listOfExtraConsonants.Add(c);
 
                     //throw new Exception("Places and Manners lists are both empty.");
@@ -352,6 +358,14 @@ namespace yod.Phonology
         public JToken ToJSON()
         {
             return new JArray(this.Select(x => x.Symbol));
+        }
+
+        public static ConsonantCollection FromJSON(JToken jToken)
+        {
+            var a = (jToken as JArray).ToList().Select(x => x.Value<string>());
+            var consonants = IPAConsonants.Where(x => a.Contains(x.Symbol)).ToList();
+            ConsonantCollection c = new ConsonantCollection(consonants);
+            return c;
         }
     }
 }

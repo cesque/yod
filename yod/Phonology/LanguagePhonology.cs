@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -122,7 +123,7 @@ namespace yod.Phonology
         public static LanguagePhonology Generate()
         {
             var syllStructure = SyllableStructure.Generate();
-            var phonemes = PhonemeCollection.Generate();
+            var phonemes = PhonemeCollection.GenerateEnglishSubset();
 
             var phonology = new LanguagePhonology(syllStructure, phonemes);
 
@@ -187,6 +188,43 @@ namespace yod.Phonology
             o.Add("onsetconsonants", OnsetConsonants.Count < Phonemes.Consonants.Count ? new JArray(OnsetConsonants.Select(x => x.Symbol)) : new JArray());
             o.Add("codaconsonants", CodaConsonants.Count < Phonemes.Consonants.Count ? new JArray(CodaConsonants.Select(x => x.Symbol)) : new JArray());
             return o;
+        }
+
+        public static LanguagePhonology FromJSON(JToken jtoken)
+        {
+            var stressDict = new Dictionary<string, StressLocation>
+            {
+                {"initial", StressLocation.Initial},
+                {"second", StressLocation.Second},
+                {"penultimate", StressLocation.Penultimate},
+                {"ultimate", StressLocation.Ultimate},
+            };
+
+            var o = jtoken as JObject;
+
+            var phonology = new LanguagePhonology();
+            phonology.WordLengthMin = (int) o["wordlengthmin"];
+            phonology.WordLengthMax = (int) o["wordlengthmax"];
+            phonology.GeminateConsonants = (bool) o["geminateconsonants"];
+            phonology.LongVowels = (bool) o["longvowels"];
+            phonology.StressLocation = stressDict[(string) o["stresslocation"]];
+            phonology.SyllableStructure = SyllableStructure.FromJSON(o["syllablestructure"]);
+            phonology.Phonemes = PhonemeCollection.FromJSON(o["phonemes"]);
+
+            var oc = (o["onsetconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
+            var onsetCons = ConsonantCollection.IPAConsonants.Where(x => oc.Contains(x.Symbol)).ToList();
+            phonology.OnsetConsonants = onsetCons.Count == 0 ? phonology.Phonemes.Consonants : onsetCons;
+
+            var cc = (o["codaconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
+            var codaCons = ConsonantCollection.IPAConsonants.Where(x => cc.Contains(x.Symbol)).ToList();
+            phonology.CodaConsonants = codaCons.Count == 0 ? phonology.Phonemes.Consonants : codaCons;
+
+            return phonology;
+        }
+
+        public static LanguagePhonology FromJSON(string path)
+        {
+            return FromJSON(JToken.Parse(File.ReadAllText(path)));
         }
     }
 }

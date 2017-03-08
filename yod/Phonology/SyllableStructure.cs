@@ -55,6 +55,12 @@ namespace yod.Phonology
                 o.Add(Length.ToString(), new JValue(Weight));
                 return o;
             }
+
+            public static SyllableStructureOption FromJSON(JToken jtoken)
+            {
+                var o = (jtoken as JObject).First as JProperty;
+                return new SyllableStructureOption(int.Parse(o.Name), (int)o.Value);
+            }
         }
 
         public static SyllableStructure Generate()
@@ -113,6 +119,16 @@ namespace yod.Phonology
                 {"nucleus", new JArray(NucleusStructure.Select(x => x.ToJSON()))},
                 {"coda", new JArray(CodaStructure.Select(x => x.ToJSON()))}
             };
+        }
+
+        public static SyllableStructure FromJSON(JToken jToken)
+        {
+            var o = jToken as JObject;
+            var structure = new SyllableStructure(new List<SyllableStructureOption>(), new List<SyllableStructureOption>(), new List<SyllableStructureOption>());
+            (o["onset"] as JArray).ToList().ForEach(x => structure.OnsetStructure.Add(SyllableStructureOption.FromJSON(x)));
+            (o["nucleus"] as JArray).ToList().ForEach(x => structure.NucleusStructure.Add(SyllableStructureOption.FromJSON(x)));
+            (o["coda"] as JArray).ToList().ForEach(x => structure.CodaStructure.Add(SyllableStructureOption.FromJSON(x)));
+            return structure;
         }
     }
 }

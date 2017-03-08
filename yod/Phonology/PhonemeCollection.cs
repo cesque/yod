@@ -65,5 +65,14 @@ namespace yod.Phonology
             o.Add("vowels", Vowels.ToJSON());
             return o;
         }
+
+        public static PhonemeCollection FromJSON(JToken jToken)
+        {
+            var o = jToken as JObject;
+            PhonemeCollection p = new PhonemeCollection();
+            p.Consonants = ConsonantCollection.FromJSON(o["consonants"]);
+            p.Vowels = VowelCollection.FromJSON(o["vowels"]);
+            return p;
+        }
     }
 }
