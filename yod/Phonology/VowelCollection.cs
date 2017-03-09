@@ -7,7 +7,7 @@ namespace yod.Phonology
 {
     public class VowelCollection : List<Vowel>
     {
-        private static readonly List<Vowel> IPAVowels = new List<Vowel>
+        public static readonly List<Vowel> IPAVowels = new List<Vowel>
         {
             // todo: add more vowels
             new Vowel("i", Vowel.Height.Close, Vowel.Backness.Front, Vowel.Rounding.Unrounded, sonority: 2),
@@ -23,15 +23,11 @@ namespace yod.Phonology
             new Vowel("ʊ", Vowel.Height.NearClose, Vowel.Backness.NearBack, Vowel.Rounding.Rounded, 2),
             new Vowel("e", Vowel.Height.CloseMid, Vowel.Backness.Front, Vowel.Rounding.Unrounded, 1),
             new Vowel("ø", Vowel.Height.CloseMid, Vowel.Backness.Front, Vowel.Rounding.Rounded, 1),
-            new Vowel("e", Vowel.Height.CloseMid, Vowel.Backness.Front, Vowel.Rounding.Unrounded, 1),
-            new Vowel("ø", Vowel.Height.CloseMid, Vowel.Backness.Front, Vowel.Rounding.Rounded, 1),
             new Vowel("ɘ", Vowel.Height.CloseMid, Vowel.Backness.Central, Vowel.Rounding.Unrounded, 1),
             new Vowel("ɵ", Vowel.Height.CloseMid, Vowel.Backness.Central, Vowel.Rounding.Rounded, 1),
             new Vowel("ɤ", Vowel.Height.CloseMid, Vowel.Backness.Back, Vowel.Rounding.Unrounded, 1),
             new Vowel("o", Vowel.Height.CloseMid, Vowel.Backness.Back, Vowel.Rounding.Rounded, 1),
             new Vowel("ə", Vowel.Height.Mid, Vowel.Backness.Central, Vowel.Rounding.Unrounded, 1),
-            new Vowel("ɤ̞", Vowel.Height.Mid, Vowel.Backness.Back, Vowel.Rounding.Unrounded, 1),
-            new Vowel("o̞", Vowel.Height.Mid, Vowel.Backness.Back, Vowel.Rounding.Rounded, 1),
             new Vowel("ɛ", Vowel.Height.OpenMid, Vowel.Backness.Front, Vowel.Rounding.Unrounded, 0),
             new Vowel("œ", Vowel.Height.OpenMid, Vowel.Backness.Front, Vowel.Rounding.Rounded, 0),
             new Vowel("ɜ", Vowel.Height.OpenMid, Vowel.Backness.Central, Vowel.Rounding.Unrounded, 0),

@@ -147,9 +147,9 @@ namespace yodTest
             });
 
 
-            File.WriteAllText("./output.txt", phonology.ToJSON().ToString());
+            File.WriteAllText("./output.txt", String.Join(", ", VowelCollection.IPAVowels.Select(x => x.Symbol)));
             Process.Start("notepad.exe", "./output.txt");
-            var p = LanguagePhonology.FromJSON("./output.txt");
+            //var p = LanguagePhonology.FromJSON("./output.txt");
         }
     }
 }
