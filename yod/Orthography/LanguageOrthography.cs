@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using yod.Phonology;
 
 namespace yod.Orthography
@@ -9,7 +10,7 @@ namespace yod.Orthography
         public Dictionary<string, string> Rules;
         LanguagePhonology language;
 
-        public Dictionary<string, List<string>> Orthographies = new Dictionary<string, List<string>>
+        public static Dictionary<string, List<string>> Graphemes = new Dictionary<string, List<string>>
         {
             {"m̥", new List<string> {"m", "ṃ", "ḿ", "ṁ"}},
             {"m", new List<string> {"m", "ṁ", "ṃ"}},
@@ -164,17 +165,17 @@ namespace yod.Orthography
             {"ə", new List<string> {"ə", "e", "a", "ĕ", "ḝ", "ȇ", "ê", "ẻ", "ḙ", "ě", "ɇ", "ė", "ẹ", "ë", "è", "ȅ", "é", "ē", "ẽ", "ḛ", "ę", "ᶒ", "ⱸ"}},
             {"ɛ", new List<string> {"ė", "e", "ĕ", "ḝ", "ȇ", "ê", "ẻ", "ḙ", "ě", "ɇ", "ė", "ẹ", "ë", "è", "ȅ", "é", "ē", "ẽ", "ḛ", "ę", "ᶒ", "ⱸ"}},
             {"œ", new List<string> {"œ", "õ", "ö", "ĕ", "ū", "ě"}},
-            {"ɜ", new List<string> {"ɜ", "œ", "õ", "ö", "ĕ", "ū"}},},
+            {"ɜ", new List<string> {"ɜ", "œ", "õ", "ö", "ĕ", "ū"}},
             {"ɞ", new List<string> {"u", "ŭ", "ʉ", "ụ", "ü", "ù", "û", "ǔ", "ű", "ŭ", "ư", "ủ", "ū", "ũ", "ų", "ȕ", "ú",}},
             {"ʌ", new List<string> {"u", "ŭ", "ʉ", "ụ", "ü", "ù", "û", "ǔ", "ű", "ŭ", "ư", "ủ", "ū", "ũ", "ų", "ȕ", "ú",}},
             {"ɔ", new List<string> {"o", "å", "ö", "ɵ", "ø", "ō", "ǫ", "õ", "ŏ"}},
             {"æ", new List<string> {"a", "ḁ", "ẚ", "ă", "ȃ", "â", "ⱥ", "ǎ", "ȧ", "ạ", "ä", "à", "ȁ", "á", "ā", "ã", "ą", "ᶏ"}},
             {"ɐ", new List<string> {"ā", "a", "ḁ", "ẚ", "ă", "ȃ", "â", "ⱥ", "ǎ", "ȧ", "ạ", "ä", "à", "ȁ", "á", "ã", "ą", "ᶏ"}},
             {"a", new List<string> {"ȃ", "ā", "a", "ḁ", "ẚ", "ă", "â", "ⱥ", "ǎ", "ȧ", "ạ", "ä", "à", "ȁ", "á", "ã", "ą", "ᶏ"}},
-            {"ɶ", new List<string> {"œ", "õ", "ö", "ĕ", "ū", "ě"}}
+            {"ɶ", new List<string> {"œ", "õ", "ö", "ĕ", "ū", "ě"}},
             {"ä", new List<string> {"ȃ", "ā", "a", "ḁ", "ẚ", "ă", "â", "ⱥ", "ǎ", "ȧ", "ạ", "ä", "à", "ȁ", "á", "ã", "ą", "ᶏ"}},
             {"ɑ", new List<string> {"ȃ", "ā", "a", "ḁ", "ẚ", "ă", "â", "ⱥ", "ǎ", "ȧ", "ạ", "ä", "à", "ȁ", "á", "ã", "ą", "ᶏ"}},
-            {"ɒ", new List<string> {"ō", "o", "ó", "õ", "å", "ọ", "ȯ", "ò"}},
+            {"ɒ", new List<string> {"ō", "o", "ó", "õ", "å", "ọ", "ȯ", "ò"}}
         };
 
         public static readonly Dictionary<string, string> DefaultOrthography = new Dictionary<string, string>
@@ -279,6 +280,22 @@ namespace yod.Orthography
                 s += Orthographize(syllable);
             }
             return s;
+        }
+
+        public static LanguageOrthography Generate(LanguagePhonology phonology)
+        {
+            var dict = new Dictionary<string, string>();
+            var allphonemes = phonology.Phonemes.AllPhonemes;
+            foreach (var pair in Graphemes)
+            {
+                var phoneme = pair.Key;
+                var possible = pair.Value;
+                if (allphonemes.Exists(x => x.Symbol == phoneme))
+                {
+                    dict.Add(phoneme, possible.First());
+                }
+            }
+            return new LanguageOrthography(dict, phonology);
         }
     }
 }
