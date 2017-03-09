@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using yod.Phonology;
 
 namespace yod.Orthography
@@ -295,6 +296,34 @@ namespace yod.Orthography
                     dict.Add(phoneme, grapheme);
                 }
             }
+            return new LanguageOrthography(dict, phonology);
+        }
+
+        public JToken ToJSON()
+        {
+            var o = new JObject();
+            foreach (var pair in Rules)
+            {
+                var phoneme = pair.Key;
+                var grapheme = pair.Value;
+
+                o.Add(phoneme, new JValue(grapheme));
+            }
+            return o;
+        }
+
+        public static LanguageOrthography FromJSON(JToken jtoken, LanguagePhonology phonology)
+        {
+            var o = jtoken as JObject;
+            var dict = new Dictionary<string, string>();
+            foreach (var prop in o.Properties())
+            {
+                var phoneme = prop.Name;
+                var grapheme = (string)prop.Value;
+
+                dict.Add(phoneme, grapheme);
+            }
+
             return new LanguageOrthography(dict, phonology);
         }
     }
