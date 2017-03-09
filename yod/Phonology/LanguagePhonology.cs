@@ -142,7 +142,7 @@ namespace yod.Phonology
         }
 
         static private int GenerateWordLengthMin() => Globals.Random.Next(100) > 75 ? 2 : 1;
-        static private int GenerateWordLengthMax(int min) => Globals.Random.Next(min, min + 4);
+        static private int GenerateWordLengthMax(int min) => Globals.Random.Next(min, min + 2);
 
         static private bool GenerateGeminateConsonants() => Globals.Random.Next(100) > 50;
         static private bool GenerateLongVowel() => Globals.Random.Next(100) > 50;

@@ -23,11 +23,7 @@ namespace yodTest
 
 
             phonology = LanguagePhonology.Generate();
-            //orthography = new LanguageOrthography(LanguageOrthography.DefaultOrthography, phonology);
-            phonology.WordLengthMin = 1;
-            phonology.WordLengthMax = 3;
-
-            //var s = "";
+            orthography = LanguageOrthography.Generate(phonology);
 
             lexicon = new Lexicon();
             lexicon.Fill("./dictionary.json", phonology);
@@ -127,6 +123,19 @@ namespace yodTest
             return s;
         }
 
+        public string TestOrthography()
+        {
+            var s = "";
+
+            foreach (var phoneme in phonology.Phonemes.AllPhonemes)
+            {
+                var symboldiff = phoneme.Symbol.Length - Globals.StripTies(phoneme.Symbol).Length;
+                s += phoneme.Symbol.PadRight(2 + symboldiff) + " -> " + orthography.Orthographize(phoneme) + Environment.NewLine;
+            }
+
+            return s;
+        }
+
         public void Run()
         {
             var s = "";
@@ -137,7 +146,8 @@ namespace yodTest
 
                 TestPhrase,
                 TestInflectedPhrase,
-                //TestLexiconOrthographized
+                TestLexiconOrthographized,
+                TestOrthography
             };
 
             tests.ForEach(test =>
@@ -147,9 +157,8 @@ namespace yodTest
             });
 
 
-            File.WriteAllText("./output.txt", String.Join(", ", VowelCollection.IPAVowels.Select(x => x.Symbol)));
+            File.WriteAllText("./output.txt", s);
             Process.Start("notepad.exe", "./output.txt");
-            //var p = LanguagePhonology.FromJSON("./output.txt");
         }
     }
 }
