@@ -291,7 +291,7 @@ namespace yod.Orthography
                 var possible = pair.Value;
                 if (allphonemes.Exists(x => x.Symbol == phoneme))
                 {
-                    var grapheme = Globals.Random.Next(100) > 25 ? possible.First() : possible[Globals.Random.Next(possible.Count)];
+                    var grapheme = Globals.Random.Next(100) > 15 ? possible.First() : possible[Globals.Random.Next(possible.Count)];
                     dict.Add(phoneme, grapheme);
                 }
             }

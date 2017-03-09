@@ -40,6 +40,8 @@ namespace yodTest
 
             flattened.ForEach(x => s += x.EnglishLemma + " ");
             s += Environment.NewLine;
+            flattened.ForEach(x => s += orthography.Orthographize(x.Inflected) + " ");
+            s += Environment.NewLine;
             s += "/";
             flattened.ForEach(x => s += x.Lemma.ToString() + " ");
             s += "/";
@@ -69,6 +71,8 @@ namespace yodTest
             var s = "";
 
             flattened.ForEach(x => s += x.EnglishLemma + " ");
+            s += Environment.NewLine;
+            flattened.ForEach(x => s += orthography.Orthographize(x.Inflected) + " ");
             s += Environment.NewLine;
             s += "/";
             flattened.ForEach(x => s += x.Inflected.ToString() + " ");
