@@ -105,20 +105,26 @@ namespace yodTest
                 new Inflection(phonology, PartOfSpeech.Pronoun, "GEN"),
                 new Inflection(phonology, PartOfSpeech.Noun, "GEN"),
             };
-
+            
             birthday1.InflectAll(inflections);
             birthday2.InflectAll(inflections);
 
             var flattened1 = birthday1.Flatten();
             var flattened2 = birthday2.Flatten();
 
-            var line1 = String.Join(" ", flattened1.Select(x => x.Inflected.ToString()));
-            var line2 = String.Join(" ", flattened2.Select(x => x.Inflected.ToString()));
+            var line1 = "/" + String.Join(" ", flattened1.Select(x => x.Inflected.ToString())) + "/";
+            var orth1 = String.Join(" ", flattened1.Select(x => orthography.Orthographize(x.Inflected)));
+            var line2 = "/" + String.Join(" ", flattened2.Select(x => x.Inflected.ToString())) + "/";
+            var orth2 = String.Join(" ", flattened2.Select(x => orthography.Orthographize(x.Inflected)));
 
             var s = "";
+            s += orth1 + Environment.NewLine;
             s += line1 + Environment.NewLine;
+            s += orth1 + Environment.NewLine;
             s += line1 + Environment.NewLine;
+            s += orth2 + Environment.NewLine;
             s += line2 + Environment.NewLine;
+            s += orth1 + Environment.NewLine;
             s += line1 + Environment.NewLine;
             return s;
         }
