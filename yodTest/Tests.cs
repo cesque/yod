@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using yod;
 using yod.Grammar;
 using yod.Grammar.Structure;
@@ -15,15 +16,17 @@ namespace yodTest
     {
         LanguagePhonology phonology;
         LanguageOrthography orthography;
+        LanguageGrammar grammar;
+        
         Lexicon lexicon;
 
         public Tests()
         {
             //Globals.SeedRandom(4);
 
-
             phonology = LanguagePhonology.Generate();
             orthography = LanguageOrthography.Generate(phonology);
+            grammar = LanguageGrammar.FromJSON("./rules3.json");
 
             lexicon = new Lexicon();
             lexicon.Fill("./dictionary.json", phonology);
@@ -31,7 +34,7 @@ namespace yodTest
 
         public string TestPhrase()
         {
-            Phrase phrase = new Phrase("./rules3.json", "./inflectioninput.json");
+            Phrase phrase = new Phrase(grammar, "./inflectioninput.json");
             phrase.Fill(lexicon);
 
             var flattened = phrase.Flatten();
@@ -51,7 +54,7 @@ namespace yodTest
 
         public string TestInflectedPhrase()
         {
-            Phrase phrase = new Phrase("./rules3.json", "./inflectioninput.json");
+            Phrase phrase = new Phrase(grammar, "./inflectioninput.json");
             phrase.Fill(lexicon);
 
             var subjectSyllable = phonology.GetSyllable();
@@ -94,8 +97,8 @@ namespace yodTest
 
         public string TestBirthday()
         {
-            Phrase birthday1 = new Phrase("./rules3.json", "./birthdayinput1.json");
-            Phrase birthday2 = new Phrase("./rules3.json", "./birthdayinput2.json");
+            Phrase birthday1 = new Phrase(grammar, "./birthdayinput1.json");
+            Phrase birthday2 = new Phrase(grammar, "./birthdayinput2.json");
 
             birthday1.Fill(lexicon);
             birthday2.Fill(lexicon);

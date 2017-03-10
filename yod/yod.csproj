@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Grammar\LanguageGrammar.cs" />
     <Compile Include="Grammar\Inflection.cs" />
     <Compile Include="Grammar\Structure\Phrase.cs" />
     <Compile Include="Grammar\Word.cs" />

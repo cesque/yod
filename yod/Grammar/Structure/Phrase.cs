@@ -11,18 +11,19 @@ namespace yod.Grammar.Structure
     {
         Dictionary<string, PartOfSpeech> posDict = new Dictionary<string, PartOfSpeech>
         {
-                {"PRON", PartOfSpeech.Pronoun},
-                {"NOUN", PartOfSpeech.Noun },
-                {"VERB", PartOfSpeech.Verb },
-                {"ADVB", PartOfSpeech.Adverb },
-                {"ADJC", PartOfSpeech.Adjective },
-                {"CONJ", PartOfSpeech.Conjunction },
-                {"PREP", PartOfSpeech.Preposition },
-                {"INTJ", PartOfSpeech.Interjection },
-                {"DETM", PartOfSpeech.Determiner },
-                {"RLTV", PartOfSpeech.Relativizer }
-            };
-        Dictionary<string, List<string>> rules;
+            {"PRON", PartOfSpeech.Pronoun},
+            {"NOUN", PartOfSpeech.Noun},
+            {"VERB", PartOfSpeech.Verb},
+            {"ADVB", PartOfSpeech.Adverb},
+            {"ADJC", PartOfSpeech.Adjective},
+            {"CONJ", PartOfSpeech.Conjunction},
+            {"PREP", PartOfSpeech.Preposition},
+            {"INTJ", PartOfSpeech.Interjection},
+            {"DETM", PartOfSpeech.Determiner},
+            {"RLTV", PartOfSpeech.Relativizer}
+        };
+
+        LanguageGrammar rules;
 
         public readonly bool IsTerminal;
 
@@ -39,6 +40,7 @@ namespace yod.Grammar.Structure
                 _word = value;
             }
         }
+
         Word _word;
 
         public List<Phrase> Phrases
@@ -54,26 +56,26 @@ namespace yod.Grammar.Structure
                 _phrases = value;
             }
         }
+
         List<Phrase> _phrases;
 
         int Number;
 
-        public Phrase(string rulesPath, string inputPath)
-            : this(JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(File.ReadAllText(rulesPath)),
-              JObject.Parse(File.ReadAllText(inputPath)))
-        { }
+        public Phrase(LanguageGrammar grammar, string inputPath) : this(grammar, JObject.Parse(File.ReadAllText(inputPath)))
+        {
+        }
 
         public string Tag;
         public string Rule;
 
-        public Phrase(Dictionary<string, List<string>> rulesDict, JToken jobj)
+        public Phrase(LanguageGrammar grammar, JToken jobj)
         {
             if (jobj.Parent == null)
             {
                 // seems to be a weird quirk of parsing JSON, this accesses the first element of json object
                 jobj = jobj.First.First;
             }
-            var name = ((JProperty)jobj.Parent).Name;
+            var name = ((JProperty) jobj.Parent).Name;
             if (name.Contains("-"))
             {
                 var parts = name.Split('-');
@@ -85,15 +87,15 @@ namespace yod.Grammar.Structure
                 Tag = name;
             }
 
-            rules = rulesDict;
+            rules = grammar;
             if (jobj["word"] != null)
             {
                 // is terminal
                 IsTerminal = true;
                 Word = new Word(
-                   jobj.Value<string>("word"),
-                   posDict[Tag],
-                   jobj.Value<string>("tags")
+                    jobj.Value<string>("word"),
+                    posDict[Tag],
+                    jobj.Value<string>("tags")
                 );
             }
             else
@@ -101,7 +103,7 @@ namespace yod.Grammar.Structure
                 // is not terminal
                 IsTerminal = false;
                 Phrases = new List<Phrase>();
-                var subphrases = ((JObject)jobj).Properties().Select(x => x.Name).ToList();
+                var subphrases = ((JObject) jobj).Properties().Select(x => x.Name).ToList();
                 var matchesRule = false;
                 foreach (var rule in rules[Tag])
                 {
@@ -116,10 +118,7 @@ namespace yod.Grammar.Structure
                 }
 
                 if (matchesRule == false) throw new Exception("Couldn't create phrase " + Tag);
-                subphrases.ForEach(x =>
-                {
-                    Phrases.Add(new Phrase(rules, jobj[x]));
-                });
+                subphrases.ForEach(x => { Phrases.Add(new Phrase(rules, jobj[x])); });
             }
         }
 
