@@ -20,7 +20,7 @@ namespace yod.Phonology
             set
             {
                 Predicate<Consonant> test = x => !Phonemes.Consonants.Contains(x);
-                if (value.Exists(test)) throw new Exception("Onset consonants list contains phoneme /" + value.Find(test).Symbol + "/ which is not in the phonology.");
+                if (value.Exists(test)) throw new ArgumentException("Onset consonants list contains phoneme /" + value.Find(test).Symbol + "/ which is not in the phonology.");
                 _onsetConsonants = value;
             }
         }
@@ -31,7 +31,7 @@ namespace yod.Phonology
             set
             {
                 Predicate<Consonant> test = x => !Phonemes.Consonants.Contains(x);
-                if (value.Exists(test)) throw new Exception("Coda consonants list contains phoneme /" + value.Find(test).Symbol + "/ which is not in the phonology.");
+                if (value.Exists(test)) throw new ArgumentException("Coda consonants list contains phoneme /" + value.Find(test).Symbol + "/ which is not in the phonology.");
                 _codaConsonants = value;
             }
         }
@@ -237,7 +237,7 @@ namespace yod.Phonology
 
             phonology.WordLengthMin = o["wordlengthmin"] == null ? GenerateWordLengthMin() : (int) o["wordlengthmin"];
             phonology.WordLengthMax = o["wordlengthmax"] == null ? GenerateWordLengthMax(phonology.WordLengthMin) : (int) o["wordlengthmax"];
-            if (phonology.WordLengthMin > phonology.WordLengthMax) throw new Exception("Word length minimum must be smaller or equal to word length max.");
+            if (phonology.WordLengthMin > phonology.WordLengthMax) throw new ArgumentOutOfRangeException("Word length minimum must be smaller or equal to word length max.");
             phonology.GeminateConsonants = o["geminateconsonants"] == null ? GenerateGeminateConsonants() : (bool) o["geminateconsonants"];
             phonology.LongVowels = o["longvowels"] == null ? GenerateLongVowel() : (bool) o["longvowels"];
             phonology.StressLocation = o["stresslocation"] == null ? GenerateStressLocation() : stressDict[(string) o["stresslocation"]];

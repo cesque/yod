@@ -15,7 +15,7 @@ namespace yod
 
         public static T WeightedRandom<T>(Dictionary<T, float> options)
         {
-            if (options.Count == 0) throw new Exception("Cannot get a random weighted value from an empty list");
+            if (options.Count == 0) throw new ArgumentException("Cannot get a random weighted value from an empty list");
             var sum = 0f;
             options.Values.ToList().ForEach(x => sum += x);
 
@@ -27,7 +27,7 @@ namespace yod
                 if (r <= 0) return kp.Key;
             }
 
-            throw new Exception("Weighted Random failed to return a value somehow");
+            throw new InvalidOperationException("Weighted Random failed to return a value somehow");
         }
 
         public static string StripTies(string ipa)

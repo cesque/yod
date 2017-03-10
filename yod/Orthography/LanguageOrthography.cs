@@ -250,11 +250,11 @@ namespace yod.Orthography
 
             foreach (var c in language.Phonemes.Consonants)
             {
-                if (!rules.ContainsKey(c.Symbol)) throw new Exception("Orthography does not contain a grapheme for the (consonant) phoneme [" + c.Symbol + "]");
+                if (!rules.ContainsKey(c.Symbol)) throw new ArgumentException("Orthography does not contain a grapheme for the (consonant) phoneme [" + c.Symbol + "]");
             }
             foreach (var v in language.Phonemes.Vowels)
             {
-                if (!rules.ContainsKey(v.Symbol)) throw new Exception("Orthography does not contain a grapheme for the (vowel) phoneme [" + v.Symbol + "]");
+                if (!rules.ContainsKey(v.Symbol)) throw new ArgumentException("Orthography does not contain a grapheme for the (vowel) phoneme [" + v.Symbol + "]");
             }
         }
 

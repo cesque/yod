@@ -95,7 +95,7 @@ namespace yod.Grammar
                         else
                         {       
                             // happens when phonemes + syllable structures + word length are all too restrictive 
-                            throw new Exception("Couldn't generate unique words for given language.");
+                            throw new FailedToBuildLexiconException("Couldn't generate unique words for given language.");
                         }
 
                     }

@@ -5,7 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace yod.Grammar.Structure
+namespace yod.Grammar
 {
     public class Phrase
     {
@@ -31,12 +31,12 @@ namespace yod.Grammar.Structure
         {
             get
             {
-                if (!IsTerminal) throw new Exception("Can't access Word of non-terminal phrase.");
+                if (!IsTerminal) throw new FieldAccessException("Can't access Word of non-terminal phrase.");
                 return _word;
             }
             set
             {
-                if (!IsTerminal) throw new Exception("Can't access Word of non-terminal phrase.");
+                if (!IsTerminal) throw new FieldAccessException("Can't access Word of non-terminal phrase.");
                 _word = value;
             }
         }
@@ -47,12 +47,12 @@ namespace yod.Grammar.Structure
         {
             get
             {
-                if (IsTerminal) throw new Exception("Can't access Phrases of terminal phrase.");
+                if (IsTerminal) throw new FieldAccessException("Can't access Phrases of terminal phrase.");
                 return _phrases;
             }
             set
             {
-                if (IsTerminal) throw new Exception("Can't access Phrases of terminal phrase.");
+                if (IsTerminal) throw new FieldAccessException("Can't access Phrases of terminal phrase.");
                 _phrases = value;
             }
         }
@@ -117,7 +117,7 @@ namespace yod.Grammar.Structure
                     }
                 }
 
-                if (matchesRule == false) throw new Exception("Couldn't create phrase " + Tag);
+                if (matchesRule == false) throw new ArgumentException("Couldn't create phrase " + Tag);
                 subphrases.ForEach(x => { Phrases.Add(new Phrase(rules, jobj[x])); });
             }
         }

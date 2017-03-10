@@ -6,7 +6,6 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using yod;
 using yod.Grammar;
-using yod.Grammar.Structure;
 using yod.Orthography;
 using yod.Phonology;
 

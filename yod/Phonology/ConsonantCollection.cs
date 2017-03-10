@@ -333,8 +333,6 @@ namespace yod.Phonology
                     var c = IPAConsonants[Globals.Random.Next(IPAConsonants.Count)];
                     while (collection.Contains(c)) c = IPAConsonants[Globals.Random.Next(IPAConsonants.Count)];
                     listOfExtraConsonants.Add(c);
-
-                    //throw new Exception("Places and Manners lists are both empty.");
                 }
 
                 collection = IPAConsonants.Where(test).ToList();
