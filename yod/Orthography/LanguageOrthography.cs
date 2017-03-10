@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using yod.Phonology;
@@ -319,12 +320,17 @@ namespace yod.Orthography
             foreach (var prop in o.Properties())
             {
                 var phoneme = prop.Name;
-                var grapheme = (string)prop.Value;
+                var grapheme = (string) prop.Value;
 
                 dict.Add(phoneme, grapheme);
             }
 
             return new LanguageOrthography(dict, phonology);
+        }
+
+        public static LanguageOrthography FromJSON(string path, LanguagePhonology phonology)
+        {
+            return FromJSON(JObject.Parse(File.ReadAllText(path)), phonology);
         }
     }
 }
