@@ -345,6 +345,7 @@ namespace yod.Phonology
 
         public static ConsonantCollection GenerateSubset(ConsonantCollection collection)
         {
+            if(collection.Count < 2) throw new ArgumentOutOfRangeException("Consonant collection must have 2 or more consonants in order to generate subset.");
             var num = Math.Max(2, Globals.Random.Next(collection.Count));
             var stack = new Stack<Consonant>(collection.OrderBy(x => Globals.Random.Next()));
             var list = new List<Consonant>();

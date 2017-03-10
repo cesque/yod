@@ -93,6 +93,7 @@ namespace yod.Phonology
 
         public static VowelCollection GenerateSubset(VowelCollection collection)
         {
+            if (collection.Count < 2) throw new ArgumentOutOfRangeException("Vowel collection must have 2 or more vowel in order to generate subset.");
             var num = Math.Max(2, Globals.Random.Next(collection.Count));
             var stack = new Stack<Vowel>(collection.OrderBy(x => Globals.Random.Next()));
             var list = new List<Vowel>();

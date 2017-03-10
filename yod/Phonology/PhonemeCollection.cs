@@ -58,6 +58,21 @@ namespace yod.Phonology
             return pc;
         }
 
+        public static PhonemeCollection GenerateSubset(PhonemeCollection collection)
+        {
+            if (collection.AllPhonemes.Count <= 5) throw new ArgumentOutOfRangeException("Phoneme collection must have more than 5 phonemes to generate subset.");
+            PhonemeCollection pc = new PhonemeCollection();
+            pc.Consonants = ConsonantCollection.GenerateSubset(collection.Consonants);
+            pc.Vowels = VowelCollection.GenerateSubset(collection.Vowels);
+            while (pc.AllPhonemes.Count <= 5)
+            {
+                pc.Consonants = ConsonantCollection.GenerateSubset(collection.Consonants);
+                pc.Vowels = VowelCollection.GenerateSubset(collection.Vowels);
+            }
+
+            return pc;
+        }
+
         public JToken ToJSON()
         {
             var o = new JObject();
@@ -72,7 +87,15 @@ namespace yod.Phonology
             PhonemeCollection p = new PhonemeCollection();
             p.Consonants = ConsonantCollection.FromJSON(o["consonants"]);
             p.Vowels = VowelCollection.FromJSON(o["vowels"]);
-            return p;
+
+            if (o["generatesubset"] != null && o["generatesubset"].Value<bool>())
+            {
+                return GenerateSubset(p);
+            }
+            else
+            {
+                return p;
+            }
         }
     }
 }
