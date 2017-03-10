@@ -93,11 +93,10 @@ namespace yod.Grammar
                             Console.WriteLine(w.ToString());
                         }
                         else
-                        {       
+                        {
                             // happens when phonemes + syllable structures + word length are all too restrictive 
                             throw new FailedToBuildLexiconException("Couldn't generate unique words for given language.");
                         }
-
                     }
                     Add(word, w, pair.Key);
                 }
