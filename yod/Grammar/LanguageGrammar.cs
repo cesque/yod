@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -19,13 +20,20 @@ namespace yod.Grammar
             LanguageGrammar rules = new LanguageGrammar();
             var o = jtoken as JObject;
             var rulesObj = o["rules"] as JObject;
+
+            var compoundRules = o["compound"] as JObject;
+
             foreach (var v in rulesObj.Properties())
             {
                 var ruleName = v.Name;
-                var expandsTo = (v.Value as JArray).Values<string>().ToList();              
+                var expandsTo = (v.Value as JArray).Values<string>().ToList();
                 foreach (var ruleSub in expandsTo)
                 {
                     var rule = new PhraseStructureRule(ruleName, new List<PhraseStructurePart>());
+                    if (compoundRules != null && compoundRules[ruleName] != null && compoundRules[ruleName].Values<string>().Contains(ruleSub))
+                    {
+                        rule.Compound = true;
+                    }
                     foreach (var phrase in ruleSub.Split(' '))
                     {
                         if (phrase.Contains("-"))
@@ -41,7 +49,7 @@ namespace yod.Grammar
                         }
                     }
                     rules.Add(rule);
-                }               
+                }
             }
             return rules;
         }
@@ -68,7 +76,166 @@ namespace yod.Grammar
             }
 
             o.Add("rules", rules);
+
+            var compounds = this.Where(x => x.Compound);
+            var compoundKeys = compounds.Select(x => x.From).Distinct().ToList();
+            var compoundObj = new JObject();
+            compoundKeys.ForEach(x => compoundObj.Add(x, new JArray()));
+
+            foreach (var rule in compounds)
+            {
+                (compoundObj[rule.From] as JArray).Add(rule.PartsToString());
+            }
+
+            o.Add("compound", compoundObj);
             return o;
+        }
+
+        public static LanguageGrammar Generate()
+        {
+            var grammar = new LanguageGrammar();
+            grammar.Add(new PhraseStructureRule("S", Globals.Random.Next(100) > 80
+                ? new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("VP", 0),
+                    new PhraseStructurePart("NP", 0),
+                }
+                : new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("NP", 0),
+                    new PhraseStructurePart("VP", 0),
+                }));
+            grammar.Add(new PhraseStructureRule("S", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("S", 1),
+                new PhraseStructurePart("VP", 0),
+                new PhraseStructurePart("S", 2)
+            }));
+
+            grammar.Add(new PhraseStructureRule("NP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("PRON", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("NP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("NN", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("NP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("DETM", 0),
+                new PhraseStructurePart("NN", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) > 80
+                ? new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("NP", 0),
+                    new PhraseStructurePart("PP", 0),
+                }
+                : new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("PP", 0),
+                    new PhraseStructurePart("NP", 0),
+                }));
+            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) > 80
+                ? new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("NP", 0),
+                    new PhraseStructurePart("RC", 0),
+                }
+                : new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("RC", 0),
+                    new PhraseStructurePart("NP", 0),
+                }));
+            grammar.Add(new PhraseStructureRule("NP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("PS", 0),
+                new PhraseStructurePart("NN", 0),
+            }));
+
+            grammar.Add(new PhraseStructureRule("VP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("VERB", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("VP", Globals.Random.Next(100) > 80
+                ? new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("VERB", 0),
+                    new PhraseStructurePart("NP", 0),
+                }
+                : new List<PhraseStructurePart>()
+                {
+                    new PhraseStructurePart("NP", 0),
+                    new PhraseStructurePart("VERB", 0),
+                }));
+            grammar.Add(new PhraseStructureRule("VP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("VERB", 0),
+                new PhraseStructurePart("ADJC", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("VP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("VERB", 0),
+                new PhraseStructurePart("PP", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("VP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("VERB", 0),
+                new PhraseStructurePart("ADVB", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("VP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("VERB", 0),
+                new PhraseStructurePart("PRON", 0),
+            }));
+
+            grammar.Add(new PhraseStructureRule("PP", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("PREP", 0),
+                new PhraseStructurePart("NP", 0),
+            }));
+
+            grammar.Add(new PhraseStructureRule("RC", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("RLTV", 0),
+                new PhraseStructurePart("VP", 0),
+            }));
+
+            grammar.Add(new PhraseStructureRule("NN", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("NOUN", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("NN", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("ADJC", 0),
+                new PhraseStructurePart("NN", 0),
+            }, Globals.Random.Next(100) > 50));
+            grammar.Add(new PhraseStructureRule("NN", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("CN", 0),
+            }));
+
+            grammar.Add(new PhraseStructureRule("CN", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("NOUN", 0),
+                new PhraseStructurePart("CN", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("CN", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("NOUN", 1),
+                new PhraseStructurePart("NOUN", 2),
+            }, Globals.Random.Next(100) > 50));
+
+            grammar.Add(new PhraseStructureRule("PS", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("NOUN", 0),
+            }));
+            grammar.Add(new PhraseStructureRule("PS", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("PRON", 0),
+            }));
+
+            return grammar;
         }
     }
 
@@ -100,10 +267,17 @@ namespace yod.Grammar
         public string From;
         public List<PhraseStructurePart> To;
 
+        public bool Compound;
+
         public PhraseStructureRule(string from, List<PhraseStructurePart> to)
         {
             From = from;
             To = to;
+        }
+
+        public PhraseStructureRule(string from, List<PhraseStructurePart> to, bool compound) : this(from, to)
+        {
+            Compound = compound;
         }
 
         public string PartsToString()

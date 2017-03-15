@@ -25,7 +25,7 @@ namespace yodTest
 
             phonology = LanguagePhonology.FromJSON("./english.json");
             orthography = LanguageOrthography.Generate(phonology);
-            grammar = LanguageGrammar.FromJSON("./rules3.json");
+            grammar = LanguageGrammar.Generate();
 
             lexicon = new Lexicon();
             lexicon.Fill("./dictionary.json", phonology);
@@ -34,8 +34,6 @@ namespace yodTest
         public string TestPhrase()
         {
             Phrase phrase = new Phrase(grammar, "./inflectioninput.json");
-
-            Console.WriteLine(phrase);
 
             phrase.Fill(lexicon);
 

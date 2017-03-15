@@ -11,11 +11,14 @@ namespace yod.Grammar
         public List<string> Tags;
         public PartOfSpeech POS;
 
+        private List<Inflection> AppliedInflections;
+
         public Word(string lemma, PartOfSpeech pos)
         {
             POS = pos;
             EnglishLemma = lemma;
             Tags = new List<string>();
+            AppliedInflections = new List<Inflection>();
         }
 
         public Word(string lemma, PartOfSpeech pos, List<string> tags) : this(lemma, pos)
@@ -35,6 +38,7 @@ namespace yod.Grammar
             {
                 if(Inflected == null) Inflected = new Phonology.Word(Lemma);
                 if(inflection.Suffix != null) Inflected.Syllables.Add(inflection.Suffix);
+                AppliedInflections.Add(inflection);
                 Inflected.Fix();
             }
         }
@@ -55,6 +59,17 @@ namespace yod.Grammar
         {
             Lemma = new Phonology.Word(lemma);
             Inflected = new Phonology.Word(lemma);
+        }
+
+        public static Word Merge(Word word1, Word word2)
+        {
+            var w = new Word(word1.EnglishLemma + "-" + word2.EnglishLemma, word2.POS);
+            w.Tags = word2.Tags;
+
+            w.Lemma = Phonology.Word.Merge(word1.Lemma, word2.Lemma);
+            w.Inflected = w.Lemma;
+            w.Inflect(word2.AppliedInflections);
+            return w;
         }
     }
 }

@@ -24,6 +24,7 @@ namespace yod.Grammar
         };
 
         public readonly bool IsTerminal;
+        public bool Compound;
 
         public Word Word
         {
@@ -116,10 +117,7 @@ namespace yod.Grammar
                 if (matchesRule == false) throw new ArgumentException("Couldn't create phrase " + Tag);
                 if (!IsTerminal)
                 {
-                    phrase.Children().ToList().ForEach(x =>
-                    {
-                        Phrases.Add(new Phrase(grammar, x));
-                    });
+                    phrase.Children().ToList().ForEach(x => { Phrases.Add(new Phrase(grammar, x)); });
                 }
             }
         }
@@ -161,7 +159,18 @@ namespace yod.Grammar
                     }
                 });
             }
-            return list;
+
+            if (!IsTerminal && Rule.Compound)
+            {
+                return new List<Word>()
+                {
+                    list.Aggregate((prev, next) => Word.Merge(prev, next))
+                };
+            }
+            else
+            {
+                return list;
+            }
         }
 
         public void InflectAll(List<Inflection> inflections)

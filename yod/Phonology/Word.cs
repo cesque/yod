@@ -165,5 +165,15 @@ namespace yod.Phonology
             }
             return true;
         }
+
+        public static Word Merge(Word word1, Word word2)
+        {
+            var w = new Word(word2.language);
+            w.Syllables = new List<Syllable>();
+            w.Syllables.AddRange(word1.Syllables);
+            w.Syllables.AddRange(word2.Syllables);
+
+            return w;
+        }
     }
 }
