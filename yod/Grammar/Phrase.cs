@@ -23,8 +23,6 @@ namespace yod.Grammar
             {"RLTV", PartOfSpeech.Relativizer}
         };
 
-        LanguageGrammar rules;
-
         public readonly bool IsTerminal;
 
         public Word Word
@@ -66,16 +64,15 @@ namespace yod.Grammar
         }
 
         public string Tag;
-        public string Rule;
+        public PhraseStructureRule Rule;
 
         public Phrase(LanguageGrammar grammar, JToken jobj)
         {
-            if (jobj.Parent == null)
-            {
-                // seems to be a weird quirk of parsing JSON, this accesses the first element of json object
-                jobj = jobj.First.First;
-            }
-            var name = ((JProperty) jobj.Parent).Name;
+            if (jobj.Parent == null) jobj = jobj.First;
+            var o = (jobj as JProperty);
+            var name = o.Name;
+            var phrase = o.Value as JObject;
+
             if (name.Contains("-"))
             {
                 var parts = name.Split('-');
@@ -87,15 +84,14 @@ namespace yod.Grammar
                 Tag = name;
             }
 
-            rules = grammar;
-            if (jobj["word"] != null)
+            if (phrase["word"] != null)
             {
                 // is terminal
                 IsTerminal = true;
                 Word = new Word(
-                    jobj.Value<string>("word"),
+                    phrase.Value<string>("word"),
                     posDict[Tag],
-                    jobj.Value<string>("tags")
+                    phrase.Value<string>("tags")
                 );
             }
             else
@@ -103,13 +99,13 @@ namespace yod.Grammar
                 // is not terminal
                 IsTerminal = false;
                 Phrases = new List<Phrase>();
-                var subphrases = ((JObject) jobj).Properties().Select(x => x.Name).ToList();
                 var matchesRule = false;
-                foreach (var rule in rules[Tag])
-                {
-                    var parts = rule.Split(' ').ToList();
 
-                    if (subphrases.Count == parts.Count && subphrases.All(y => subphrases.Count(p => p == y) == parts.Count(p => p == y)))
+                var matchingTagRules = grammar.Where(x => x.From == Tag);
+
+                foreach (var rule in matchingTagRules)
+                {
+                    if (phrase.Children().Count() == rule.To.Count && phrase.Children().All(y => phrase.Children().Count(p => p == y) == rule.To.Count(p => p.Tag == (y as JProperty).Name)))
                     {
                         matchesRule = true;
                         Rule = rule;
@@ -118,7 +114,13 @@ namespace yod.Grammar
                 }
 
                 if (matchesRule == false) throw new ArgumentException("Couldn't create phrase " + Tag);
-                subphrases.ForEach(x => { Phrases.Add(new Phrase(rules, jobj[x])); });
+                if (!IsTerminal)
+                {
+                    phrase.Children().ToList().ForEach(x =>
+                    {
+                        Phrases.Add(new Phrase(grammar, x));
+                    });
+                }
             }
         }
 
@@ -144,19 +146,18 @@ namespace yod.Grammar
             }
             else
             {
-                var ruleParts = Rule.Split(' ').ToList();
+                var ruleParts = Rule.To;
                 ruleParts.ForEach(phrase =>
                 {
-                    if (phrase.Contains('-'))
+                    if (phrase.Number > 0)
                     {
-                        var parts = phrase.Split('-');
-                        var tag = parts[0];
-                        var num = int.Parse(parts[1]);
+                        var tag = phrase.Tag;
+                        var num = phrase.Number;
                         list.AddRange(Phrases.Find(x => x.Tag == tag && x.Number == num).Flatten());
                     }
                     else
                     {
-                        list.AddRange(Phrases.Find(x => x.Tag == phrase).Flatten());
+                        list.AddRange(Phrases.Find(x => x.Tag == phrase.Tag).Flatten());
                     }
                 });
             }
@@ -172,6 +173,25 @@ namespace yod.Grammar
             else
             {
                 Phrases.ForEach(x => x.InflectAll(inflections));
+            }
+        }
+
+        public override string ToString()
+        {
+            if (IsTerminal)
+            {
+                return Word.EnglishLemma;
+            }
+            else
+            {
+                var s = Tag + " {" + Environment.NewLine;
+                foreach (var phrase in Phrases)
+                {
+                    s += "  " + phrase + Environment.NewLine;
+                }
+                s += "}" + Environment.NewLine;
+
+                return s;
             }
         }
     }

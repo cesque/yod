@@ -34,6 +34,9 @@ namespace yodTest
         public string TestPhrase()
         {
             Phrase phrase = new Phrase(grammar, "./inflectioninput.json");
+
+            Console.WriteLine(phrase);
+
             phrase.Fill(lexicon);
 
             var flattened = phrase.Flatten();

@@ -1,7 +1,9 @@
 ﻿{
-  "S": [ "NP VP", "S-1 CONJ S-2" ],
-  "NP": [ "PRON", "NOUN", "DETM NOUN", "NP PP", "NP RC" ],
-  "VP": [ "VERB", "VERB NP", "VERB ADJC", "VERB PP", "VERB ADVB", "VERB PRON" ],
-  "PP": [ "PREP NP" ],
-  "RC": [ "RLTV VP" ]
+	"rules": {
+		"S": ["NP VP", "S-1 CONJ S-2"],
+		"NP": ["PRON", "NOUN", "DETM NOUN", "NP PP", "NP RC"],
+		"VP": ["VERB", "VERB NP", "VERB ADJC", "VERB PP", "VERB ADVB", "VERB PRON"],
+		"PP": ["PREP NP"],
+		"RC": ["RLTV VP"]
+	}
 }

@@ -90,7 +90,6 @@ namespace yod.Grammar
                         if (loops < 50)
                         {
                             w = GenerateWordToAdd(word, pair.Key, commonWords, relatedWords, baseWords, phonology);
-                            Console.WriteLine(w.ToString());
                         }
                         else
                         {
