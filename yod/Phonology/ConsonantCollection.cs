@@ -244,14 +244,14 @@ namespace yod.Phonology
 
         public Consonant GetRandom()
         {
-            return this[Globals.Random.Next(Count)];
+            return new Consonant(this[Globals.Random.Next(Count)]);
         }
 
         public Consonant GetRandomInSonorityRange(int sonorityMin, int sonorityMax)
         {
             var sublist = this.Where(x => x.Sonority <= sonorityMax && x.Sonority >= sonorityMin).ToList();
             if (sublist.Count == 0) return null;
-            return sublist.ElementAt(Globals.Random.Next(sublist.Count));
+            return new Consonant(sublist.ElementAt(Globals.Random.Next(sublist.Count)));
         }
 
         public static ConsonantCollection Generate()

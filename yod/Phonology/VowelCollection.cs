@@ -65,7 +65,7 @@ namespace yod.Phonology
 
         public Vowel GetRandom()
         {
-            return this[Globals.Random.Next(Count)];
+            return new Vowel(this[Globals.Random.Next(Count)]);
         }
 
         public static VowelCollection Generate()
