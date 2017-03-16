@@ -101,17 +101,17 @@ namespace yod.Phonology
 
         public Syllable GetSyllable()
         {
-            return new Syllable(this);
+            return Syllable.Generate(this);
         }
 
         public Word GetWord()
         {
-            return new Word(this);
+            return Word.Generate(this);
         }
 
         public Word GetWord(int syllableLength)
         {
-            return new Word(this, syllableLength);
+            return Word.Generate(this, syllableLength);
         }
 
         public static int GetCharacterLength(string s)

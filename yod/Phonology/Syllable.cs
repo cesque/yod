@@ -51,20 +51,21 @@ namespace yod.Phonology
         {
             language = l;
             structure = l.SyllableStructure;
-            Generate();
         }
 
-        public void Generate()
+        public static Syllable Generate(LanguagePhonology phonology)
         {
-            Onset = new List<Phoneme>();
-            Nucleus = new List<Phoneme>();
-            Coda = new List<Phoneme>();
+            var syllable = new Syllable(phonology);
+            syllable.Onset = new List<Phoneme>();
+            syllable.Nucleus = new List<Phoneme>();
+            syllable.Coda = new List<Phoneme>();
 
-            Onset.AddRange(GetOnset());
-            Nucleus.AddRange(GetNucleus());
-            Coda.AddRange(GetCoda());
+            syllable.Onset.AddRange(syllable.GetOnset());
+            syllable.Nucleus.AddRange(syllable.GetNucleus());
+            syllable.Coda.AddRange(syllable.GetCoda());
 
-            if(!IsValid()) Generate();
+            if (!syllable.IsValid()) return Generate(phonology);
+            return syllable;
         }
 
         private bool IsValid()

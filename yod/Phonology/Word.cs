@@ -22,44 +22,7 @@ namespace yod.Phonology
         public Word(LanguagePhonology language)
         {
             this.language = language;
-            Generate();
-        }
-
-        public Word(LanguagePhonology language, int syllableLength)
-        {
-            this.language = language;
-            Generate(syllableLength);
-        }
-
-        public void Generate()
-        {
-            var syllableLength = language.WordLengthMin + Globals.Random.Next(language.WordLengthMax - language.WordLengthMin);
-            Generate(syllableLength);
-        }
-
-        public void Generate(int syllableLength)
-        {
             Syllables = new List<Syllable>();
-            for (var i = 0; i < syllableLength; i++)
-            {
-                var syl = new Syllable(language);
-                if (Syllables.Count == 0)
-                {
-                    Syllables.Add(syl);
-                }
-                else
-                {
-                    //while (Syllables.Last().Phonemes.Last() == syl.Phonemes.First()) syl = new Syllable(language);
-                    Syllables.Add(syl);
-                }
-            }
-
-            ApplyStress();
-
-            if (!IsValid())
-            {
-                Generate();
-            }
         }
 
         // fixes stress placement and consecutive identical phonemes
@@ -174,6 +137,40 @@ namespace yod.Phonology
             w.Syllables.AddRange(word2.Syllables);
 
             return w;
+        }
+
+        public static Word Generate(LanguagePhonology phonology, int syllableLength)
+        {
+            var w = new Word(phonology);
+            w.Syllables = new List<Syllable>();
+            for (var i = 0; i < syllableLength; i++)
+            {
+                var syl = Syllable.Generate(phonology);
+                if (w.Syllables.Count == 0)
+                {
+                    w.Syllables.Add(syl);
+                }
+                else
+                {
+                    //while (Syllables.Last().Phonemes.Last() == syl.Phonemes.First()) syl = new Syllable(language);
+                    w.Syllables.Add(syl);
+                }
+            }
+
+            w.ApplyStress();
+
+            if (!w.IsValid())
+            {
+                return Generate(phonology, syllableLength);
+            }
+
+            return w;
+        }
+
+        public static Word Generate(LanguagePhonology phonology)
+        {
+            var syllableLength = phonology.WordLengthMin + Globals.Random.Next(phonology.WordLengthMax - phonology.WordLengthMin);
+            return Generate(phonology, syllableLength);
         }
     }
 }

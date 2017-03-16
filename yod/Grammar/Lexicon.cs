@@ -72,8 +72,8 @@ namespace yod.Grammar
                 var common = commonWords.ContainsKey(pos) && commonWords[pos].Contains(word);
 
                 var baseWord = common
-                    ? new Phonology.Word(phonology, syllableLength: phonology.WordLengthMin)
-                    : new Phonology.Word(phonology);
+                    ? Phonology.Word.Generate(phonology, syllableLength: phonology.WordLengthMin)
+                    : Phonology.Word.Generate(phonology);
 
                 if (!baseWords.ContainsKey(group)) baseWords.Add(group, baseWord);
             }
@@ -118,11 +118,11 @@ namespace yod.Grammar
             else if (commonWords.ContainsKey(pos) && commonWords[pos].Contains(word))
             {
                 var length = Globals.Random.Next(phonology.WordLengthMin, Math.Min(phonology.WordLengthMax, phonology.WordLengthMin + 1));
-                return new Phonology.Word(phonology, syllableLength: length);
+                return Phonology.Word.Generate(phonology, syllableLength: length);
             }
             else
             {
-                return new Phonology.Word(phonology);
+                return Phonology.Word.Generate(phonology);
             }
         }
 
