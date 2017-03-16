@@ -125,7 +125,7 @@ namespace yod.Grammar
                 new PhraseStructurePart("DETM", 0),
                 new PhraseStructurePart("NN", 0),
             }));
-            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) > 80
+            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) < 80
                 ? new List<PhraseStructurePart>()
                 {
                     new PhraseStructurePart("NP", 0),
@@ -136,7 +136,7 @@ namespace yod.Grammar
                     new PhraseStructurePart("PP", 0),
                     new PhraseStructurePart("NP", 0),
                 }));
-            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) > 80
+            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) < 80
                 ? new List<PhraseStructurePart>()
                 {
                     new PhraseStructurePart("NP", 0),
@@ -157,7 +157,7 @@ namespace yod.Grammar
             {
                 new PhraseStructurePart("VERB", 0),
             }));
-            grammar.Add(new PhraseStructureRule("VP", Globals.Random.Next(100) > 80
+            grammar.Add(new PhraseStructureRule("VP", Globals.Random.Next(100) < 80
                 ? new List<PhraseStructurePart>()
                 {
                     new PhraseStructurePart("VERB", 0),
