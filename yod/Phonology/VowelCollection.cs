@@ -5,11 +5,16 @@ using Newtonsoft.Json.Linq;
 
 namespace yod.Phonology
 {
+    /// <summary>
+    /// Represents a collection of vowel phonemes.
+    /// </summary>
     public class VowelCollection : List<Vowel>
     {
+        /// <summary>
+        /// A list of every vowel in the Internation Phonetic Alphabet. <see cref="AllVowels"/> for a <see cref="VowelCollection"/> containing all of these vowels.
+        /// </summary>
         public static readonly List<Vowel> IPAVowels = new List<Vowel>
         {
-            // todo: add more vowels
             new Vowel("i", Vowel.Height.Close, Vowel.Backness.Front, Vowel.Rounding.Unrounded, sonority: 2),
             new Vowel("y", Vowel.Height.Close, Vowel.Backness.Front, Vowel.Rounding.Rounded, sonority: 2),
             new Vowel("ɨ", Vowel.Height.Close, Vowel.Backness.Central, Vowel.Rounding.Unrounded, sonority: 2),
@@ -43,31 +48,61 @@ namespace yod.Phonology
             new Vowel("ɒ", Vowel.Height.Open, Vowel.Backness.Back, Vowel.Rounding.Rounded, 0),
         };
 
-        public static VowelCollection AllVowels => new VowelCollection();
+        /// <summary>
+        /// All vowels in the Internation Phonetic Alphabet.
+        /// </summary>
+        public static VowelCollection AllVowels => new VowelCollection(new List<Predicate<Vowel>> {x => true});
 
+        /// <summary>
+        /// All vowels used in English.
+        /// </summary>
+        /// <remarks>Useful for generating words that will be more pronouncable for most people. However, the idiomatic way to create
+        /// a <see cref="PhonemeCollection"/> for English phonemes would be to load one from a JSON file using <see cref="LanguagePhonology.FromJSON(string)"/></remarks>
         public static VowelCollection EnglishVowels => new VowelCollection(new List<Predicate<Vowel>> {x => "iɪuʊeɜəɔæʌɑɒ".Contains(x.Symbol)});
 
+        /// <summary>
+        /// The vowels used when creating a <see cref="VowelCollection"/> with the default constructor.
+        /// </summary>
         public static VowelCollection DefaultVowels => EnglishVowels;
 
-        public VowelCollection() : base(EnglishVowels)
+        /// <summary>
+        /// Create a new VowelCollection with the default set of vowels (<see cref="DefaultVowels"/>).
+        /// </summary>
+        public VowelCollection() : base(DefaultVowels)
         {
         }
 
+        /// <summary>
+        /// Create a new VowelCollection containing all vowels that match any of a given set of predicates.
+        /// </summary>
+        /// <param name="add">A list of predicates to check.</param>
         public VowelCollection(List<Predicate<Vowel>> add)
         {
             add.ForEach(pred => { AddRange(IPAVowels.Where(v => pred(v))); });
         }
 
+        /// <summary>
+        /// Create a new VowelCollection containing all vowels from a list.
+        /// </summary>
+        /// <param name="vowels">A list of vowels to add.</param>
         public VowelCollection(List<Vowel> vowels)
         {
             vowels.ForEach(x => Add(x));
         }
 
+        /// <summary>
+        /// Get a random vowel from the collection.
+        /// </summary>
+        /// <returns>A random vowel.</returns>
         public Vowel GetRandom()
         {
             return new Vowel(this[Globals.Random.Next(Count)]);
         }
 
+        /// <summary>
+        /// Generate a random VowelCollection using realistic statistics for picking numbers of vowels.
+        /// </summary>
+        /// <returns>A random VowelCollection.</returns>
         public static VowelCollection Generate()
         {
             var probabilities = new Dictionary<Tuple<int, int>, float>
@@ -91,6 +126,13 @@ namespace yod.Phonology
             return new VowelCollection(collection);
         }
 
+        /// <summary>
+        /// Generate a random VowelCollection that is a subset of another collection.
+        /// </summary>
+        /// <param name="collection">The collection to take a subset of. Must contain at least 2 or more vowels.</param>
+        /// <returns>A random VowelCollection.</returns>
+        /// <remarks></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static VowelCollection GenerateSubset(VowelCollection collection)
         {
             if (collection.Count < 2) throw new ArgumentOutOfRangeException("Vowel collection must have 2 or more vowel in order to generate subset.");
@@ -104,11 +146,20 @@ namespace yod.Phonology
             return new VowelCollection(list);
         }
 
+        /// <summary>
+        /// Serializes the collection to JSON.
+        /// </summary>
+        /// <returns>A JToken representing the collection.</returns>
         public JToken ToJSON()
         {
             return new JArray(this.Select(x => x.Symbol));
         }
 
+        /// <summary>
+        /// Deserializes a JSON object into a VowelCollection.
+        /// </summary>
+        /// <param name="jToken">A JToken representing a VowelCollection</param>
+        /// <returns>The deserialized collection.</returns>
         public static VowelCollection FromJSON(JToken jToken)
         {
             var a = (jToken as JArray).ToList().Select(x => x.Value<string>());

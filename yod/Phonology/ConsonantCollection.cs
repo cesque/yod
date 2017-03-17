@@ -5,6 +5,9 @@ using Newtonsoft.Json.Linq;
 
 namespace yod.Phonology
 {
+    /// <summary>
+    /// Represents a collection of consonant phonemes.
+    /// </summary>
     public class ConsonantCollection : List<Consonant>
     {
         /*
@@ -23,6 +26,9 @@ namespace yod.Phonology
         LA      |     |     |     | l   |     |     |     |ʎ    |     |     |     |        |                                                   
         */
 
+        /// <summary>
+        /// A list of every Consonant in the International Phonetic Alphabet. See <see cref="AllConsonants"/> for a <see cref="ConsonantCollection"/> containing all of these.
+        /// </summary>
         public static readonly List<Consonant> IPAConsonants = new List<Consonant>
         {
             #region consonants
@@ -201,10 +207,16 @@ namespace yod.Phonology
             #endregion
         };
 
-        public static ConsonantCollection AllConsonants => new ConsonantCollection();
+        /// <summary>
+        /// All consonants in the Internation Phonetic Alphabet.
+        /// </summary>
+        public static ConsonantCollection AllConsonants => new ConsonantCollection(new List<Predicate<Consonant>> {x => true});
 
-        public static ConsonantCollection DefaultConsonants => EnglishConsonants;
-
+        /// <summary>
+        /// All consonants used in English.
+        /// </summary>
+        /// <remarks>Useful for generating words that will be more pronouncable for most people. However, the idiomatic way to create
+        /// a <see cref="PhonemeCollection"/> for English phonemes would be to load one from a JSON file using <see cref="LanguagePhonology.FromJSON(string)"/></remarks>
         public static ConsonantCollection EnglishConsonants
         {
             get
@@ -228,25 +240,51 @@ namespace yod.Phonology
             }
         }
 
+        /// <summary>
+        /// The consonants used when creating a <see cref="ConsonantCollection"/> with the default constructor.
+        /// </summary>
+        public static ConsonantCollection DefaultConsonants => EnglishConsonants;
+
+        /// <summary>
+        /// Create a new ConsonantCollection with the default set of consonants (<see cref="DefaultConsonants"/>).
+        /// </summary>
         public ConsonantCollection() : base(DefaultConsonants)
         {
         }
 
+        /// <summary>
+        /// Create a new ConsonantCollection containing all consonants that match any of a given set of predicates.
+        /// </summary>
+        /// <param name="add">A list of predicates to check.</param>
         public ConsonantCollection(List<Predicate<Consonant>> add)
         {
             add.ForEach(pred => { AddRange(IPAConsonants.Where(c => pred(c))); });
         }
 
+        /// <summary>
+        /// Create a new ConsonantCollection containing all consonants from a list.
+        /// </summary>
+        /// <param name="consonants">A list of consonants to add.</param>
         public ConsonantCollection(List<Consonant> consonants)
         {
             consonants.ForEach(x => this.Add(x));
         }
 
+        /// <summary>
+        /// Get a random consonant from the collection.
+        /// </summary>
+        /// <returns>A random consonant.</returns>
         public Consonant GetRandom()
         {
             return new Consonant(this[Globals.Random.Next(Count)]);
         }
 
+        /// <summary>
+        /// Get a random consonant with a sonority within a range.
+        /// </summary>
+        /// <param name="sonorityMin">The minimum sonority value.</param>
+        /// <param name="sonorityMax">The maximum sonority value.</param>
+        /// <returns></returns>
         public Consonant GetRandomInSonorityRange(int sonorityMin, int sonorityMax)
         {
             var sublist = this.Where(x => x.Sonority <= sonorityMax && x.Sonority >= sonorityMin).ToList();
@@ -254,6 +292,10 @@ namespace yod.Phonology
             return new Consonant(sublist.ElementAt(Globals.Random.Next(sublist.Count)));
         }
 
+        /// <summary>
+        /// Generate a random ConsonantCollection using realistic statistics for picking numbers of consonants.
+        /// </summary>
+        /// <returns>A random ConsonantCollection.</returns>
         public static ConsonantCollection Generate()
         {
             var places = new List<Consonant.Place>();
@@ -341,9 +383,15 @@ namespace yod.Phonology
             return new ConsonantCollection(new List<Predicate<Consonant>> {x => test(x)});
         }
 
+        /// <summary>
+        /// Generate a random ConsonantCollection that is a subset of another collection.
+        /// </summary>
+        /// <param name="collection">The collection to take a subset of. Must contain at least 2 or more consonants.</param>
+        /// <returns>A random ConsonantCollection</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static ConsonantCollection GenerateSubset(ConsonantCollection collection)
         {
-            if(collection.Count < 2) throw new ArgumentOutOfRangeException("Consonant collection must have 2 or more consonants in order to generate subset.");
+            if (collection.Count < 2) throw new ArgumentOutOfRangeException("Consonant collection must have 2 or more consonants in order to generate subset.");
             var num = Math.Max(2, Globals.Random.Next(collection.Count));
             var stack = new Stack<Consonant>(collection.OrderBy(x => Globals.Random.Next()));
             var list = new List<Consonant>();
@@ -354,11 +402,20 @@ namespace yod.Phonology
             return new ConsonantCollection(new List<Predicate<Consonant>> {x => list.Contains(x)});
         }
 
+        /// <summary>
+        /// Serializes the collection to JSON.
+        /// </summary>
+        /// <returns>A JToken representing the collection.</returns>
         public JToken ToJSON()
         {
             return new JArray(this.Select(x => x.Symbol));
         }
 
+        /// <summary>
+        /// Deserializes a JSON object into a ConsonantCollection.
+        /// </summary>
+        /// <param name="jToken">A JToken representing a ConsonantCollection</param>
+        /// <returns>The deserialized collection.</returns>
         public static ConsonantCollection FromJSON(JToken jToken)
         {
             var a = (jToken as JArray).ToList().Select(x => x.Value<string>());
