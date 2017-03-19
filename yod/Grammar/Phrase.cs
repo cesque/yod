@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using yod.Orthography;
 
 namespace yod.Grammar
 {
@@ -126,7 +127,8 @@ namespace yod.Grammar
         {
             if (IsTerminal)
             {
-                var word = lexicon.First(w => w.English == Word.EnglishLemma && w.POS == Word.POS);
+                var word = lexicon.FirstOrDefault(w => w.English == Word.EnglishLemma && w.POS == Word.POS);
+                if (word == null) throw new LexemeNotFoundException();
                 Word.Fill(word.Lemma);
             }
             else
@@ -185,23 +187,42 @@ namespace yod.Grammar
             }
         }
 
+        public string ToString(LanguageOrthography orthography)
+        {
+            var flattened = Flatten();
+
+            var line1 = "";
+            var line2 = "/";
+            var line3 = "";
+
+            foreach (var word in flattened)
+            {
+                line1 += orthography.Orthographize(word.Inflected) + " ";
+                line2 += word.Inflected.ToString() + " ";
+                line3 += word.ToGlossString() + " ";
+            }
+
+            line2 = line2.Trim() + "/";
+
+            return line1 + Environment.NewLine + line2 + Environment.NewLine + line3 + Environment.NewLine;
+        }
+
         public override string ToString()
         {
-            if (IsTerminal)
-            {
-                return Word.EnglishLemma;
-            }
-            else
-            {
-                var s = Tag + " {" + Environment.NewLine;
-                foreach (var phrase in Phrases)
-                {
-                    s += "  " + phrase + Environment.NewLine;
-                }
-                s += "}" + Environment.NewLine;
+            var flattened = Flatten();
 
-                return s;
+            var line1 = "";
+            var line2 = "/";
+
+            foreach (var word in flattened)
+            {
+                line1 += word.Inflected.ToString() + " ";
+                line2 += word.ToGlossString() + " ";
             }
+
+            line2 = line2.Trim() + "/";
+
+            return line1 + Environment.NewLine + line2 + Environment.NewLine;
         }
     }
 }

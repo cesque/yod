@@ -111,6 +111,11 @@ namespace yod.Grammar
                 new PhraseStructurePart("VP", 0),
                 new PhraseStructurePart("S", 2)
             }));
+            grammar.Add(new PhraseStructureRule("S", new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("INTJ", 0),
+                new PhraseStructurePart("S", 0),
+            }));
 
             grammar.Add(new PhraseStructureRule("NP", new List<PhraseStructurePart>()
             {

@@ -19,10 +19,16 @@ namespace yodCmd
             bool showHelp = false;
 
             LanguagePhonology phonology = null;
+            bool loadPhonology = false;
+            string phonologyPath = "";
+
             LanguageOrthography orthography = null;
             bool loadOrthography = false;
             string orthographyPath = "";
+
             LanguageGrammar grammar = null;
+            bool loadGrammar = false;
+            string grammarPath = "";
 
             Lexicon lexicon = null;
             bool loadLexicon = false;
@@ -35,7 +41,14 @@ namespace yodCmd
             var p = new OptionSet()
             {
                 {
-                    "p|phonology=", "load {PHONOLOGY} from JSON file.", s => phonology = LanguagePhonology.FromJSON(s)
+                    "seed=", "set {SEED} of random number generator.", s => Globals.Seed = Int32.Parse(s)
+                },
+                {
+                    "p|phonology=", "load {PHONOLOGY} from JSON file.", s =>
+                    {
+                        loadPhonology = true;
+                        phonologyPath = s;
+                    }
                 },
                 {
                     "o|orthography=", "load {ORTHOGRAPHY} from JSON file.", s =>
@@ -45,13 +58,17 @@ namespace yodCmd
                     }
                 },
                 {
-                    "g|grammar=", "load {GRAMMAR} from json file", s => grammar = LanguageGrammar.FromJSON(s)
-                },
-                {
                     "l|lexicon=", "load {LEXICON} from JSON file.", s =>
                     {
                         loadLexicon = true;
                         lexiconPath = s;
+                    }
+                },
+                {
+                    "g|grammar=", "load {GRAMMAR} from json file", s =>
+                    {
+                        loadGrammar = true;
+                        grammarPath = s;
                     }
                 },
                 {
@@ -67,15 +84,18 @@ namespace yodCmd
             };
 
             var extra = new List<string>();
+
             try
             {
                 extra = p.Parse(args);
+                Console.WriteLine("Seed: " + Globals.Seed);
             }
             catch (OptionException e)
             {
                 Console.Write("yodc: ");
                 Console.WriteLine(e.Message);
                 Console.WriteLine("Try `yodc --help' for more information.");
+                return;
             }
 
             if (showHelp)
@@ -88,19 +108,79 @@ namespace yodCmd
                 return;
             }
 
-            phonology = phonology ?? LanguagePhonology.Generate();
-
-            if (loadOrthography)
+            try
             {
-                orthography = LanguageOrthography.FromJSON(orthographyPath, phonology);
+                if (loadPhonology) phonology = LanguagePhonology.FromJSON(phonologyPath);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to load phonology!");
+                return;
             }
 
-            orthography = orthography ?? LanguageOrthography.Generate(phonology);
-
-            if (loadLexicon)
+            try
             {
-                lexicon = new Lexicon();
-                lexicon.Fill(lexiconPath, phonology);
+                phonology = phonology ?? LanguagePhonology.Generate();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to generate phonology!");
+                return;
+            }
+
+            try
+            {
+                if (loadOrthography)
+                {
+                    orthography = LanguageOrthography.FromJSON(orthographyPath, phonology);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to load orthography!");
+                return;
+            }
+
+            try
+            {
+                orthography = orthography ?? LanguageOrthography.Generate(phonology);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to generate orthography!");
+                return;
+            }
+            try
+            {
+                if (loadGrammar) grammar = LanguageGrammar.FromJSON(grammarPath);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to load grammar!");
+                return;
+            }
+            try
+            {
+                grammar = grammar ?? LanguageGrammar.Generate();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to generate grammar!");
+                return;
+            }
+
+            try
+            {
+                if (loadLexicon)
+                {
+                    lexicon = new Lexicon();
+                    lexicon.Fill(lexiconPath, phonology);
+                }
+            }
+            catch (FailedToBuildLexiconException e)
+            {
+                Console.WriteLine("Failed to build lexicon!");
+                return;
             }
 
             if (loadPhrase)
@@ -113,8 +193,22 @@ namespace yodCmd
                     return;
                 }
 
-                phrase = new Phrase(grammar, phrasePath);
-                phrase.Fill(lexicon);
+                try
+                {
+                    phrase = new Phrase(grammar, phrasePath);
+                    phrase.Fill(lexicon);
+                }
+                catch (LexemeNotFoundException e)
+                {
+                    Console.WriteLine("Failed to build phrase - lexeme not found in lexicon!");
+                    Console.WriteLine("Check that your supplied dictionary contains an entry for all words in the phrase.");
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to build phrase!");
+                    return;
+                }
             }
 
             Directory.CreateDirectory("output");
@@ -129,12 +223,12 @@ namespace yodCmd
             }
             if (lexicon != null)
             {
-                File.WriteAllText("output/lexicon.txt", lexicon.ToString());
+                File.WriteAllText("output/lexicon.txt", lexicon.ToString(orthography));
                 Console.WriteLine("Wrote output/lexicon.txt");
             }
             if (phrase != null)
             {
-                File.WriteAllText("output/translated.txt", phrase.ToString());
+                File.WriteAllText("output/translated.txt", phrase.ToString(orthography));
                 Console.WriteLine("Wrote output/translated.txt");
             }
         }

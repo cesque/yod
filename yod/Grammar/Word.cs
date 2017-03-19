@@ -71,5 +71,16 @@ namespace yod.Grammar
             w.Inflect(word2.AppliedInflections);
             return w;
         }
+
+        public string ToGlossString()
+        {
+            var s = "";
+            s += EnglishLemma;
+            Tags.ForEach(tag =>
+            {
+                s += "-" + Globals.ConvertToSmallCaps(tag);
+            });
+            return s;
+        }
     }
 }

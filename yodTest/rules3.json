@@ -1,6 +1,6 @@
 ﻿{
 	"rules": {
-		"S": ["NP VP", "S-1 CONJ S-2"],
+		"S": ["NP VP", "S-1 CONJ S-2", "INTJ S"],
 		"NP": ["PRON", "NN", "DETM NN", "NP PP", "NP RC", "PS NN"],
 		"VP": ["VERB", "VERB NP", "VERB ADJC", "VERB PP", "VERB ADVB", "VERB PRON"],
 		"PP": ["PREP NP"],

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace yod.Grammar
 {
-    class FailedToBuildLexiconException : Exception
+    public class FailedToBuildLexiconException : Exception
     {
         public FailedToBuildLexiconException()
         {

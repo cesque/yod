@@ -1,0 +1,158 @@
+﻿{
+	"words": {
+		"PRON": [
+			"i",
+			"she",
+			"he",
+			"we",
+			"you",
+		],
+		"NOUN": [
+			"dog",
+			"cat",
+			"fox",
+			"human",
+			"book",
+			"house",
+			"ball",
+			"birthday",
+			"name",
+			"today",
+			"yesterday",
+			"tomorrow",
+		],
+		"VERB": [
+			"be",
+			"see",
+			"own",
+			"like",
+			"love",
+			"dislike",
+			"hate",
+			"jump",
+			"run",
+			"dance",
+			"sit",
+			"sleep",
+			"cry",
+			"laugh",
+		],
+		"ADVB": [
+			"quickly",
+			"really",
+			"slowly",
+			"usually",
+			"also",
+		],
+		"ADJC": [
+			"big",
+			"small",
+			"red",
+			"blue",
+			"yellow",
+			"orange",
+			"green",
+			"purple",
+			"pink",
+			"white",
+			"black",
+			"brown",
+			"ancient",
+			"holy",
+			"great",
+			"wise",
+			"evil",
+			"old",
+			"young",
+			"good",
+			"bad",
+			"happy",
+			"sad",
+			"dear",
+			"quick",
+			"lazy",
+		],
+		"CONJ": [
+			"or",
+			"and",
+			"but",
+			"because",
+			"so"
+		],
+		"INTJ": [
+			"alas",
+			"hello",
+			"goodbye",
+			"lo"
+		],
+		"DETM": [
+			"the",
+			"a",
+			"this",
+			"that"
+		],
+		"PREP": [
+			"on",
+			"in",
+			"with",
+			"outside",
+			"to",
+			"from",
+			"over",
+		],
+		"RLTV": [
+			"that"
+		]
+	},
+	"common": {
+		"PRON": [
+			"i",
+			"she",
+			"he",
+			"we",
+			"you"
+		],
+		"NOUN": [
+
+		],
+		"VERB": [
+			"be",
+		],
+		"ADVB": [
+
+		],
+		"ADJC": [
+
+		],
+		"CONJ": [
+			"or",
+			"and",
+			"but",
+			"because",
+			"so"
+		],
+		"INTJ": [
+
+		],
+		"DETM": [
+			"the",
+			"a",
+			"this",
+			"that"
+		],
+		"PREP": [
+
+		],
+		"RLTV": [
+			"that"
+		]
+	},
+	"related": {
+		"3rd person singular pronouns": {
+			"PRON": ["she","he"]
+		},
+		"demonstrative articles": {
+			"DETM": ["this","that"]
+		}
+	}
+}

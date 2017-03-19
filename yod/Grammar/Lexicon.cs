@@ -238,10 +238,14 @@ namespace yod.Grammar
             var maxOrth = this.Max(x => orthography.Orthographize(x.Lemma).Length);
             foreach (var w in this)
             {
-                var lDiff = w.Lemma.ToString().Length - Globals.StripTies(w.Lemma.ToString()).Length;
+                var lemmaToString = w.Lemma.ToString();
+                var orthToString = orthography.Orthographize(w.Lemma);
+
+                var lDiff = lemmaToString.Length - Globals.StripTies(lemmaToString).Length;
+                var oDiff = orthToString.Length - Globals.StripCombining(orthToString).Length;
                 s +=
-                    (orthography.Orthographize(w.Lemma) + " /" + w.Lemma + "/ (" + posDict[w.POS] + ")").PadRight(
-                        maxIpa + maxOrth + lDiff + 8);
+                    (orthToString + " /" + lemmaToString + "/ (" + posDict[w.POS] + ")").PadRight(
+                        maxIpa + maxOrth + lDiff + oDiff + 8);
                 s += ": ";
                 s += w.English;
                 s += Environment.NewLine;
