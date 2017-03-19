@@ -14,7 +14,7 @@ namespace yod.Phonology
 
         // todo: choose random onset and coda consonants
 
-        public List<Consonant> OnsetConsonants
+        public ConsonantCollection OnsetConsonants
         {
             get { return _onsetConsonants; }
             set
@@ -25,7 +25,7 @@ namespace yod.Phonology
             }
         }
 
-        public List<Consonant> CodaConsonants
+        public ConsonantCollection CodaConsonants
         {
             get { return _codaConsonants; }
             set
@@ -36,8 +36,8 @@ namespace yod.Phonology
             }
         }
 
-        private List<Consonant> _onsetConsonants;
-        public List<Consonant> _codaConsonants;
+        private ConsonantCollection _onsetConsonants;
+        public ConsonantCollection _codaConsonants;
 
         public StressLocation StressLocation;
 
@@ -95,8 +95,8 @@ namespace yod.Phonology
 
         public LanguagePhonology(SyllableStructure sylStructure, List<Predicate<Consonant>> consonantsToAdd, List<Predicate<Vowel>> vowelsToAdd, List<Consonant> onsetConsonants, List<Consonant> codaConsonants) : this(sylStructure, consonantsToAdd, vowelsToAdd)
         {
-            OnsetConsonants = onsetConsonants;
-            CodaConsonants = codaConsonants;
+            OnsetConsonants = new ConsonantCollection(onsetConsonants);
+            CodaConsonants = new ConsonantCollection(codaConsonants);
         }
 
         public Syllable GetSyllable()
@@ -160,7 +160,7 @@ namespace yod.Phonology
             return Globals.WeightedRandom(stressDict);
         }
 
-        static private List<Consonant> GenerateOnsetConsonants(ConsonantCollection consonants)
+        static private ConsonantCollection GenerateOnsetConsonants(ConsonantCollection consonants)
         {
             if (Globals.Random.Next(100) > 50)
             {
@@ -171,7 +171,7 @@ namespace yod.Phonology
                 {
                     oc.Add(stack.Pop());
                 }
-                return oc;
+                return new ConsonantCollection(oc);
             }
             else
             {
@@ -179,18 +179,18 @@ namespace yod.Phonology
             }
         }
 
-        static private List<Consonant> GenerateCodaConsonants(ConsonantCollection consonants)
+        static private ConsonantCollection GenerateCodaConsonants(ConsonantCollection consonants)
         {
             if (Globals.Random.Next(100) > 50)
             {
-                var oc = new List<Consonant>();
+                var cc = new List<Consonant>();
                 var num = Math.Max(2, Globals.Random.Next(consonants.Count));
                 var stack = new Stack<Consonant>(new List<Consonant>(consonants).OrderBy(x => Globals.Random.Next()));
                 for (var i = 0; i < num; i++)
                 {
-                    oc.Add(stack.Pop());
+                    cc.Add(stack.Pop());
                 }
-                return oc;
+                return new ConsonantCollection(cc);
             }
             else
             {
@@ -252,7 +252,7 @@ namespace yod.Phonology
             {
                 var oc = (o["onsetconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
                 var onsetCons = ConsonantCollection.IPAConsonants.Where(x => oc.Contains(x.Symbol)).ToList();
-                phonology.OnsetConsonants = onsetCons.Count == 0 ? phonology.Phonemes.Consonants : onsetCons;
+                phonology.OnsetConsonants = onsetCons.Count == 0 ? phonology.Phonemes.Consonants : new ConsonantCollection(onsetCons);
             }
 
             if (o["codaconsonants"] == null)
@@ -263,7 +263,7 @@ namespace yod.Phonology
             {
                 var cc = (o["codaconsonants"] as JArray).Select(x => x.Value<string>()).ToList();
                 var codaCons = ConsonantCollection.IPAConsonants.Where(x => cc.Contains(x.Symbol)).ToList();
-                phonology.CodaConsonants = codaCons.Count == 0 ? phonology.Phonemes.Consonants : codaCons;
+                phonology.CodaConsonants = codaCons.Count == 0 ? phonology.Phonemes.Consonants : new ConsonantCollection(codaCons);
             }
 
             return phonology;
