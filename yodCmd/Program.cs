@@ -212,6 +212,20 @@ namespace yodCmd
             }
 
             Directory.CreateDirectory("output");
+
+            try
+            {
+                File.Delete("output/phonology.json");
+                File.Delete("output/orthography.json");
+                File.Delete("output/grammar.json");
+                File.Delete("output/lexicon.txt");
+                File.Delete("output/translate.txt");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[warning] Failed to delete existing output files.");
+            }
+
             File.WriteAllText("output/phonology.json", phonology.ToJSON().ToString());
             Console.WriteLine("Wrote output/phonology.json");
             File.WriteAllText("output/orthography.json", orthography.ToJSON().ToString());

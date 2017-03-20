@@ -1,0 +1,16 @@
+﻿{
+	"rules": {
+		"S": ["NP VP", "S-1 CONJ S-2", "INTJ S"],
+		"NP": ["PRON", "NN", "DETM NN", "NP PP", "NP RC", "PS NN"],
+		"VP": ["VERB", "VERB NP", "VERB ADJC", "VERB PP", "VERB ADVB", "VERB PRON"],
+		"PP": ["PREP NP"],
+		"RC": ["RLTV VP"],
+		"NN": ["NOUN", "ADJC NN", "CN"],
+		"CN": ["NOUN CN", "NOUN-1 NOUN-2"],
+		"PS": ["NOUN", "PRON"]
+	},
+	"compound": {
+		"NN": ["ADJC NN"],
+		"CN": ["NOUN-1 NOUN-2"]
+	}
+}
