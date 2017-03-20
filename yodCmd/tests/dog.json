@@ -1,0 +1,23 @@
+﻿{
+	"S": {
+		"NP": {
+			"DETM": { "word": "every", "tags": "DEF" },
+			"NN": {
+				"NOUN": { "word": "dog", "tags": "SG,SBJ" },
+			}
+		},
+		"VP": {
+			"VERB": { "word": "be", "tags": "3,PRS,SG" },
+			"NP": {
+				"DETM": { "word": "a", "tags": "INDF" },
+				"NN": {
+					"ADJC": { "word": "good", "tags": "" },
+					"NN": {
+						"NOUN": { "word": "dog", "tags": "SG,SBJ" },
+					}
+
+				}
+			}
+		}
+	}
+}

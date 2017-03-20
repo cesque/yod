@@ -13,7 +13,7 @@
 			}
 		},
 		"VP": {
-			"VERB": { "word": "jump", "tags": "1,PRS,SG" },
+			"VERB": { "word": "jump", "tags": "3,PRS,SG" },
 			"PP": {
 				"PREP": { "word": "over", "tags": "" },
 				"NP": {

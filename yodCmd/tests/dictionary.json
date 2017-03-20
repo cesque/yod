@@ -89,7 +89,15 @@
 			"the",
 			"a",
 			"this",
-			"that"
+			"that",
+			"another",
+			"more",
+			"less",
+			"some",
+			"any",
+			"all",
+			"most",
+			"every"
 		],
 		"PREP": [
 			"on",
@@ -113,16 +121,13 @@
 			"you"
 		],
 		"NOUN": [
-
 		],
 		"VERB": [
 			"be",
 		],
 		"ADVB": [
-
 		],
 		"ADJC": [
-
 		],
 		"CONJ": [
 			"or",
@@ -132,16 +137,14 @@
 			"so"
 		],
 		"INTJ": [
-
 		],
 		"DETM": [
 			"the",
 			"a",
 			"this",
-			"that"
+			"that",
 		],
 		"PREP": [
-
 		],
 		"RLTV": [
 			"that"
@@ -149,10 +152,10 @@
 	},
 	"related": {
 		"3rd person singular pronouns": {
-			"PRON": ["she","he"]
+			"PRON": ["she", "he"]
 		},
 		"demonstrative articles": {
-			"DETM": ["this","that"]
+			"DETM": ["this", "that"]
 		}
 	}
 }

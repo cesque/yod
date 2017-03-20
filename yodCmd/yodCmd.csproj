@@ -63,6 +63,9 @@
     <None Include="tests\englishorth.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="tests\dog.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="tests\hello.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
