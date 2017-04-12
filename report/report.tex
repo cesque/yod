@@ -1,0 +1,103 @@
+\documentclass{report}
+\usepackage{tipa}
+\usepackage{lmodern}
+\usepackage{multirow}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{listings}
+\usepackage{tikz-qtree}
+\usepackage{url}
+\usepackage{todonotes}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\usepackage{gb4e}
+
+\definecolor{lightgray}{HTML}{EEEEEE}
+
+\addbibresource{bibliography.bib}
+
+\title{yod: A library for language generation}
+\author{Daniel James}
+\date{April 2017}
+\begin{document}
+   \maketitle
+   
+   \chapter{Introduction}
+   \textit{yod} is a library designed to aid in the construction and generation of artificial languages. Artificial languages (also known as constructed languages or 'conlangs') are probably most publicly well known through the popularisation of 'fictional languages' - that is, languages designed for use in works of fiction, usually for adding depth to a fictional world. For example, J. R. R. Tolkien devised the languages of \textit{Sindarin} and \textit{Quenya} for use in his \textit{Lord of the Rings} series. Other popular fictional languages that have reached mainstream awareness include \textit{Star Trek}'s \textit{Klingon} and \textit{Game of Thrones}' \textit{Dothraki}.
+   
+   The creation of these languages has become an indispensable tool for writers to add depth and character to their worlds. However, constructed languages do not exist solely for creative uses. The language \textit{Esperanto} was developed by its creator L. L. Zamenhof with the goal of being a global language that was easy for people to learn\cite{unualibro}. Now it is reported that as many as 63,000 people worldwide can speak Esperanto to some degree\cite{esperanto}. The existence of Esperanto and other so-called "international auxiliary languages" (languages designed to simplify complication between people of different countries and cultures) shows that the usefulness of constructed languages extends into real-world applications as well as artistic uses.
+   
+   \textit{yod} was developed with a focus on artistic languages, and so the goal was to generate a large variety of languages which could suit many different worlds and fictional civilisations. However, due to the hierarchy of rules \textit{yod} uses to build languages, the languages are regular, in contrast to most natural languages, which means generated languages with certain features could be treated as auxiliary languages too.
+   
+   \todo{talk about structure}
+   
+   \chapter{Building Words}
+   The 'naive' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ we can generate the following example text:
+   
+   \begin{lstlisting}[breaklines=true,backgroundcolor=\color{lightgray},framesep=40pt]
+tqk qzsyjla msmnix jvxx wug sysrh cuepg snyow ptjo bcek arjdubw pfwpt nabgzk jmq taphh zewll dmpr uvpmx sfpfk uuo bdm vnjbq hahuj wstq kohvma irn fott axdut rlgg tawz wsol wigom psqwd tnv vlzgt lbcikk bof msmyg zkqgubb veht ukaznqn ixp rppfj eqllnko uyyp aot uowtn icv fgypx cenawnk hypq rruh eosgrf wmakeg hhweua gnbfh mkpzi ebtwbv cjwrxw ucky kqezcm ucme wmrk khsya llzbeqw uxwivpp pbao gkzu pda txdp iwl gkmfqn uxeupe atjxy vyul
+   \end{lstlisting}
+   
+   We can immediately see several problems with this generated text. First, many of the words are difficult to pronounce and unrealistic with regards to their consonant clusters - for example, words like \verb|jvxx| and \verb|rppfj| are unlikely to exist in any natural languages. Generating words in this manner will also not produce very much variation in languages, as each letter has an equal probability to be picked.
+   
+   We also quickly run into the problem of representing language in text. \todo{cite}Written languages are based on spoken languages, so generating a written language first without basing it on a spoken one will lead to an unrealistic language. Furthermore, it is hard to say how our generated words are pronounced - we can apply English pronunciations to some of the words (for example \verb|tawz| becomes \textipa{/tO:z/} and \verb|axdut| becomes \textipa{/"\ae ks.d2t/}), but this results in a very Anglo-centric phonology, as we are biased to only use phonemes that exist in our own language while pronouncing unknown words.
+   
+   Because of these problems, it is obvious that merely stringing together random characters with no thought towards pronunciation is insufficient when it comes to creating realistic and varied languages. Therefore it is necessary to first create a phonology on which to base all of our language's words.
+   
+   \section{Phonology}
+   
+   In its simplest form, a phonology is a list of every sound that is included in a language. \todo{cite (WALS)}English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the 'Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
+   
+  \begin{table}[h]
+  	\caption{Consonant inventory in English phonology}
+  	\label{english consonants}
+  	\centering
+  	\makebox[0pt]{
+	  	\begin{tabular}{|
+	  			>{\columncolor[HTML]{D8D8D8}} l |
+	  			>{\columncolor[HTML]{D8D8D8}} l |llllll}
+	  		\hline
+	  		\textbf{} & \textbf{} & \cellcolor[HTML]{D8D8D8}\textbf{Labial} & \cellcolor[HTML]{D8D8D8}\textbf{\begin{tabular}[c]{@{}l@{}}Dental,\\ Alveolar\end{tabular}} & \cellcolor[HTML]{D8D8D8}\textbf{Post-alveolar} & \cellcolor[HTML]{D8D8D8}\textbf{Palatal} & \multicolumn{1}{l|}{\cellcolor[HTML]{D8D8D8}\textbf{Velar}} & \multicolumn{1}{l|}{\cellcolor[HTML]{D8D8D8}\textbf{Glottal}} \\ \hline
+	  		\textbf{Nasal} & \cellcolor[HTML]{D8D8D8} & \textipa{m} & \textipa{n} &  &  & \textipa{N} &  \\ \cline{1-1}
+	  		\textbf{\begin{tabular}[c]{@{}l@{}}Plosive,\\ Affricate\end{tabular}} & \multirow{-2}{*}{\cellcolor[HTML]{D8D8D8}} & \textipa{p} / \textipa{b} & \textipa{t} / \textipa{d} & \textipa{\t{tS}} / \textipa{\t{dZ}} &  & \textipa{k} / \textipa{g} &  \\ \cline{1-2}
+	  		\cellcolor[HTML]{D8D8D8} & \textbf{Sibilant} &  & \textipa{s} / \textipa{z} & \textipa{S} / \textipa{Z} &  &  &  \\ \cline{2-2}
+	  		\multirow{-2}{*}{\cellcolor[HTML]{D8D8D8}\textbf{Fricative}} & \textbf{Non-sibilant} & \textipa{f} / \textipa{v} & \textipa{T} / \textipa{D} &  &  & \textipa{x} & \textipa{h} \\ \cline{1-2}
+	  		\textbf{Approximant} & \textbf{} &  & \textipa{l} & \textipa{r} & \textipa{j} & \textipa{w} &  \\ \hline
+	  	\end{tabular}
+  	}
+  \end{table}
+
+	\begin{table}[h]
+		\centering
+		\caption{Vowel inventory in English phonology (Received Pronunciation)}
+		\label{english vowels}
+		\begin{tabular}{|
+				>{\columncolor[HTML]{D8D8D8}}l |lll}
+			\hline
+			& \multicolumn{1}{l|}{\cellcolor[HTML]{D8D8D8}Front} & \multicolumn{1}{l|}{\cellcolor[HTML]{D8D8D8}Central} & \multicolumn{1}{l|}{\cellcolor[HTML]{D8D8D8}Back} \\ \hline
+			Close & \textipa{i} / \textipa{I}                                              &                                                      & \textipa{u} / \textipa{U}                                        \\ \cline{1-1}
+			Mid   & \textipa{e}                                                  & \textipa{3} / \textipa{@}                                            & \textipa{O}                                        \\ \cline{1-1}
+			Open  & \textipa{\ae}                                                 & \textipa{2}                                         & \textipa{A} / \textipa{6}                                    \\ \cline{1-1}
+		\end{tabular}
+	\end{table}
+
+	Other languages have different phonemic inventories, with varying numbers of consonants and vowels. Some, for example, have as few as 3 vowels, or as many as 84 or more consonants, depending on the method of counting\cite{leverbeoubykh}. A very large factor in the variety of languages generated is the phonology, as it restricts the type of sounds which often has a profound impact on how it is perceived. Therefore our first step towards a completed language should be a randomly generated, unique phonology.
+	
+	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the "end result" of generation process, since we can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \verb|yod| can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
+	
+	However, we can also use the IPA as a basis for \textit{creating} a phonology. 
+	
+	\section{Syllables}
+	
+	\section{Stress and Long/Geminate Phonemes}
+	
+	\section{Words}
+	
+	\chapter{Orthography}
+	
+	\chapter{Grammar}
+	
+	\section{Lexicon}
+	
+	\section{Phrase Structure Grammar}
+   
+   \printbibliography
+\end{document}
