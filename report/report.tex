@@ -9,7 +9,12 @@
 \usepackage{todonotes}
 \usepackage{tcolorbox}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\usepackage{fontspec}
 \usepackage{gb4e}
+
+\newfontface\lserif{Consolas}
+\newcommand{\Csh}{C{\lserif\#}}
+
 
 \definecolor{lightgray}{HTML}{EEEEEE}
 
@@ -18,7 +23,7 @@
 \title{yod: A library for language generation}
 \author{Daniel James}
 \date{April 2017}
-\begin{document}
+\begin{document}% %
    \maketitle
    
    \chapter{Introduction}
@@ -33,10 +38,13 @@
    \chapter{Building Words}
    The 'na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ we can generate the following example text:
    
+   \begin{figure}[h]
+   \caption{Random letters from the Latin alphabet}
+   \label{random letters from latin alphabet}  
    \begin{tcolorbox}
-   \label{random letters from latin alphabet}
 \texttt{tqk qzsyjla msmnix jvxx wug sysrh cuepg snyow ptjo bcek arjdubw pfwpt nabgzk jmq taphh zewll dmpr uvpmx sfpfk uuo bdm vnjbq hahuj wstq kohvma irn fott axdut rlgg tawz wsol wigom psqwd tnv vlzgt lbcikk bof msmyg zkqgubb veht ukaznqn ixp rppfj eqllnko uyyp aot uowtn icv fgypx cenawnk hypq rruh eosgrf wmakeg hhweua gnbfh mkpzi ebtwbv cjwrxw ucky kqezcm ucme wmrk khsya llzbeqw uxwivpp pbao gkzu pda txdp iwl gkmfqn uxeupe atjxy vyul}
    \end{tcolorbox}
+\end{figure}
    
    Several problems can be immediately seen with this generated text. First, many of the words are difficult to pronounce and unrealistic with regards to their consonant clusters - for example, words like \verb|jvxx| and \verb|rppfj| are unlikely to exist in any natural languages. Generating words in this manner will also not produce very much variation in languages, as each letter has an equal probability to be picked.
    
@@ -91,16 +99,90 @@
 	
 	To create more realistic phonologies, the subset of sounds taken from the full phonetic alphabet can be restricted. If, for example, random phonemes from the set are formed into words of random length between 3 and 8, the following words could be produced:
 	
+	\begin{figure}[h]
+	\caption{Random subset of all phonemes}
+	\label{random subset of all phonemes}	
 	\begin{tcolorbox}
-		\label{random subset of all phonemes}
+
 		\texttt{
-			\textipa{\:lT\r*T\textraising{\={\*r}} \c{c}g\t{dz} e\t{dz}\:R\:lV \:l\t{\=*{\r*t}\textraising{\={\*r}}}g\t{\=*{\r*t}\textraising{\={\*r}}}XU\:R\t{\=*{\r*t}\textraising{\={\*r}}} \:l\textraising{L}\r*g\textraising{\={\*r}}\c{c} \t{dz}\textcrh\t{\:d\:z} \textcrh\textcrh\r*{\:R}\textraising{\={\*r}}eT e\t{dz}\c{c}\t{dz} \r*LV\t{dz}e\:lV U\:lUX\textcrh}
+			\textipa{\:lTT\textraising{\={\*r}} \c{c}g\t{dz} e\t{dz}\:R\:lV \:l\t{\=*{\r*t}\textraising{\={\*r}}}g\t{\=*{\r*t}\textraising{\={\*r}}}XU\:R\t{\=*{\r*t}\textraising{\={\*r}}} \:l\textraising{L}\r*g\textraising{\={\*r}}\c{c} \t{dz}\textcrh\t{\:d\:z} \textcrh\textcrh\r*{\:R}\textraising{\={\*r}}eT e\t{dz}\c{c}\t{dz} \r*LV\t{dz}e\:lV U\:lUX\textcrh}
 		}
 	\end{tcolorbox}
+\end{figure}
 
-	Although this method achieves variety of phonemes while keeping the total number of phonemes low - the phonology used to generate these words only contains 15 phonemes - a lot of the words are still unrealistic. Similar to \ref{random letters from latin alphabet} there are an abundance of large consonant clusters - most words are lacking a vowel completely, in fact. 
+	Although this method achieves variety of phonemes while keeping the total number of phonemes low - the phonology used to generate these words only contains 15 phonemes - a lot of the words are still unrealistic. Similar to figure \ref{random letters from latin alphabet}, there are an abundance of large consonant clusters. Most words in the output lack a vowel and even those with vowels have extremely unrealistic consonant clusters.
 	
+	Another problem with this generated output is the sequences \textipa{/TT/} and \textipa{/\textcrh\textcrh/}. The former contains adjacent voiceless dental fricatives, and the latter contains adjacent voiceless pharyngeal fricatives. Such sequences consisting of two of the same phonemes are unpronounceable and would most likely be realised as single instances of the phoneme (e.g. \textipa{/T/} and \textipa{/\textcrh/}). These problems show that this method of generation is still insufficiently realistic.
 	
+	Is is important now to separate the phonology somewhat from the process of creating words. The problems just discussed are largely more to do with this word creation process, whereas there is still some work to do to improve the selection of individual phonemes for the phonology.
+	
+	The first step is to create a distinction between the two different types of phonemes: consonants and vowels. Consonants and vowels have very different features, and play very different roles in the formation of words. Thus the phonology's set of consonants should be generated separately from its set of vowels.
+	
+	Both consonants and vowels share the common features of phonemes shown in figure \ref{shared properties of phonemes}. Sonority is a numerical representation of how loud or sonorous the phoneme. Each phoneme also has a representative symbol in the International Phonetic Alphabet so they can be easily transcribed.
+	
+	\begin{figure}
+		\caption{Shared properties of phonemes}
+		\label{shared properties of phonemes}
+		\begin{tcolorbox}
+			\begin{itemize}
+				\item IPA symbol representation
+				\item Sonority
+			\end{itemize}
+		\end{tcolorbox}
+	\end{figure}
+
+	In addition to these shared properties, consonants also have the extra features shown in figure \ref{properties of consonants}.
+	
+	\begin{figure}[h]
+		\caption{Unique properties of consonants}
+		\label{properties of consonants}
+		\begin{tcolorbox}
+			\begin{itemize}
+				\item Place of articulation
+				\item Manner of articulation
+				\item Phonation/Voicing
+				\item Gemination
+			\end{itemize}
+		\end{tcolorbox}
+	\end{figure}
+	
+	The place of articulation refers to the part of the vocal track that creates an obstruction of airflow. The manner of articulation describes \textit{how} this obstruction affects the airflow - for example, "stops" or "plosives" completely block airflow, whereas "sibilants" and "fricatives" merely result in a turbulent airflow. The phonation of a consonant refers to whether, in producing the sound, the larynx affects the airflow through vibration of the vocal folds. Geminate consonants are consonants which are pronounced for a longer period of time, contrasting the usual shorter consonants. In 'stops' this is realised as a delayed release of the consonant, whereas other consonants with other types of articulation are merely prolonged.
+	
+	Similarly to consonants, vowels can be distinguished by the features in figure \ref{properties of vowels}.
+	
+	\begin{figure}[h]
+		\caption{Unique properties of vowels}
+		\label{properties of vowels}
+		\begin{tcolorbox}
+			\begin{enumerate}
+				\item Height
+				\item Backness
+				\item Roundedness
+				\item Length
+			\end{enumerate}
+		\end{tcolorbox}
+	\end{figure}
+
+	A vowels characteristics are formed from the position of the tongue in the mouth and the rounding of the lips. The height of a vowel refers to the height of the tongue, and the backness is the forward/back position of the tongue. Roundedness is the state of the lips in pronouncing the vowel - either rounded or unrounded. This unrounded/rounded distinction can be seen in the difference between the two open mid-back vowels \textipa{/2/} and \textipa{/O/} (compare \textit{shut} \textipa{/S2t/} and \textit{short} \textipa{/SO:t/}). The word \textit{short} \textipa{/SO:t/} also shows a good example of a long vowel (although there is no long/short vowel distinction in most English dialects\todo{cite?}).
+	
+	In fact, both height and backness are defined by the formant frequency of the voice, which are produced by the tongue's position. A spoken vowel can be represented with two formants \textit{F1 = height} and \textit{F2 = backness}. Roundness also has an effect on these formants, usually being seen as a decrease in \textit{F2} as well as a small decrease in \textit{F1}.
+	
+	It can be seen that both vowels and consonants have properties which relate to their length; these being consonants' gemination and vowels' length. Due to the similarities between these properties, they can be abstracted into the set of base phoneme properties as a 'Length' property. Thus we end up with our final set of properties being as follows:
+
+	\begin{figure}[h]
+	\caption{Shared properties of phonemes, with length}
+	\label{shared properties of phonemes with length}
+	\begin{tcolorbox}
+		\begin{itemize}
+			\item IPA symbol representation
+			\item Sonority
+			\item Length
+		\end{itemize}
+	\end{tcolorbox}
+	\end{figure}
+
+	This arrangement of properties lends itself extremely well to a simple data structure in \Csh{}. Consonants and vowels both translate trivially to classes, with their respective properties existing as enum members in those classes. For example, an enum \texttt{PlaceOfArticulation} can be created to represent the place of articulation of a consonants which would contain the set of values \texttt{Bilabial}, \texttt{Labiodental}, \texttt{Lingulabial}, \texttt{Dental} etc. Both the \texttt{Consonant} and \texttt{Vowel} classes are subclasses of a more general, abstract \texttt{Phoneme} class which contains only the properties that are shared between both of them. This allows the entire International Phonetic alphabet to be represented in code as a set of \texttt{Phoneme}s.
+
 	\section{Syllables}
 	
 	\section{Stress and Long/Geminate Phonemes}

@@ -21,7 +21,7 @@ namespace yodTest
 
         public Tests()
         {
-            //Globals.SeedRandom(4);
+            Globals.Seed = 11;
 
             phonology = LanguagePhonology.FromJSON("./english.json");
             orthography = LanguageOrthography.Generate(phonology);
