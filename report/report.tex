@@ -7,6 +7,7 @@
 \usepackage{tikz-qtree}
 \usepackage{url}
 \usepackage{todonotes}
+\usepackage{tcolorbox}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \usepackage{gb4e}
 
@@ -30,15 +31,16 @@
    \todo{talk about structure}
    
    \chapter{Building Words}
-   The 'naive' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ we can generate the following example text:
+   The 'na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ we can generate the following example text:
    
-   \begin{lstlisting}[breaklines=true,backgroundcolor=\color{lightgray},framesep=40pt]
-tqk qzsyjla msmnix jvxx wug sysrh cuepg snyow ptjo bcek arjdubw pfwpt nabgzk jmq taphh zewll dmpr uvpmx sfpfk uuo bdm vnjbq hahuj wstq kohvma irn fott axdut rlgg tawz wsol wigom psqwd tnv vlzgt lbcikk bof msmyg zkqgubb veht ukaznqn ixp rppfj eqllnko uyyp aot uowtn icv fgypx cenawnk hypq rruh eosgrf wmakeg hhweua gnbfh mkpzi ebtwbv cjwrxw ucky kqezcm ucme wmrk khsya llzbeqw uxwivpp pbao gkzu pda txdp iwl gkmfqn uxeupe atjxy vyul
-   \end{lstlisting}
+   \begin{tcolorbox}
+   \label{random letters from latin alphabet}
+\texttt{tqk qzsyjla msmnix jvxx wug sysrh cuepg snyow ptjo bcek arjdubw pfwpt nabgzk jmq taphh zewll dmpr uvpmx sfpfk uuo bdm vnjbq hahuj wstq kohvma irn fott axdut rlgg tawz wsol wigom psqwd tnv vlzgt lbcikk bof msmyg zkqgubb veht ukaznqn ixp rppfj eqllnko uyyp aot uowtn icv fgypx cenawnk hypq rruh eosgrf wmakeg hhweua gnbfh mkpzi ebtwbv cjwrxw ucky kqezcm ucme wmrk khsya llzbeqw uxwivpp pbao gkzu pda txdp iwl gkmfqn uxeupe atjxy vyul}
+   \end{tcolorbox}
    
-   We can immediately see several problems with this generated text. First, many of the words are difficult to pronounce and unrealistic with regards to their consonant clusters - for example, words like \verb|jvxx| and \verb|rppfj| are unlikely to exist in any natural languages. Generating words in this manner will also not produce very much variation in languages, as each letter has an equal probability to be picked.
+   Several problems can be immediately seen with this generated text. First, many of the words are difficult to pronounce and unrealistic with regards to their consonant clusters - for example, words like \verb|jvxx| and \verb|rppfj| are unlikely to exist in any natural languages. Generating words in this manner will also not produce very much variation in languages, as each letter has an equal probability to be picked.
    
-   We also quickly run into the problem of representing language in text. \todo{cite}Written languages are based on spoken languages, so generating a written language first without basing it on a spoken one will lead to an unrealistic language. Furthermore, it is hard to say how our generated words are pronounced - we can apply English pronunciations to some of the words (for example \verb|tawz| becomes \textipa{/tO:z/} and \verb|axdut| becomes \textipa{/"\ae ks.d2t/}), but this results in a very Anglo-centric phonology, as we are biased to only use phonemes that exist in our own language while pronouncing unknown words.
+   We also quickly run into the problem of representing language in text. \todo{cite}Written languages are based on spoken languages, so generating a written language first without basing it on a spoken one will lead to an unrealistic language. Furthermore, it is hard to say how our generated words are pronounced - one can apply English pronunciations to some of the words (for example \verb|tawz| becomes \textipa{/tO:z/} and \verb|axdut| becomes \textipa{/"\ae ks.d2t/}), but this results in a very Anglo-centric phonology, as we are biased to only use phonemes that exist in our own language while pronouncing unknown words.
    
    Because of these problems, it is obvious that merely stringing together random characters with no thought towards pronunciation is insufficient when it comes to creating realistic and varied languages. Therefore it is necessary to first create a phonology on which to base all of our language's words.
    
@@ -79,11 +81,25 @@ tqk qzsyjla msmnix jvxx wug sysrh cuepg snyow ptjo bcek arjdubw pfwpt nabgzk jmq
 		\end{tabular}
 	\end{table}
 
-	Other languages have different phonemic inventories, with varying numbers of consonants and vowels. Some, for example, have as few as 3 vowels, or as many as 84 or more consonants, depending on the method of counting\cite{leverbeoubykh}. A very large factor in the variety of languages generated is the phonology, as it restricts the type of sounds which often has a profound impact on how it is perceived. Therefore our first step towards a completed language should be a randomly generated, unique phonology.
+	Other languages have different phonemic inventories, with varying numbers of consonants and vowels. Some, for example, have as few as 3 vowels, or as many as 84 or more consonants, depending on the method of counting\cite{leverbeoubykh}. A very large factor in the variety of languages generated is the phonology, as it restricts the type of sounds which often has a profound impact on how it is perceived. Therefore the first step towards a completed language should be a randomly generated, unique phonology.
 	
-	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the "end result" of generation process, since we can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \verb|yod| can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
+	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the "end result" of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \verb|yod| can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
 	
-	However, we can also use the IPA as a basis for \textit{creating} a phonology. 
+	However, the IPA can also be used as a basis for \textit{creating} a phonology. It lists every sound possible in a language, so as a na\"{\i}ve approach would be to randomly choose sounds from this set to build words. This approach is similar to the approach we took before which involved choosing random letters from the Latin alphabet. However this time the words are being generated via sound directly rather than generating a written word, then trying to create a spoken representation of that.
+	
+	The problems with taking the entire IPA as our set of possible sounds are twofold. First, it does not give us a unique phonology - instead the phonology is the same every single time, as its contents are not randomised. Second, if the phonology for the generated language contains \textit{every} consonant and vowel from the IPA, then it will have many more phonemes than even the largest existing phonetic inventory. This is clearly unrealistic, and would be very difficult for anybody to learn. For artistic languages, this is a bit less of a concern but it is still preferable that the generated words be somewhat pronounceable and understandable, which gets less likely the more phonemes a speaker would have to discern from each other.
+	
+	To create more realistic phonologies, the subset of sounds taken from the full phonetic alphabet can be restricted. If, for example, random phonemes from the set are formed into words of random length between 3 and 8, the following words could be produced:
+	
+	\begin{tcolorbox}
+		\label{random subset of all phonemes}
+		\texttt{
+			\textipa{\:lT\r*T\textraising{\={\*r}} \c{c}g\t{dz} e\t{dz}\:R\:lV \:l\t{\=*{\r*t}\textraising{\={\*r}}}g\t{\=*{\r*t}\textraising{\={\*r}}}XU\:R\t{\=*{\r*t}\textraising{\={\*r}}} \:l\textraising{L}\r*g\textraising{\={\*r}}\c{c} \t{dz}\textcrh\t{\:d\:z} \textcrh\textcrh\r*{\:R}\textraising{\={\*r}}eT e\t{dz}\c{c}\t{dz} \r*LV\t{dz}e\:lV U\:lUX\textcrh}
+		}
+	\end{tcolorbox}
+
+	Although this method achieves variety of phonemes while keeping the total number of phonemes low - the phonology used to generate these words only contains 15 phonemes - a lot of the words are still unrealistic. Similar to \ref{random letters from latin alphabet} there are an abundance of large consonant clusters - most words are lacking a vowel completely, in fact. 
+	
 	
 	\section{Syllables}
 	
