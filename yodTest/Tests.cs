@@ -149,6 +149,20 @@ namespace yodTest
             return s;
         }
 
+        public string TestPhonology()
+        {
+            var s = "Phonemes:" + Environment.NewLine;
+            s += "    Consonants: /";
+            phonology.Phonemes.Consonants.ForEach(x => s += x.ToString() + " ");
+            s += "/" + Environment.NewLine;
+            s += "        Vowels: /";
+            phonology.Phonemes.Vowels.ForEach(x => s += x.ToString() + " ");
+            s += "/" + Environment.NewLine;
+            s += "Syllable structure: " + phonology.SyllableStructure.ToString();
+
+            return s;
+        }
+
         public void Run()
         {
             var s = "";
@@ -159,6 +173,7 @@ namespace yodTest
 
                 TestPhrase,
                 TestInflectedPhrase,
+                TestPhonology,
                 TestLexiconOrthographized,
                 TestOrthography
             };

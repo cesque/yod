@@ -2,12 +2,17 @@
 \usepackage{tipa}
 \usepackage{lmodern}
 \usepackage{multirow}
+\usepackage{amssymb}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{listings}
+\usepackage{tikz}
 \usepackage{tikz-qtree}
 \usepackage{url}
+\usepackage{graphicx}
 \usepackage{todonotes}
 \usepackage{tcolorbox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \usepackage{fontspec}
 \usepackage{gb4e}
@@ -20,7 +25,7 @@
 
 \addbibresource{bibliography.bib}
 
-\title{yod: A library for language generation}
+\title{Creating a library to aid in constructed language generation}
 \author{Daniel James}
 \date{April 2017}
 \begin{document}% %
@@ -43,7 +48,7 @@
    
    \todo{talk about structure}
    
-   \chapter{Building Words}
+   \chapter{Phonology}
    The 'na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ we can generate the following example text:
    
    \begin{figure}[h]
@@ -60,7 +65,7 @@
    
    Because of these problems, it is obvious that merely stringing together random characters with no thought towards pronunciation is insufficient when it comes to creating realistic and varied languages. Therefore it is necessary to first create a phonology on which to base all of our language's words.
    
-   \section{Phonology}
+   \section{Phonetic inventory}
    
    In its simplest form, a phonology is a list of every sound that is included in a language. \todo{cite (WALS)}English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the 'Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
    
@@ -99,7 +104,7 @@
 
 	Other languages have different phonemic inventories, with varying numbers of consonants and vowels. Some, for example, have as few as 3 vowels, or as many as 84 or more consonants, depending on the method of counting\cite{leverbeoubykh}. A very large factor in the variety of languages generated is the phonology, as it restricts the type of sounds which often has a profound impact on how it is perceived. Therefore the first step towards a completed language should be a randomly generated, unique phonology.
 	
-	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the "end result" of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \verb|yod| can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
+	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the "end result" of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \textit{yod} can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
 	
 	However, the IPA can also be used as a basis for \textit{creating} a phonology. It lists every sound possible in a language, so as a na\"{\i}ve approach would be to randomly choose sounds from this set to build words. This approach is similar to the approach we took before which involved choosing random letters from the Latin alphabet. However this time the words are being generated via sound directly rather than generating a written word, then trying to create a spoken representation of that.
 	
@@ -191,9 +196,168 @@
 
 	This arrangement of properties lends itself extremely well to a simple data structure in \Csh{}. Consonants and vowels both translate trivially to classes, with their respective properties existing as enum members in those classes. For example, an enum \texttt{PlaceOfArticulation} can be created to represent the place of articulation of a consonants which would contain the set of values \texttt{Bilabial}, \texttt{Labiodental}, \texttt{Lingulabial}, \texttt{Dental} etc. Both the \texttt{Consonant} and \texttt{Vowel} classes are subclasses of a more general, abstract \texttt{Phoneme} class which contains only the properties that are shared between both of them. This allows the entire International Phonetic alphabet to be represented in code as a set of \texttt{Phoneme}s.
 	
-	It is more useful, however, to distinguish between the set of vowels and the set of consonants. Thus the two classes \texttt{ConsonantCollection} and \texttt{VowelCollection} can act as lists of their respective type of phoneme, with a \texttt{PhonemeCollection} being formed out of a union of the two sets of phonemes.
+	It is more useful, however, to distinguish between the set of vowels and the set of consonants. Thus the two classes \texttt{ConsonantCollection} and \texttt{VowelCollection} can act as lists of their respective type of phoneme, with a \texttt{PhonemeCollection} being formed out of a union of the two sets of phonemes. Each class's \texttt{Generate()} method can then be used to create a unique set of each type of phoneme.
+	
+	Using statistics from the World Atlas of Language Structures, the realism of our phonology generation can be increased by roughly following the range distribution of numbers of vowels and consonants in natural languages. For vowels, the distribution is shown in figure \ref{vowel quality inventories}. By using these numbers as weights for a weighted random algorithm, the vowel inventory in the generated phonology will be similar in size to natural languages' vowel inventories. The result of the weighted random algorithm is a range (minimum value and a maximum value). Using \textit{yod}'s global random number generator, a value between these maximum and minimum can be chosen as the goal number of vowels. Then that amount of unique vowel sounds can be randomly chosen from the full set to complete the vowel inventory.
+	
+	\begin{table}[]
+		\centering
+		\caption{Vowel Quality Inventories\cite{wals-2}}
+		\label{vowel quality inventories}
+		\begin{tabular}{|>{\columncolor[HTML]{D8D8D8}}l |l|}
+			\hline
+			Value	&	\cellcolor[HTML]{D8D8D8}Representation \\
+			\hline
+			Small vowel inventory (2-4)                                   & 93                                     \\ \hline
+			Average vowel inventory (5-6)                                 & 287                                    \\ \hline
+			Large vowel inventory (7-14)                                  & 184                                    \\ \hline \hline
+			\multicolumn{1}{|r|}{\cellcolor[HTML]{D8D8D8}\textbf{Total:}} & 564                                    \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\begin{table}[]
+		\centering
+		\caption{Consonant Quality Inventories\cite{wals-1}}
+		\label{consonant quality inventories}
+		\begin{tabular}{|>{\columncolor[HTML]{D8D8D8}}l|l|}
+			\hline
+			Value                    & \cellcolor[HTML]{D8D8D8}Representation \\ 
+			\hline
+			Small (6-14)             & 89             \\
+			Moderately small (15-18) & 122            \\
+			Average (19-25)          & 201            \\
+			Moderately large (26-33) & 94             \\
+			Large (34 or more)       & 57             \\ \hline \hline
+			\multicolumn{1}{|r|}{\cellcolor[HTML]{D8D8D8}\textbf{Total:}} & 563                                    \\ \hline
+		\end{tabular}
+	\end{table}
+
+	Similarly, figure \ref{consonant quality inventories} shows the range distribution of consonants in natural languages. The same weighted random algorithm can be used to get a range, then a random 'goal' value of consonants in that range.
+	
+	For consonants, however, it does not need to be as simple as choosing random consonants from the set of all consonants in the IPA. There are approaches that can be used to pick consonants in a smarter way which will result in better consonant inventories.
+	
+	Given a goal number of consonants that need to be added to the phonology, the aim is procedurally get as close to that number while taking into account extra statistics for which consonants to pick. Adding and removing whole places or manners of articulation tends to be more natural than choosing consonants at random\todo{cite - only thing i know about this is that one Artifexian video}, so a way of modelling this would be to add places and manners of articulation until the intersection of them results in the right amount of consonants. The algorithm would therefore work something like this:
+	
+	\begin{algorithm}
+		\caption{Consonant inventory generation algorithm}
+		\label{consonant inventory generation algorithm}
+		\begin{algorithmic}[1]
+		\State $goal \gets$ generated goal number of consonants
+		\State $places \gets \varnothing $
+		\State $manners \gets \varnothing $
+		\State $consonants \gets \varnothing $
+		\While{$\left\vert{consonants}\right\vert < goal$}
+			\If{$random < 0.5$}
+				\State $places \gets places \cup \{$random place of articulation$\}$
+			\Else
+				\State $manners \gets manners \cup \{$random manner of articulation$\}$
+			\EndIf
+			\State $consonants \gets \{x | x.place \in places \wedge x.manner \in manners\}$
+		\EndWhile
+		\end{algorithmic}
+	\end{algorithm}
+
+	Generating a consonant inventory this way means that the resulting language will be more cohesive in its sounds, while still retaining a unique feel every time one is generated. This approach does not take into account the phonation of consonants, though, so more variety could still be added. Again, WALS provides statistics on voicing in natural languages. Figure \ref{voicing in plosives and fricatives} shows the distribution of languages which have a distinction between voiced and unvoiced fricatives and plosives.
+	
+	\begin{table}[h]
+		\centering
+		\caption{Voicing in Plosives and Fricatives\cite{wals-4}}
+		\label{voicing in plosives and fricatives}
+		\begin{tabular}{|>{\columncolor[HTML]{D8D8D8}}l|l|}
+			\hline
+		    Value                                            & Representation \\ \hline
+		No voicing contrast                              & 182            \\
+		Voicing contrast in plosives alone               & 189            \\
+		Voicing contrast in fricatives alone             & 38             \\
+		Voicing contrast in both plosives and fricatives & 158            \\ \hline \hline
+			\multicolumn{1}{|r|}{\cellcolor[HTML]{D8D8D8}\textbf{Total:}} & 567                                    \\ \hline
+		\end{tabular}
+	\end{table}
+
+	The figure shows information about voicing in both fricatives and plosives. In order to get this information from the statistics into a form that can be used in code, the \textbf{Value} column can instead be seen as a tuple of two boolean values: "voicing contrast in plosives" and "voicing contrast in fricatives". With an object structure of \verb|{fricative voicing contrast, plosive voicing contrast}| The values will then become \verb|{false, false}|, \verb|{false, true}|, \verb|{true, false}| and \verb|{true, true}|. By using a weighted random algorithm, as above, to choose a random tuple, the respective values can be taken from the tuple and set in our consonant-choosing code.
+	
+	These values do not refer to whether voiced or unvoiced phonemes themselves are included in the phonology - rather they describe whether there is a distinction made between voiced and unvoiced phonemes. This can be simplified as "if the language makes a distinction between the two, include both voicings." Otherwise, the algorithm should only include only the consonant which has the phonology's "voicing" for that manner of articulation, which can be chosen randomly.
+	
+	By using these refinements for generating a phonetic inventory, a unique and varied, yet still realistic, phonology can begin to be generated. This phonology provides the basis upon which the rest of the language is built.
 
 	\section{Syllables}
+	
+	The next step towards a full phonology is building syllables out of the phonemes from the generated phonetic inventory.
+	
+	\begin{figure}[h]
+		\caption{Syllable structure}
+		\label{syllable structure}
+		\centering
+		\begin{tikzpicture}				
+			\tikzset{level distance=40pt}
+			\tikzset{sibling distance=30pt}
+			\tikzset{frontier/.style={distance from root=100pt}}
+			\Tree [.{Syllable ($\sigma$)} {Onset ($\omega$)} [.{Rime ($\rho$)} {Nucleus ($\nu$)} {Coda ($\kappa$)} ] ]
+		\end{tikzpicture}
+	\end{figure}
+
+	Figure \ref{syllable structure} shows the structure of a syllable. A syllable is formed out of two parts - the \textit{onset} and the \textit{rime}. Furthermore, the rime consists of a usually required \textit{nucleus} and a \textit{coda}. Both the onset and coda can be consonants or consonant clusters. The nucleus consists of a vowel or vowels (monophthong or diphthong).
+	
+	The role of \textit{yod} is to construct syllables that fit this structure and then form them into words. The simplest method of generating syllables is by taking random phonemes from the pre-generated phoneme inventory and filling the onset, nucleus and coda with them. This method can be easily refined by not always filling all the parts of the syllable - the onset and coda can both be optional, so adding them in every instance is less realistic.
+	
+	Another simple improvement that can be made is allowing for consonant clusters and diphthongs, which is done by picking multiple phonemes when filling a section. In order to vary the results, this should not be done every time, but should vary in frequency. The addition of clusters and diphthongs allows for more complex syllables to be created.
+	
+	The maximum number of consonants in a consonant cluster, the maximum number of vowels in the nucleus, as well as whether any of the parts of the syllable are optional, are all properties of the language. Thus, syllable structures can be generated. The structure of a syllable is commonly shown as a string of either 'C's or 'V's (consonants or vowels)\cite{clements1985cv}. A language permitting only syllables with exactly one onset consonant and exactly one vowel, and no coda, would be described as having a CV syllable structure.
+	
+	This representation also shows variable structures where some phonemes are optional - that is, the number of phonemes in a segment can differ. For this, bracket notation is used to denote an optional phoneme. For example, the syllable structure of the English language is cited as being (C)(C)(C)V(C)(C)(C)(C). This represents a syllable structure where the onset can have 0-3 consonants, the nucleus always contains a vowel, and the coda can have 0-4 consonants. While it is rare in English for a syllable to have the largest possible onset \textit{and} coda clusters at the same time, examples can still be seen; the monosyllabic word \textit{strengths} can be transcribed as \textipa{/st\*rENkTs/}. This word displays an onset cluster of length 3 (\textipa{/st\*r/}) and a coda cluster of length 4 (\textipa{/NkTs/}).
+	
+	In order to generate a syllable structure in its most basic form, a minimum and maximum cluster value can be defined for onset, nucleus and coda. This yields a decently varied set of possible structures. To augment this, weights can be assigned to each possible value from the minimum to maximum, meaning that some lengths of phoneme clusters will be rarer than others. As in the case of the English language's 4-length coda consonant cluster, which is uncommonly seen, some clusters in the generated language will be less common. Not only does this increase variety in the languages that \textit{yod} generates, but it also is more realistic, as it would be unusual to have all possible cluster lengths equally probable.
+	
+	Now, with a syllable structure for the language decided, a syllable can be created based on it. First, a syllable structure is needed for this syllable - this can be randomly generated from the phonology's structure. For example, given English's (C)(C)(C)V(C)(C)(C)(C) structure, there are many possible subsets of structures that a syllable could have and still be considered valid. At its most complex, a syllable could match the above structure exactly, and at its simplest the syllable could just have the structure V. Most syllables will lie somewhere inbetween these two extremes. Treating the onset, nucleus and coda separately, a random value can be selected using a weighted random algorithm on our weighted set of possible values. Then a number of phonemes equal to the chosen number for each section can be chosen. By concatenating the onset phonemes, the nucleus and the nucleus phonemes in that order, a syllable is created.
+	
+	Using this method, and the set of phonemes from the English phonology, the sample set of syllables in figure \ref{sample syllables with weighted structure} was generated. The syllables in the figure are based on a generated syllable structure of (C)(C)V(C)(C).
+	
+	\begin{figure}
+		\caption{Sample syllables with weighted structure (C)(C)V(C)(C)}
+		\label{sample syllables with weighted structure}  
+		\begin{tcolorbox}
+		\textipa{
+			/\*rl6z Didg @pn vOsg \*ru SZUsT I Dj\ae{} t\ae{} s6w vz2f 6kk NOh eD \ae T ASZ 6sD fT3D 6Z SI \t{dZ}6p @h h@zw b@p Nujn Il giZw \ae Sh sjOl \t{dZ}\ae ND 2\t{dZ} v\ae{} TUlD iD\t{dZ} zAl nA vS3st 2f\t{dZ} lOwm \*rAl\t{dZ} \t{dZ}tU\t{dZ}d l3vz 3 6 idl 2jn pb6hm t\t{dZ}AfD f3Sj/
+		}		
+		\end{tcolorbox}
+	\end{figure}
+
+	Both syllables that match the most complex possible structure in this phonology (\textipa{/\t{dZ}tU\t{dZ}d/} and \textipa{/pb6hm/}) and the least complex possible structure (\textipa{/3/} and \textipa{/6/} can be seen in this selection, showing the range of the syllable generation code. If each syllable in this sample is considered to be a monosyllabic word, the results from this code are already noticeably more realistic than the words generated in figures \ref{random letters from latin alphabet} and \ref{random subset of all phonemes} (although in this sample only the phonemes from the English phonology are used, which can give a false sense of 'realism'). The structure of building clusters of consonants around a central vowel base creates realistic syllables.
+	
+	However, there are still some instances where unrealistic phoneme sequences can be spotted, even in this short sample of results. For example, the initial cluster of \textipa{/pb/} in the word \textipa{/pb6hm/} consists of two successive stops - both the voiced and unvoiced bilabial plosive. For a word to contain multiple plosives in a row already makes it harder to pronounce, and the fact that they are both bilabial plosives only increases that difficult. Either both are audibly released, which results in a long, difficult to pronounce cluster, or the first consonant will be deleted completely\todo{cite}. The generated syllable \textipa{/6kk/} also provides some trouble, as "double consonants" are rare in IPA transcriptions of natural languages. Usually when a double consonant appears in a transcription, it will either be across a syllable boundary (e.g., a sequence \textipa{/\dots{}kk\dots{}/} is likely to represent the coda of one syllable and the onset of another syllable \textipa{/\dots{}k.k\dots{}/}) or the gemination of the consonant (e.g., \textipa{/\dots{}kk\dots{}/} is another way of writing \textipa{/\dots{}k:\dots{}/}). However, these uses are rare, and most commonly a single consonant would be used in their place, or the IPA symbol for gemination inserted.
+	
+	In order to solve the problem of unrealistic consonant clusters, syllables can be built based on a 'sonority hierarchy'. The sonority hierarchy is a scale showing the relative strength of different phonemes based on their properties\cite{burquest2006}. Different phonemes have different amplitudes, and patterns in the amplitudes can be seen depending on the place and manner of articulation, as well as the phonation. It can be seen that syllables in many natural languages follow a structure whereby the nucleus has the most sonorant phonemes, and then the rest of the phonemes in the syllable decrease in sonority as they get further away from the nucleus. This can be seen in English by considering the initial consonant cluster \textipa{/pl\dots{}/} compared to \textipa{/lp\dots{}/} - the \textipa{/l/} is a lateral fricative, which is more sonorous than the obstruent stop \textipa{/p/}. Because of this, the cluster \textipa{/pl/} is much more common in onset consonant clusters. As the inverse of this, the cluster \textipa{/lp/} is much more common in coda consonant clusters globally than \textipa{/pl/}. In English, an example of initial cluster \textipa{/pl/} would be the word \textit{plant} (\textipa{/pl\ae{}nt/}), and an example of coda cluster \textipa{/lp/} would be the word \textit{help} (\textipa{/hElp/}).
+	
+	Applying the sonority hierarchy rules to the phoneme-picking algorithm will make a profound difference to the realism of the generated syllables. In order to implement the hierarchy in the code, every phoneme must be given a sonority value. Using the image in figure \ref{sonority hierarchy}, a value from 0 to 10 can be given to every single phoneme based on its type. In fact, the IPA and therefore \textit{yod} contains no complex plosives, so the values range is 0 to 9 inclusive.
+	
+	\begin{figure}
+		\caption{Sonority hierarchy\cite{glossaryoflinguisticterms}}
+		\label{sonority hierarchy}
+		\includegraphics[height=150pt]{sonority}
+	\end{figure}
+
+	\begin{table}
+		\centering
+		\caption{Sonority hierarchy assigned values}
+		\label{sonority hierarchy assigned values}
+		\begin{tabular}{|l|l|}
+			\hline
+			\cellcolor[HTML]{D8D8D8}Type  & \cellcolor[HTML]{D8D8D8}Value \\
+			\hline
+			Open vowels                                 & 0     \\
+			Mid vowels                                  & 1     \\
+			Close vowels (and semivowels)               & 2     \\
+			Trills, flaps and taps                      & 3     \\
+			Laterals                                    & 4     \\
+			Nasals                                      & 5     \\
+			Voiced affricates and voiced fricatives     & 6     \\
+			Unvoiced affricates and unvoiced fricatives & 7     \\
+			Voiced stops                                & 8     \\
+			Unvoiced stops                              & 9     \\ \hline
+		\end{tabular}
+	\end{table}
+
+	Figure \ref{sonority hierarchy assigned values} shows how each category of phoneme is assigned a value representing its sonority. With this information encoded into each phoneme representation, the next step is to factor these into the strategy of picking phonemes for a syllable.
 	
 	\section{Stress and Long/Geminate Phonemes}
 	

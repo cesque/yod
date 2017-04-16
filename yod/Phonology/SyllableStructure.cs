@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
@@ -72,7 +73,7 @@ namespace yod.Phonology
                 {1, 50f},
                 {2, 45f}
             });
-            for (var i = 0; i <= maxOnset; i++)
+            for (var i = Math.Min(Globals.Random.Next(100) > 50 ? 1 : 0, maxOnset); i <= maxOnset; i++)
             {
                 onset.Add(new SyllableStructureOption(i, 10 + Globals.Random.Next(i == 0 ? 35 : 40)));
             }
@@ -129,6 +130,27 @@ namespace yod.Phonology
             (o["nucleus"] as JArray).ToList().ForEach(x => structure.NucleusStructure.Add(SyllableStructureOption.FromJSON(x)));
             (o["coda"] as JArray).ToList().ForEach(x => structure.CodaStructure.Add(SyllableStructureOption.FromJSON(x)));
             return structure;
+        }
+
+        public override string ToString()
+        {
+            var s = "";
+            var minOnset = this.OnsetStructure.Min(option => option.Length);
+            var maxOnset = this.OnsetStructure.Max(option => option.Length);
+            for (var i = 0; i<minOnset; i++) s += "C";
+            for (var i = 0; i < maxOnset - minOnset; i++) s += "(C)";
+
+            var minNucleus = this.NucleusStructure.Min(option => option.Length);
+            var maxNucleus = this.NucleusStructure.Max(option => option.Length);
+            for (var i = 0; i < minNucleus; i++) s += "V";
+            for (var i = 0; i < maxNucleus - minNucleus; i++) s += "(V)";
+
+            var minCoda = this.CodaStructure.Min(option => option.Length);
+            var maxCoda = this.CodaStructure.Max(option => option.Length);
+            for (var i = 0; i < minCoda; i++) s += "C";
+            for (var i = 0; i < maxCoda - minCoda; i++) s += "(C)";
+
+            return s;
         }
     }
 }
