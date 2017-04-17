@@ -116,12 +116,11 @@
 	\caption{Random subset of all phonemes}
 	\label{random subset of all phonemes}	
 	\begin{tcolorbox}
-
 		\texttt{
 			\textipa{\:lTT\textraising{\={\*r}} \c{c}g\t{dz} e\t{dz}\:R\:lV \:l\t{\=*{\r*t}\textraising{\={\*r}}}g\t{\=*{\r*t}\textraising{\={\*r}}}XU\:R\t{\=*{\r*t}\textraising{\={\*r}}} \:l\textraising{L}\r*g\textraising{\={\*r}}\c{c} \t{dz}\textcrh\t{\:d\:z} \textcrh\textcrh\r*{\:R}\textraising{\={\*r}}eT e\t{dz}\c{c}\t{dz} \r*LV\t{dz}e\:lV U\:lUX\textcrh}
 		}
 	\end{tcolorbox}
-\end{figure}
+	\end{figure}
 
 	Although this method achieves variety of phonemes while keeping the total number of phonemes low - the phonology used to generate these words only contains 15 phonemes - a lot of the words are still unrealistic. Similar to figure \ref{random letters from latin alphabet}, there are an abundance of large consonant clusters. Most words in the output lack a vowel and even those with vowels have extremely unrealistic consonant clusters.
 	
@@ -326,7 +325,7 @@
 	
 	However, there are still some instances where unrealistic phoneme sequences can be spotted, even in this short sample of results. For example, the initial cluster of \textipa{/pb/} in the word \textipa{/pb6hm/} consists of two successive stops - both the voiced and unvoiced bilabial plosive. For a word to contain multiple plosives in a row already makes it harder to pronounce, and the fact that they are both bilabial plosives only increases that difficult. Either both are audibly released, which results in a long, difficult to pronounce cluster, or the first consonant will be deleted completely\todo{cite}. The generated syllable \textipa{/6kk/} also provides some trouble, as "double consonants" are rare in IPA transcriptions of natural languages. Usually when a double consonant appears in a transcription, it will either be across a syllable boundary (e.g., a sequence \textipa{/\dots{}kk\dots{}/} is likely to represent the coda of one syllable and the onset of another syllable \textipa{/\dots{}k.k\dots{}/}) or the gemination of the consonant (e.g., \textipa{/\dots{}kk\dots{}/} is another way of writing \textipa{/\dots{}k:\dots{}/}). However, these uses are rare, and most commonly a single consonant would be used in their place, or the IPA symbol for gemination inserted.
 	
-	In order to solve the problem of unrealistic consonant clusters, syllables can be built based on a 'sonority hierarchy'. The sonority hierarchy is a scale showing the relative strength of different phonemes based on their properties\cite{burquest2006}. Different phonemes have different amplitudes, and patterns in the amplitudes can be seen depending on the place and manner of articulation, as well as the phonation. It can be seen that syllables in many natural languages follow a structure whereby the nucleus has the most sonorant phonemes, and then the rest of the phonemes in the syllable decrease in sonority as they get further away from the nucleus. This can be seen in English by considering the initial consonant cluster \textipa{/pl\dots{}/} compared to \textipa{/lp\dots{}/} - the \textipa{/l/} is a lateral fricative, which is more sonorous than the obstruent stop \textipa{/p/}. Because of this, the cluster \textipa{/pl/} is much more common in onset consonant clusters. As the inverse of this, the cluster \textipa{/lp/} is much more common in coda consonant clusters globally than \textipa{/pl/}. In English, an example of initial cluster \textipa{/pl/} would be the word \textit{plant} (\textipa{/pl\ae{}nt/}), and an example of coda cluster \textipa{/lp/} would be the word \textit{help} (\textipa{/hElp/}).
+	In order to solve the problem of unrealistic consonant clusters, syllables can be built based on a 'sonority hierarchy'. The sonority hierarchy is a scale showing the relative strength of different phonemes based on their properties\cite{burquest2006}. Different phonemes have different amplitudes, and patterns in the amplitudes can be seen depending on the place and manner of articulation, as well as the phonation. It can be seen that syllables in many natural languages follow a structure whereby the nucleus has the most sonorant phonemes, and then the rest of the phonemes in the syllable decrease in sonority as they get further away from the nucleus. This is known as the \textit{sonority sequencing principle}. It can be seen in English by considering the initial consonant cluster \textipa{/pl\dots{}/} compared to \textipa{/lp\dots{}/} - the \textipa{/l/} is a lateral fricative, which is more sonorous than the obstruent stop \textipa{/p/}. Because of this, the cluster \textipa{/pl/} is much more common in onset consonant clusters. As the inverse of this, the cluster \textipa{/lp/} is much more common in coda consonant clusters globally than \textipa{/pl/}. In English, an example of initial cluster \textipa{/pl/} would be the word \textit{plant} (\textipa{/pl\ae{}nt/}), and an example of coda cluster \textipa{/lp/} would be the word \textit{help} (\textipa{/hElp/}).
 	
 	Applying the sonority hierarchy rules to the phoneme-picking algorithm will make a profound difference to the realism of the generated syllables. In order to implement the hierarchy in the code, every phoneme must be given a sonority value. Using the image in figure \ref{sonority hierarchy}, a value from 0 to 10 can be given to every single phoneme based on its type. In fact, the IPA and therefore \textit{yod} contains no complex plosives, so the values range is 0 to 9 inclusive.
 	
@@ -357,9 +356,112 @@
 		\end{tabular}
 	\end{table}
 
-	Figure \ref{sonority hierarchy assigned values} shows how each category of phoneme is assigned a value representing its sonority. With this information encoded into each phoneme representation, the next step is to factor these into the strategy of picking phonemes for a syllable.
+	Figure \ref{sonority hierarchy assigned values} shows how each category of phoneme is assigned a value representing its sonority. With this information encoded into each phoneme representation, the next step is to factor these into the strategy of picking phonemes for syllables.
+	
+	To construct a syllable, generating the vowel first allows for the rest of the syllable to be more easily generated. Randomly choosing a vowel will give a value $n$ between 0 and 2 inclusive. Then random consonants are chosen for the onset with the restrictions that all of their sonority values are greater than $n$, and for each one, the sonority value is greater than the one directly after it. Similarly, consonants are chosen for the coda with the same restrictions, except that each consonant must have a greater value than the one \textit{preceding} it. 
+	
+	\begin{algorithm}
+		\caption{Onset generation algorithm}
+		\label{onset generation algorithm}
+		\begin{algorithmic}[1]
+			\State $phonemes \gets$ empty list
+			\State $length \gets $ desired phoneme length
+			\State $min \gets 2 + (length - 1)$ \Comment{see explanation}
+			\State $max \gets 9$ \Comment{9 is the highest value in fig. \ref{sonority hierarchy assigned values}}
+			\State $i \gets 0$ \Comment{loop counter}
+			\While{$i < length$}
+				\State $consonant \gets $ random consonant with value between $min$ and $max$
+				\State append $consonant$ to $phonemes$
+				\State $min \gets min - 1$
+				\State $max \gets consonant.sonority - 1$
+				\State $i \gets i + 1$
+			\EndWhile
+		\end{algorithmic}
+	\end{algorithm}
+
+	\begin{algorithm}
+		\caption{Coda generation algorithm}
+		\label{coda generation algorithm}
+		\begin{algorithmic}[1]
+			\State $phonemes \gets$ empty list
+			\State $length \gets $ desired phoneme length
+			\State $min \gets 2$
+			\State $max \gets 9 - (length - 1)$
+			\State $i \gets 0$ \Comment{loop counter}
+			\While{$i < length$}
+				\State $consonant \gets $ random consonant with value between $min$ and $max$
+				\State append $consonant$ to $phonemes$
+				\State $min \gets consonant.sonority + 1$
+				\State $max \gets max + 1$
+				\State $i \gets i + 1$
+			\EndWhile
+		\end{algorithmic}
+	\end{algorithm}
+
+	The pseudocode in algorithms \ref{onset generation algorithm} and \ref{coda generation algorithm} show how \textit{yod} pieces together these segments. The similarities can be seen, with small changes due to the fact that the coda algorithm is essentially the same as the onset algorithm except it is building it in reverse order.
+	
+	The reason for defining the minimum sonority value as 2 (or in the case of the onset algorithm, $2 + (length - 1)$) is that 2 is the lowest possible value that a consonant can gave, based on the data in figure \ref{sonority hierarchy assigned values}. This means that the algorithm does not need to factor in the value of the nucleus vowels, as they can all be assumed to be between 0 and 2 (the range of values that a vowel can have).
+	
+	The reason for the addition of $length - 1$ to our initial minimum value in the onset generation algorithm is to make sure that there are enough consonants to pick on every iteration. If $min$ was set to 2 and $length > 1$, then the algorithm could pick a consonant of value 2 on the first iteration, and then not be able to pick any consonants on subsequent iterations due to the fact that there are no consonants with $sonority < 2$. The same concept is true for the coda generation algorithm, except in this instance the sonority value must increase over more loops. Because of this, the initial maximum value must leave enough room so that larger maximum values can be chosen on subsequent iterations without causing an error in the code.
+	
+		
+	\begin{figure}
+		\caption{Sample syllables following sonority sequencing principle}
+		\label{sample syllables using sonority sequencing principle}  
+		\begin{tcolorbox}
+			\textipa{
+				sn3iZh Zi iAh nj2US \t{dZ}l6T sIm\t{tS} Nj\ae{} \*rj3\*r mjI\t{tS}d zOg \t{tS}\*rI\ae{}d s3f 2D\t{tS} \t{tS}n6T kZeD U\t{tS} s2vS figk IS \*rj6\t{dZ}b \t{dZ}3m k@\t{tS}d uUv \t{tS}niv \t{dZ}N2\ae{}s I\*rD Zl@p pU2 Tuk p6 lw6wd h\ae{}\t{tS} d@\t{tS} liO vjOvf uzg uew AiTk zUAj pvuN tumT fe2mk SZi uf De6n Z\*rAIj iAz \t{tS}N\ae{} ulT id
+			}
+		\end{tcolorbox}
+	\end{figure}
+
+	Figure \ref{sample syllables using sonority sequencing principle} shows a set of sample syllables generated using the sonority sequencing principle. These syllables are based on a generated syllable structure of (C)(C)V(V)(C)(C). This structure displays not only the fact that onset and coda generation follow the sonority hierarchy, but also the inclusion of diphthongs due to the V(V) nucleus structure.
 	
 	\section{Stress and Long/Geminate Phonemes}
+	
+	In phonology, stress is when a syllable is given particular emphasis as part of a word. Stress in a syllable is denoted by an IPA symbol which is similar to an apostrophe, as seen in the second syllable of the word \textit{hello} (\textipa{/hE"l@U/}). Stress can be represented as a single boolean value in the \texttt{Syllable} object - if \texttt{true} then the syllable is stressed else it is unstressed.
+	
+	Particularly, lexical stress (stressed placed on a given syllable of a word) is important to the word generation process. A word can have one syllable with lexical stress, and the position of this syllable differs in different languages. For some languages the stress can fall on any syllable, and must be learned per-word. For languages with fixed stress, however, the position of the stress is determined by language-wide rules, and so can be easily chosen by algorithmic rules.
+	
+	\begin{table}
+		\centering
+		\caption{Fixed Stress Locations\cite{wals-14}}
+		\label{fixed stress locations}
+		\begin{tabular}{|>{\columncolor[HTML]{D8D8D8}}l|l|}
+			\hline
+			Value                                            & Representation \\ \hline
+			No fixed stress      & 220            \\
+			Initial              & 92             \\
+			Second               & 16             \\
+			Third                & 1             \\
+			Antepenultimate      & 12             \\
+			Penultimate          & 110             \\
+			Ultimate             & 51            \\ \hline \hline
+			\multicolumn{1}{|r|}{\cellcolor[HTML]{D8D8D8}\textbf{Total:}} & 502                                    \\ \hline
+		\end{tabular}
+	\end{table}
+
+	Figure \ref{fixed stress locations} shows the distribution of lexical stress positions in natural languages. Again, using a weighted random algorithm can assign the phonology a random lexical stress position from this list.
+	
+	As discussed earlier, \textit{yod}'s structure for phonemes contains a 'length' property, which has similar but distinct meanings depending on the type of the phoneme. In vowels, it refers to whether the vowel is long or not (e.g., the distinction between the words \textit{ferry} \textipa{/fe"\*ri/} and \textit{fairy} \textipa{/fe:"\*ri/} in Australian English). In consonants, it represents the gemination of the consonant.
+	
+	In \textit{yod}'s syllable and word generation code, these features are determined \textit{after} a word is created. The phonology, when generated, randomly selects whether long vowels and geminate consonants are a part of the phonology. These features are separate, so a phonology can allow geminate consonants but not long vowels, or vice versa. Then when a word is constructed, it is scanned over to check for instances where two consecutive phonemes are identical. This can happen for two reasons: first, there is no unique restriction on vowel picking for the nucleus, so if a diphthong is generated there is a possibility for two identical vowels in sequence. For consonants, this approach does not apply, as generated onset clusters and coda clusters follow the sonority sequencing principle which forbids sequences of two consonants with the same sonority. However, since syllables are generated independently of each other, it is possible for the boundaries of two adjacent syllables to be the same consonant. That is, if a syllable ends with a consonant such as \textipa{/k/} and the next syllable happened to start with \textipa{/k/}, the resulting word would contain the consonant sequence \textipa{/\dots{}kk\dots{}/}.
+	
+	When a sequence of two identical phonemes is found, then those phonemes can either be reduced into one long vowel or geminate consonant, or one of the phonemes can be deleted. Figure \ref{convert to long phonemes examples} shows some examples of words before and after undergoing this process.
+	
+	\begin{figure}[h]
+		\caption{Process of converting identical phoneme sequences to 'long' phonemes}
+		\label{convert to long phonemes examples}
+		\begin{tcolorbox}
+			\begin{Large}
+				\textipa{/"h\ae{}k.koU/} $\rightarrow$ \textipa{/"h\ae.{}k:oU/}
+				
+				\textipa{/"pAAt/} $\rightarrow$ \textipa{/"pA:t/}
+				
+				\textipa{/tOO"p\ae{}n.naI} $\rightarrow$ \textipa{/tO:"p\ae{}.n:aI/}
+			\end{Large}
+		\end{tcolorbox}
+	\end{figure}
 	
 	\section{Words}
 	
