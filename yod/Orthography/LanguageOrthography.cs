@@ -283,7 +283,9 @@ namespace yod.Orthography
             return s;
         }
 
-        public static LanguageOrthography Generate(LanguagePhonology phonology)
+        public static LanguageOrthography Generate(LanguagePhonology phonology) => Generate(phonology, 0.15f);
+
+        public static LanguageOrthography Generate(LanguagePhonology phonology, float useRandomPercentage)
         {
             var dict = new Dictionary<string, string>();
             var allphonemes = phonology.Phonemes.AllPhonemes;
@@ -293,7 +295,7 @@ namespace yod.Orthography
                 var possible = pair.Value;
                 if (allphonemes.Exists(x => x.Symbol == phoneme))
                 {
-                    var grapheme = Globals.Random.Next(100) > 15 ? possible.First() : possible[Globals.Random.Next(possible.Count)];
+                    var grapheme = Globals.Random.NextDouble() > useRandomPercentage ? possible.First() : possible[Globals.Random.Next(possible.Count)];
                     dict.Add(phoneme, grapheme);
                 }
             }

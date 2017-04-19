@@ -49,7 +49,7 @@
    \todo{talk about structure}
    
    \chapter{Phonology}
-   The 'na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ we can generate the following example text:
+   The 'na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ the following example text can be generated.
    
    \begin{figure}[h]
    \caption{Random letters from the Latin alphabet}
@@ -106,7 +106,7 @@
 	
 	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the "end result" of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \textit{yod} can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
 	
-	However, the IPA can also be used as a basis for \textit{creating} a phonology. It lists every sound possible in a language, so as a na\"{\i}ve approach would be to randomly choose sounds from this set to build words. This approach is similar to the approach we took before which involved choosing random letters from the Latin alphabet. However this time the words are being generated via sound directly rather than generating a written word, then trying to create a spoken representation of that.
+	However, the IPA can also be used as a basis for \textit{creating} a phonology. It lists every sound possible in a language, so as a na\"{\i}ve approach would be to randomly choose sounds from this set to build words. This approach is similar to the approach which was taken before, which involved choosing random letters from the Latin alphabet. However this time the words are being generated via sound directly rather than generating a written word, then trying to create a spoken representation of that.
 	
 	The problems with taking the entire IPA as our set of possible sounds are twofold. First, it does not give us a unique phonology - instead the phonology is the same every single time, as its contents are not randomised. Second, if the phonology for the generated language contains \textit{every} consonant and vowel from the IPA, then it will have many more phonemes than even the largest existing phonetic inventory. This is clearly unrealistic, and would be very difficult for anybody to learn. For artistic languages, this is a bit less of a concern but it is still preferable that the generated words be somewhat pronounceable and understandable, which gets less likely the more phonemes a speaker would have to discern from each other.
 	
@@ -179,7 +179,7 @@
 	
 	In fact, both height and backness are defined by the formant frequency of the voice, which are produced by the tongue's position. A spoken vowel can be represented with two formants \textit{F1 = height} and \textit{F2 = backness}. Roundness also has an effect on these formants, usually being seen as a decrease in \textit{F2} as well as a small decrease in \textit{F1}.
 	
-	It can be seen that both vowels and consonants have properties which relate to their length; these being consonants' gemination and vowels' length. Due to the similarities between these properties, they can be abstracted into the set of base phoneme properties as a 'Length' property. Thus we end up with our final set of properties being as follows:
+	It can be seen that both vowels and consonants have properties which relate to their length; these being consonants' gemination and vowels' length. Due to the similarities between these properties, they can be abstracted into the set of base phoneme properties as a 'Length' property. Thus the final set of properties ends up being as follows:
 
 	\begin{figure}[h]
 	\caption{Shared properties of phonemes, with length}
@@ -462,11 +462,102 @@
 			\end{Large}
 		\end{tcolorbox}
 	\end{figure}
+
+	A final refinement to syllable generation is to employ another general phonotactic rule. It can be seen that the phonotactics of many languages have restrictions on what consonant clusters are permitted as syllable-initial and syllable-final. For example, in Serbo-Croatian, the phonology contains both the phoneme \textipa{/d/} and the phoneme \textipa{/S/}, represented by the grapheme \textit{\v{s}}. However, despite following the sonority sequencing principle, the sequence "\v{s}d" (\textipa{/Sd/}) is not permitted as an initial cluster in a syllable\cite{uzelac1971phonological}. English also has many phonotactic rules, some of which permit or allow certain initial and final consonant clusters\cite{chomsky1968sound}.
+	
+	While the rules governing clusters in these cases are quite complex, \textit{yod} approximates these systems by merely restricting coda and onset consonants to randomly selected subsets of the phonology's consonant set. On generation, both onset consonants and coda consonants independently have a chance to be restricted. The restriction occurs by selecting a subset of the consonants of a random length, between a minimum of 2 and a maximum of the length of the total set.
+	
+	Even though this concept has a very na\"{i}ve implementation, it introduces a large amount of variety and lends further realism to the generated languages.
 	
 	\section{Words}
 	
+	Most of the complexity involved in generating words is involved in the actual construction of syllables. As such, word generation in \textit{yod} is a relatively simple process. The range of possible word lengths in the language is decided when the phonology is generated - this range is in syllable length rather than phoneme length. A random value between the minimum and maximum of this range is then chosen.
+	
+	Given this random value as the length of the word, that many syllables are then generated in order. Following this, both the stress-placing process and the long vowel/gemination are applied to the word, as described in the previous section. 
+	
+	\begin{figure}
+		\caption{Example words using subsets of English phonology}
+		\label{example words english}
+		\begin{tcolorbox}
+			\begin{enumerate}
+				\item \textipa{/23n m\ae{}A AIj nu@n S2v b@ lub ke2 u3 2j n@j eil tab e@v jei \*r2A kib lIl \t{dZ}\ae{}v bu3n/}
+				\item \textipa{/"hn6\*rgN@w Zn6t"\*rw6\t{tS}gD@N "n\*r6gN6t b\t{tS}@n"bS@v\*r6b "Z6S6 hv@"t6Nn6\t{dZ} "dn@v\t{tS}\*r@/}
+				\item \textipa{/eZf"ge dIt"h3 h2"ist N3 eiTbt fI"TIj 3 zi2 Ij"3\t{tS}gk t2 Ne"fI zi/}
+			\end{enumerate}
+		\end{tcolorbox}
+	\end{figure}
+
+	\begin{figure}
+		\caption{Example words using all phonemes}
+		\label{example words all}
+		\begin{tcolorbox}
+			\begin{enumerate}
+				\item \textipa{/\:zo"p6 oZ\textbardotlessj{}"\:tu \textsubbridge{b}@\textctz{}\textsubbridge{b}"zo\;G\textbarglotstop{} \textbarglotstop{}W\textbardotlessj{}k"\:z@\textsubbridge{b} z@z\textsubbridge{b}"doZ\;G g@"\:z@Zk dZu\;Gk'\textbarglotstop{}6 @gk"Zuzk/}
+				\item \textipa{/h\ae{} sa gu C6 CW \=*Tu C\ae{} s6 \textseagull{d}a \=*T6 \;GW hW Su fW \c{c}6 \=*Ta C\ae{} \c{c}6 \=*Tu sa hW gu sa{} \=*Ta/}
+				\item \textipa{/"kA\textcloserevepsilon{}tAOfg\textsubbridge{p} "TA\:tO\textcloserevepsilon{} "\textsubbridge{p}6xA\textsubbridge{b}\:t "T\textcloserevepsilon{}O6 "\textsubbridge{p}EO\textsubbridge{b}\:t\textsubbridge{p}O\textcloserevepsilon{} "T6A\=*TtO\=*Tgk '\textsubbridge{p}Ef\textsubbridge{b}\:tgEO\textsubbridge{b}/}
+			\end{enumerate}
+		\end{tcolorbox}
+	\end{figure}
+
+	Figure \ref{example words english} shows three different sets of generated words, all using a subset of English phonemes. Figure \ref{example words all} also shows three sets of word, this time generated using different subsets of the full set of phonemes. Using the English phonology makes for words which are more easily pronounceable without much practice by English speakers - however, using the full set of phonemes produces much more varied and unique results.
+	
 	\chapter{Orthography}
 	
+	So far, the focus has been on creating a \textit{spoken} language, due to the fact that all written languages are based on spoken languages to begin with. For constructed languages, however, not having a way of writing the language is a large negative. People would not be able to communicate non-verbally in the language, and for fictional languages, it is likely that the creator would want to have a written form of the language to use in their work.
+	
+	Therefore the generation of an orthography is desired. An orthography concerns the way a language is represented by different symbols, or graphemes, in writing. There are three main types of orthography: \textit{syllabic}, with a grapheme representing each syllable, \textit{logographic}, with a grapheme representing each morpheme/word, and \textit{alphabetic}, where each grapheme roughly represents a phoneme. \textit{yod} is restricted to creating alphabetic orthographies - however the nature of the organisation of the library means that it would be a relatively easy task to take the output of the phonology generation and use that to create a logographic or syllabic orthography.
+	
+	An alphabetic orthography can be seen as a map of each phoneme in the phonetic inventory of a generated language to a randomly chose grapheme, or rarely multiple graphemes. The orthography of Croatian, seen in figure \ref{orthography of the croatian language}, is a good example of this mapping. It was created in 1835 by Croatian linguist Ljudevit Gaj to give Croatia a unified way of writing the language. The right column shows the phonemes included in the language and the left column shows to which grapheme (or in some cases, digraph) the phoneme maps.
+	
+	In English, such a table would be much more complex, as in English a phoneme can have many different written representations, and many graphemes or grapheme clusters represent multiple phonemes depending on context. Languages where there is a more complex mapping such as English are said to have a \textit{deep orthography}, in contrast to the \textit{shallow orthography} of Croatian, as well as the languages generated by \textit{yod}.
+	
+	\begin{table}
+		\caption{Orthography of the Croatian language}
+		\label{orthography of the croatian language}
+		\centering
+		\begin{tabular}{|l|l|} \hline
+			\rowcolor[HTML]{D8D8D8}Phoneme & Grapheme 		\\ \hline
+			A a      		& ~ \textipa{/a/}    			\\
+			B b       	 	& ~ \textipa{/b/}      			\\
+			V v      		& ~ \textipa{/v/}       		\\
+			G g       		& ~ \textipa{/g/}       		\\
+			D d      		& ~ \textipa{/d/}       		\\
+			\DJ{} \dj{}     & ~ \textipa{/\t{d\textctz}/}   \\
+			E e      		& ~ \textipa{/e/}       		\\
+			\v{Z} \v{z}     & ~ \textipa{/\:z/}       		\\
+			Z z       		& ~ \textipa{/z/}       		\\
+			I i       		& ~ \textipa{/i/}       		\\
+			J j       		& ~ \textipa{/J/}       		\\
+			K k       		& ~ \textipa{/k/}       		\\
+			Lj lj      		& ~ \textipa{/L/}       		\\
+			M m       		& ~ \textipa{/m/}       		\\ 
+			N n       		& ~ \textipa{/n/}       		\\ \hline
+		\end{tabular}
+		\begin{tabular}{|l|l|} \hline
+			\rowcolor[HTML]{D8D8D8}Phoneme & Grapheme 		\\ \hline
+			Nj nj      		& ~ \textipa{/\textltailn/}     \\
+			O o      		& ~ \textipa{/O/}       		\\
+			P p       		& ~ \textipa{/p/}       		\\
+			R r       		& ~ \textipa{/R/}       		\\
+			S s       		& ~ \textipa{/s/}       		\\
+			T t      		& ~ \textipa{/t/}       		\\
+			\'{C} \'{c}     & ~ \textipa{/\t{tC}/}  	    \\
+			U u       		& ~ \textipa{/u/}      		 	\\
+			F f       		& ~ \textipa{/f/}       		\\
+			H h       		& ~ \textipa{/x/}       		\\
+			C c      		& ~ \textipa{/ts/}      		\\
+			\u{C} \u{c}		& ~ \textipa{/\t{\:t\:s/}}      \\
+			D\v{z} d\v{z}	& ~ \textipa{/\t{\:d\:z/}}      \\
+			\v{S} \v{s}		& ~ \textipa{/\:s/}       		\\ \hline
+		\end{tabular}
+	\end{table}
+
+	To generate an orthography for a generated language, then, a system must exist to assign each phoneme a grapheme or grapheme cluster. \textit{yod} handles this by having an object which maps each possible phoneme in the International Phonetic Alphabet to a list of possible symbols. This list was compiled as a default set of options - however, a user interacting with the library directly would be free to change this dictionary or add to it, in order to add more options. Of course, the user is also free to set the orthography directly to whatever level of specificity they desire.
+	
+	Many of the possible symbols in these lists are based off common grapheme representations for their respective phonemes in different languages. To increase the variety, these symbols are also included with different diacritics for many of the phonemes. For each list, the first value is the 'preferred' symbol, and will be chosen on average 85\% of the time. In the case of the preferred symbol not being picked, a random symbol from the rest of the list is picked.
+	
+	Since many of the lists contain the same symbols, as the lists are primarily differentiated by having different preferred symbols, there is a small chance that the same symbol can be picked for different phonemes. However, as seen with the phonology of English, the same graphemes can sometimes represent many different phonemes, so if this occurs, it merely acts as another unique factor of the language. As long as phonemes get unique graphemes in a majority of instances, the language will not be overly ambiguous.
+
 	\chapter{Grammar}
 	
 	\section{Lexicon}

@@ -169,7 +169,7 @@ namespace yod.Phonology
 
         public static Word Generate(LanguagePhonology phonology)
         {
-            var syllableLength = phonology.WordLengthMin + Globals.Random.Next(phonology.WordLengthMax - phonology.WordLengthMin);
+            var syllableLength = Globals.Random.Next(phonology.WordLengthMin, phonology.WordLengthMax);
             return Generate(phonology, syllableLength);
         }
     }

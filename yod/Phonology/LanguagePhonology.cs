@@ -141,13 +141,13 @@ namespace yod.Phonology
             return phonology;
         }
 
-        static private int GenerateWordLengthMin() => Globals.Random.Next(100) > 75 ? 2 : 1;
-        static private int GenerateWordLengthMax(int min) => Globals.Random.Next(min, min + 2);
+        static public int GenerateWordLengthMin() => Globals.Random.Next(100) > 75 ? 2 : 1;
+        static public int GenerateWordLengthMax(int min) => Globals.Random.Next(min, min + 2);
 
-        static private bool GenerateGeminateConsonants() => Globals.Random.Next(100) > 50;
-        static private bool GenerateLongVowel() => Globals.Random.Next(100) > 50;
+        static public bool GenerateGeminateConsonants() => Globals.Random.Next(100) > 50;
+        static public bool GenerateLongVowel() => Globals.Random.Next(100) > 50;
 
-        static private StressLocation GenerateStressLocation()
+        static public StressLocation GenerateStressLocation()
         {
             var stressDict = new Dictionary<StressLocation, float>
             {
@@ -160,7 +160,7 @@ namespace yod.Phonology
             return Globals.WeightedRandom(stressDict);
         }
 
-        static private ConsonantCollection GenerateOnsetConsonants(ConsonantCollection consonants)
+        static public ConsonantCollection GenerateOnsetConsonants(ConsonantCollection consonants)
         {
             if (Globals.Random.Next(100) > 50)
             {
@@ -179,7 +179,7 @@ namespace yod.Phonology
             }
         }
 
-        static private ConsonantCollection GenerateCodaConsonants(ConsonantCollection consonants)
+        static public ConsonantCollection GenerateCodaConsonants(ConsonantCollection consonants)
         {
             if (Globals.Random.Next(100) > 50)
             {
