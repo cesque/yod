@@ -20,6 +20,8 @@
 \setcounter{biburllcpenalty}{7000}
 \setcounter{biburlucpenalty}{8000}
 
+\lstset{basicstyle=\ttfamily}
+
 \newfontface\lserif{Consolas}
 \newcommand{\Csh}{C{\lserif\#}}
 
@@ -660,7 +662,84 @@
 	
 	\section{Phrase Structure Grammar}
 	
-	The phrase translation process is perhaps the most important section of \textit{yod}'s whole translation section. 
+	The phrase translation process is perhaps the most important section of \textit{yod}'s whole translation section. The goal for this code is to take some representation of an English sentence and convert it into a sentence of a generated language, preserving its meaning. If the input is merely an English sentence (as a string) then in order to get information about the sentence structure and also the grammatical categories of each of the words, some amount of natural language processing (NLP) is required. As NLP is out of the scope of the project, an object structure which encodes all of this information is necessary.
+	
+	There are two different types of parse tree used in natural language processing for representing sentence structures: dependency-based parse trees and constituency-based parse trees. Both tree structures represent the same data, but in different ways.
+	
+	Constituency-based grammars contain non-terminal and terminal nodes, with each terminal node representing a lexical token in the sentence, and each non-terminal node representing a `phrase'. Dependency-based grammars treat every node as terminal, which creates simpler trees overall.
+	
+	\begin{figure}
+		\caption{Parse tree in dependency-based grammar}
+		\label{parse tree in dependency-based grammar}
+		\centering
+		\begin{tikzpicture}[frontier/.style={distance from root=120pt}]
+			\tikzset{sibling distance=40pt,level distance=40pt}
+%			\tikzset{frontier/.style={distance from root=120pt}}
+			\Tree[.VERB 
+				[.PRON [ [.I ] ] ]
+				[ [ [.\node[xshift=30pt]{love}; ] ] ]
+				[.NOUN 
+					[.\node[xshift=10pt]{DETM}; [.the ] ]
+					[ [.\node[xshift=-20pt]{dog}; ] ]
+				]
+			]
+		\end{tikzpicture}
+	\end{figure}
+
+	\begin{figure}
+		\caption{Parse tree in constituency-based grammar}
+		\label{parse tree in constituency-based grammar}
+		\centering
+		\Tree[.S
+			[.NP [.PRON [.I ] ] ]
+			[.VP [.VERB [.love ] ] [.NP [.DETM [.the ] ] [.NOUN [.dog  ] ] ] ]
+		]
+	\end{figure}
+
+	\todo{fix graphs}
+	
+	Figure \ref{parse tree in dependency-based grammar} shows a sentence (`I love the dog') parsed into a dependency tree. Each node in the tree directly maps to a word in the sentence. Figure \ref{parse tree in constituency-based grammar} shows the same sentence in constituency tree format. Dependency grammars can be more useful in some circumstances because of their simpler nature - however, constituency grammars (or `phrase structure grammars') contain a lot more information about the phrase structure of the sentence, and so are better for the translation process. As such, \textit{yod}'s sentence input is given in constituency tree format.
+	
+	The tree input is represented as a JSON file, with properties of the object representing roots of subtrees of the current node. An input must be a single constituent of the tree, meaning the root must be a single node; the translation process can act on any node of the tree. The terminal nodes are represented by an object containing a \texttt{word} property which represents the English lemma of the word to be translated. This value is necessarily not inflected due to the fact that the lemma is needed to get a translation from the lexicon, and getting the lemma from an inflected English word is not necessarily a trivial task. Thus, preparing a sentence into the structure required by \textit{yod} requires a bit of manual editing, or a tool designed to use natural language processing to convert English sentences into this format. The JSON format was chosen over other forms of serialisation largely to allow for easy hand editing as well as compatibility with other software.
+	
+	The object which represents a terminal node also has a property which is a list of `tags' which represent different grammatical categories. This allows grammatical information to be carried through to the translation process, and allows for the possibility of morphological changes to be applied to generated words based on their grammatical categories. 
+	
+	The part of speech of the terminal node is represented by the key of its parent. When loading in a phrase from a JSON object, this information as well as all the information contained in the node is used to construct a logical representation of the sentence.
+	
+	This logical representation depends on the exact structure of the grammar required. \textit{yod} allows users to specify their own phrase structure grammar, as a full grammar of English would be too complicated for a user to be able to parse their sentences into, hindering the ease of use of the library. Allowing for custom grammars also allows users to devise more complex and unique languages - for example, if a writer wanted to create an alien language which lacked verbs, an English constituent grammar would not be sufficient. More complicated and unusual sentence structures can be permitted through a data-driven approach to creating a grammar. The grammar object should be thought of as representing the generated language's grammar, rather than an English grammar.
+	
+	Grammars are also serialised and deserialised as JSON objects or files containing JSON objects. These objects have a very simple structure: the object contains a key called \texttt{rules} which then contains a key for each non-terminal constituent in the grammar. For each of these constituents, there is a list of phrases that it can be expanded to. Each of these phrases consists of a list of constituents, terminal or otherwise, which is ordered such that when a sentence is translated, the elements of the phrase will be appended to the final sentence in that order.
+	
+	For phrases which contain multiple of the same constituent - for example, a compound noun phrase could be represented as \texttt{NOUN NOUN}, it is necessary to indicate the order in which these constituents are represented in order to distinguish the two nouns from each other when later translating the phrase. To accomplish this, duplicate constituents in phrases are marked with numbers; a compound noun in this form is represented as \texttt{NOUN-1 NOUN-2}.
+	
+	The last addition to the phrase structure grammar file is not necessarily a part of the grammar itself but instead an instruction on how to construct certain phrases in the language. This property is a list of rules which should be `compounded'. When the final translated sentence is constructed, a space is added between each constituent. If a rule is set to be compounded, however, the constituents of the rule will be concatenated without a space between them. A good example of this type of rule is the English language, where noun-noun compounds are frequently created by taking two nouns and concatenating them without a space: $fire + place \rightarrow fireplace$, $wrist + watch \rightarrow wristwatch$.
+
+	An example phrase structure grammar which can be used to translate moderately complex English sentences is shown in figure \ref{example phrase structure grammar}.
+	
+	\begin{figure}
+		\caption{Example phrase structure grammar}
+		\label{example phrase structure grammar}
+		\begin{tcolorbox}
+			\begin{lstlisting}[breaklines=true,tabsize=2]
+{
+	"rules": {
+		"S": ["NP VP", "S-1 CONJ S-2", "INTJ S"],
+		"NP": ["PRON", "NN", "DETM NN", "NP PP", "NP RC", "PS NN"],
+		"VP": ["VERB", "VERB NP", "VERB ADJC", "VERB PP", "VERB ADVB", "VERB PRON"],
+		"PP": ["PREP NP"],
+			"RC": ["RLTV VP"],
+		"NN": ["NOUN", "ADJC NN", "CN"],
+		"CN": ["NOUN CN", "NOUN-1 NOUN-2"],
+		"PS": ["NOUN", "PRON"]
+	},
+	"compound": {
+		"NN": ["ADJC NN"],
+		"CN": ["NOUN-1 NOUN-2"]
+	}
+}
+			\end{lstlisting}
+		\end{tcolorbox}
+	\end{figure}
 	
 	\section{Inflection}
    
