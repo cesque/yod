@@ -172,5 +172,10 @@ namespace yod.Phonology
             var syllableLength = Globals.Random.Next(phonology.WordLengthMin, phonology.WordLengthMax);
             return Generate(phonology, syllableLength);
         }
+
+        public void Morph()
+        {
+            Syllables[Globals.Random.Next(SyllableLength)].Morph();
+        }
     }
 }

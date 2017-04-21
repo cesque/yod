@@ -112,7 +112,7 @@ namespace yod.Grammar
             {
                 var group = relatedWords[word].Item2;
                 var w = new Phonology.Word(baseWords[group]);
-                w.Syllables.Last().Morph();
+                w.Morph();
                 return w;
             }
             else if (commonWords.ContainsKey(pos) && commonWords[pos].Contains(word))

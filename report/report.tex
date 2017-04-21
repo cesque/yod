@@ -17,8 +17,13 @@
 \usepackage{fontspec}
 \usepackage{gb4e}
 
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
+
 \newfontface\lserif{Consolas}
 \newcommand{\Csh}{C{\lserif\#}}
+
+\fontsize{11pt}{1.2}
 
 
 \definecolor{lightgray}{HTML}{EEEEEE}
@@ -32,24 +37,24 @@
    \maketitle
    
    \chapter{Introduction}
-   \textit{yod} is a library, written in \Csh{}, designed to aid in the construction and generation of artificial languages. Artificial languages (also known as constructed languages or 'conlangs') are probably most publicly well known through the popularisation of 'fictional languages' - that is, languages designed for use in works of fiction, usually for adding depth to a fictional world. For example, J. R. R. Tolkien devised the languages of \textit{Sindarin} and \textit{Quenya} for use in his \textit{Lord of the Rings} series. Other popular fictional languages that have reached mainstream awareness include \textit{Star Trek}'s \textit{Klingon} and \textit{Game of Thrones}' \textit{Dothraki}.
+   \textit{yod} is a library, written in \Csh{}, designed to aid in the construction and generation of artificial languages. Artificial languages (also known as constructed languages or `conlangs') are probably most publicly well known through the popularisation of `fictional languages' - that is, languages designed for use in works of fiction, usually for adding depth to a fictional world. For example, J. R. R. Tolkien devised the languages of \textit{Sindarin} and \textit{Quenya} for use in his \textit{Lord of the Rings} series. Other popular fictional languages that have reached mainstream awareness include \textit{Star Trek}'s \textit{Klingon} and \textit{Game of Thrones}' \textit{Dothraki}.
    
-   The creation of these languages has become an indispensable tool for writers to add depth and character to their worlds. However, constructed languages do not exist solely for creative uses. The language \textit{Esperanto} was developed by its creator L. L. Zamenhof with the goal of being a global language that was easy for people to learn\cite{unualibro}. Now it is reported that as many as 63,000 people worldwide can speak Esperanto to some degree\cite{esperanto}. The existence of Esperanto and other so-called "international auxiliary languages" (languages designed to simplify complication between people of different countries and cultures) shows that the usefulness of constructed languages extends into real-world applications as well as artistic uses.
+   The creation of these languages has become an indispensable tool for writers to add depth and character to their worlds. However, constructed languages do not exist solely for creative uses. The language \textit{Esperanto} was developed by its creator L. L. Zamenhof with the goal of being a global language that was easy for people to learn\cite{unualibro}. Now it is reported that as many as 63,000 people worldwide can speak Esperanto to some degree\cite{esperanto}. The existence of Esperanto and other so-called `international auxiliary languages' (languages designed to simplify complication between people of different countries and cultures) shows that the usefulness of constructed languages extends into real-world applications as well as artistic uses.
    
    \textit{yod} was developed with a focus on artistic languages, and so the goal was to generate a large variety of languages which could suit many different worlds and fictional civilisations. However, due to the hierarchy of rules \textit{yod} uses to build languages, the languages are regular, in contrast to most natural languages, which means generated languages with certain features could be treated as auxiliary languages too.
    
    As a library, \textit{yod} provides interfaces to easily generate any part of a language, including phonology, orthography and grammar and sub-parts thereof. This works by having each class which represents a randomisable constituent exposing a \texttt{Generate()} method which creates a new instance of that class from scratch with procedurally generated properties. If necessary, this sometimes also means recursively generating that objects constituent members. Writing these generator methods in a way that takes into account certain restrictions or statistics allows for much more realistic values for the object.
    
-   Merely generating a new language every time the library is used, however, would not allow for enough control over the language generation process for users who are more experienced with the concept of 'conlangs' and the construction thereof. It also does not allow for iterative language-building, wherein the user keeps features of a generated language that they like, but re-generates the rest of the features. This would allow a user to quickly and easily refine their language until it suited their use case.
+   Merely generating a new language every time the library is used, however, would not allow for enough control over the language generation process for users who are more experienced with the concept of `conlangs' and the construction thereof. It also does not allow for iterative language-building, wherein the user keeps features of a generated language that they like, but re-generates the rest of the features. This would allow a user to quickly and easily refine their language until it suited their use case.
    
    To facilitate this, \textit{yod} uses a data-driven approach which allows almost every class that can be randomly generated to also be serialised to and deserialised from external data files. These data files are written in JSON to allow for them to be altered or loaded by other tools, or if necessary, by hand. Provided is a basic command line interface to the library which can handle almost every step of the generation process. This is a simple example of a tool which can load and create the data files produced by the library, and utilise the library's API. Providing the language-generation tools as a library allow for more complex tools to grow which implement and interact with the code.
    
-   The library format also allows for software which might have a need for 'conlangs' to generate them directly and use them immediately, as opposed to generating one and then using the output files as input for the program. One such example could be in the case of a video game which requires a cohesive strategy for naming places, characters, flavour text etc. These entities could have their text generated on the fly, without any input from the game developer or writers. The \textit{yod} library also allows the random number generator (which provides random values for all of the rest of the code) to be given a seed, meaning it will produce the same output every time. Thus, the objects in the aforementioned game could have different text every time the game was run, or the developer could choose a seed that gave output that suited them and keep that the same, without having to copy text from the output of the script into the game's script and data files.
+   The library format also allows for software which might have a need for `conlangs' to generate them directly and use them immediately, as opposed to generating one and then using the output files as input for the program. One such example could be in the case of a video game which requires a cohesive strategy for naming places, characters, flavour text etc. These entities could have their text generated on the fly, without any input from the game developer or writers. The \textit{yod} library also allows the random number generator (which provides random values for all of the rest of the code) to be given a seed, meaning it will produce the same output every time. Thus, the objects in the aforementioned game could have different text every time the game was run, or the developer could choose a seed that gave output that suited them and keep that the same, without having to copy text from the output of the script into the game's script and data files.
    
    \todo{talk about structure}
    
    \chapter{Phonology}
-   The 'na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ the following example text can be generated.
+   The `na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ the following example text can be generated.
    
    \begin{figure}[h]
    \caption{Random letters from the Latin alphabet}
@@ -67,7 +72,7 @@
    
    \section{Phonetic inventory}
    
-   In its simplest form, a phonology is a list of every sound that is included in a language. \todo{cite (WALS)}English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the 'Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
+   In its simplest form, a phonology is a list of every sound that is included in a language. \todo{cite (WALS)}English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the `Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
    
   \begin{table}[h]
   	\caption{Consonant inventory in English phonology}
@@ -104,7 +109,7 @@
 
 	Other languages have different phonemic inventories, with varying numbers of consonants and vowels. Some, for example, have as few as 3 vowels, or as many as 84 or more consonants, depending on the method of counting\cite{leverbeoubykh}. A very large factor in the variety of languages generated is the phonology, as it restricts the type of sounds which often has a profound impact on how it is perceived. Therefore the first step towards a completed language should be a randomly generated, unique phonology.
 	
-	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the "end result" of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \textit{yod} can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
+	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the `end result' of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \textit{yod} can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
 	
 	However, the IPA can also be used as a basis for \textit{creating} a phonology. It lists every sound possible in a language, so as a na\"{\i}ve approach would be to randomly choose sounds from this set to build words. This approach is similar to the approach which was taken before, which involved choosing random letters from the Latin alphabet. However this time the words are being generated via sound directly rather than generating a written word, then trying to create a spoken representation of that.
 	
@@ -158,7 +163,7 @@
 		\end{tcolorbox}
 	\end{figure}
 	
-	The place of articulation refers to the part of the vocal track that creates an obstruction of airflow. The manner of articulation describes \textit{how} this obstruction affects the airflow - for example, "stops" or "plosives" completely block airflow, whereas "sibilants" and "fricatives" merely result in a turbulent airflow. The phonation of a consonant refers to whether, in producing the sound, the larynx affects the airflow through vibration of the vocal folds. Geminate consonants are consonants which are pronounced for a longer period of time, contrasting the usual shorter consonants. In 'stops' this is realised as a delayed release of the consonant, whereas other consonants with other types of articulation are merely prolonged.
+	The place of articulation refers to the part of the vocal track that creates an obstruction of airflow. The manner of articulation describes \textit{how} this obstruction affects the airflow - for example, `stops' or `plosives' completely block airflow, whereas `sibilants' and `fricatives' merely result in a turbulent airflow. The phonation of a consonant refers to whether, in producing the sound, the larynx affects the airflow through vibration of the vocal folds. Geminate consonants are consonants which are pronounced for a longer period of time, contrasting the usual shorter consonants. In `stops' this is realised as a delayed release of the consonant, whereas other consonants with other types of articulation are merely prolonged.
 	
 	Similarly to consonants, vowels can be distinguished by the features in figure \ref{properties of vowels}.
 	
@@ -179,7 +184,7 @@
 	
 	In fact, both height and backness are defined by the formant frequency of the voice, which are produced by the tongue's position. A spoken vowel can be represented with two formants \textit{F1 = height} and \textit{F2 = backness}. Roundness also has an effect on these formants, usually being seen as a decrease in \textit{F2} as well as a small decrease in \textit{F1}.
 	
-	It can be seen that both vowels and consonants have properties which relate to their length; these being consonants' gemination and vowels' length. Due to the similarities between these properties, they can be abstracted into the set of base phoneme properties as a 'Length' property. Thus the final set of properties ends up being as follows:
+	It can be seen that both vowels and consonants have properties which relate to their length; these being consonants' gemination and vowels' length. Due to the similarities between these properties, they can be abstracted into the set of base phoneme properties as a `Length' property. Thus the final set of properties ends up being as follows:
 
 	\begin{figure}[h]
 	\caption{Shared properties of phonemes, with length}
@@ -231,7 +236,7 @@
 		\end{tabular}
 	\end{table}
 
-	Similarly, figure \ref{consonant quality inventories} shows the range distribution of consonants in natural languages. The same weighted random algorithm can be used to get a range, then a random 'goal' value of consonants in that range.
+	Similarly, figure \ref{consonant quality inventories} shows the range distribution of consonants in natural languages. The same weighted random algorithm can be used to get a range, then a random `goal' value of consonants in that range.
 	
 	For consonants, however, it does not need to be as simple as choosing random consonants from the set of all consonants in the IPA. There are approaches that can be used to pick consonants in a smarter way which will result in better consonant inventories.
 	
@@ -273,9 +278,9 @@
 		\end{tabular}
 	\end{table}
 
-	The figure shows information about voicing in both fricatives and plosives. In order to get this information from the statistics into a form that can be used in code, the \textbf{Value} column can instead be seen as a tuple of two boolean values: "voicing contrast in plosives" and "voicing contrast in fricatives". With an object structure of \verb|{fricative voicing contrast, plosive voicing contrast}| The values will then become \verb|{false, false}|, \verb|{false, true}|, \verb|{true, false}| and \verb|{true, true}|. By using a weighted random algorithm, as above, to choose a random tuple, the respective values can be taken from the tuple and set in our consonant-choosing code.
+	The figure shows information about voicing in both fricatives and plosives. In order to get this information from the statistics into a form that can be used in code, the \textbf{Value} column can instead be seen as a tuple of two boolean values: `voicing contrast in plosives' and `voicing contrast in fricatives'. With an object structure of \verb|{fricative voicing contrast, plosive voicing contrast}| The values will then become \verb|{false, false}|, \verb|{false, true}|, \verb|{true, false}| and \verb|{true, true}|. By using a weighted random algorithm, as above, to choose a random tuple, the respective values can be taken from the tuple and set in our consonant-choosing code.
 	
-	These values do not refer to whether voiced or unvoiced phonemes themselves are included in the phonology - rather they describe whether there is a distinction made between voiced and unvoiced phonemes. This can be simplified as "if the language makes a distinction between the two, include both voicings." Otherwise, the algorithm should only include only the consonant which has the phonology's "voicing" for that manner of articulation, which can be chosen randomly.
+	These values do not refer to whether voiced or unvoiced phonemes themselves are included in the phonology - rather they describe whether there is a distinction made between voiced and unvoiced phonemes. This can be simplified as `if the language makes a distinction between the two, include both voicings.' Otherwise, the algorithm should only include only the consonant which has the phonology's `voicing' for that manner of articulation, which can be chosen randomly.
 	
 	By using these refinements for generating a phonetic inventory, a unique and varied, yet still realistic, phonology can begin to be generated. This phonology provides the basis upon which the rest of the language is built.
 
@@ -301,7 +306,7 @@
 	
 	Another simple improvement that can be made is allowing for consonant clusters and diphthongs, which is done by picking multiple phonemes when filling a section. In order to vary the results, this should not be done every time, but should vary in frequency. The addition of clusters and diphthongs allows for more complex syllables to be created.
 	
-	The maximum number of consonants in a consonant cluster, the maximum number of vowels in the nucleus, as well as whether any of the parts of the syllable are optional, are all properties of the language. Thus, syllable structures can be generated. The structure of a syllable is commonly shown as a string of either 'C's or 'V's (consonants or vowels)\cite{clements1985cv}. A language permitting only syllables with exactly one onset consonant and exactly one vowel, and no coda, would be described as having a CV syllable structure.
+	The maximum number of consonants in a consonant cluster, the maximum number of vowels in the nucleus, as well as whether any of the parts of the syllable are optional, are all properties of the language. Thus, syllable structures can be generated. The structure of a syllable is commonly shown as a string of either `C's or `V's (consonants or vowels)\cite{clements1985cv}. A language permitting only syllables with exactly one onset consonant and exactly one vowel, and no coda, would be described as having a CV syllable structure.
 	
 	This representation also shows variable structures where some phonemes are optional - that is, the number of phonemes in a segment can differ. For this, bracket notation is used to denote an optional phoneme. For example, the syllable structure of the English language is cited as being (C)(C)(C)V(C)(C)(C)(C). This represents a syllable structure where the onset can have 0-3 consonants, the nucleus always contains a vowel, and the coda can have 0-4 consonants. While it is rare in English for a syllable to have the largest possible onset \textit{and} coda clusters at the same time, examples can still be seen; the monosyllabic word \textit{strengths} can be transcribed as \textipa{/st\*rENkTs/}. This word displays an onset cluster of length 3 (\textipa{/st\*r/}) and a coda cluster of length 4 (\textipa{/NkTs/}).
 	
@@ -321,11 +326,11 @@
 		\end{tcolorbox}
 	\end{figure}
 
-	Both syllables that match the most complex possible structure in this phonology (\textipa{/\t{dZ}tU\t{dZ}d/} and \textipa{/pb6hm/}) and the least complex possible structure (\textipa{/3/} and \textipa{/6/} can be seen in this selection, showing the range of the syllable generation code. If each syllable in this sample is considered to be a monosyllabic word, the results from this code are already noticeably more realistic than the words generated in figures \ref{random letters from latin alphabet} and \ref{random subset of all phonemes} (although in this sample only the phonemes from the English phonology are used, which can give a false sense of 'realism'). The structure of building clusters of consonants around a central vowel base creates realistic syllables.
+	Both syllables that match the most complex possible structure in this phonology (\textipa{/\t{dZ}tU\t{dZ}d/} and \textipa{/pb6hm/}) and the least complex possible structure (\textipa{/3/} and \textipa{/6/} can be seen in this selection, showing the range of the syllable generation code. If each syllable in this sample is considered to be a monosyllabic word, the results from this code are already noticeably more realistic than the words generated in figures \ref{random letters from latin alphabet} and \ref{random subset of all phonemes} (although in this sample only the phonemes from the English phonology are used, which can give a false sense of `realism'). The structure of building clusters of consonants around a central vowel base creates realistic syllables.
 	
-	However, there are still some instances where unrealistic phoneme sequences can be spotted, even in this short sample of results. For example, the initial cluster of \textipa{/pb/} in the word \textipa{/pb6hm/} consists of two successive stops - both the voiced and unvoiced bilabial plosive. For a word to contain multiple plosives in a row already makes it harder to pronounce, and the fact that they are both bilabial plosives only increases that difficult. Either both are audibly released, which results in a long, difficult to pronounce cluster, or the first consonant will be deleted completely\todo{cite}. The generated syllable \textipa{/6kk/} also provides some trouble, as "double consonants" are rare in IPA transcriptions of natural languages. Usually when a double consonant appears in a transcription, it will either be across a syllable boundary (e.g., a sequence \textipa{/\dots{}kk\dots{}/} is likely to represent the coda of one syllable and the onset of another syllable \textipa{/\dots{}k.k\dots{}/}) or the gemination of the consonant (e.g., \textipa{/\dots{}kk\dots{}/} is another way of writing \textipa{/\dots{}k:\dots{}/}). However, these uses are rare, and most commonly a single consonant would be used in their place, or the IPA symbol for gemination inserted.
+	However, there are still some instances where unrealistic phoneme sequences can be spotted, even in this short sample of results. For example, the initial cluster of \textipa{/pb/} in the word \textipa{/pb6hm/} consists of two successive stops - both the voiced and unvoiced bilabial plosive. For a word to contain multiple plosives in a row already makes it harder to pronounce, and the fact that they are both bilabial plosives only increases that difficult. Either both are audibly released, which results in a long, difficult to pronounce cluster, or the first consonant will be deleted completely\todo{cite}. The generated syllable \textipa{/6kk/} also provides some trouble, as `double consonants' are rare in IPA transcriptions of natural languages. Usually when a double consonant appears in a transcription, it will either be across a syllable boundary (e.g., a sequence \textipa{/\dots{}kk\dots{}/} is likely to represent the coda of one syllable and the onset of another syllable \textipa{/\dots{}k.k\dots{}/}) or the gemination of the consonant (e.g., \textipa{/\dots{}kk\dots{}/} is another way of writing \textipa{/\dots{}k:\dots{}/}). However, these uses are rare, and most commonly a single consonant would be used in their place, or the IPA symbol for gemination inserted.
 	
-	In order to solve the problem of unrealistic consonant clusters, syllables can be built based on a 'sonority hierarchy'. The sonority hierarchy is a scale showing the relative strength of different phonemes based on their properties\cite{burquest2006}. Different phonemes have different amplitudes, and patterns in the amplitudes can be seen depending on the place and manner of articulation, as well as the phonation. It can be seen that syllables in many natural languages follow a structure whereby the nucleus has the most sonorant phonemes, and then the rest of the phonemes in the syllable decrease in sonority as they get further away from the nucleus. This is known as the \textit{sonority sequencing principle}. It can be seen in English by considering the initial consonant cluster \textipa{/pl\dots{}/} compared to \textipa{/lp\dots{}/} - the \textipa{/l/} is a lateral fricative, which is more sonorous than the obstruent stop \textipa{/p/}. Because of this, the cluster \textipa{/pl/} is much more common in onset consonant clusters. As the inverse of this, the cluster \textipa{/lp/} is much more common in coda consonant clusters globally than \textipa{/pl/}. In English, an example of initial cluster \textipa{/pl/} would be the word \textit{plant} (\textipa{/pl\ae{}nt/}), and an example of coda cluster \textipa{/lp/} would be the word \textit{help} (\textipa{/hElp/}).
+	In order to solve the problem of unrealistic consonant clusters, syllables can be built based on a `sonority hierarchy'. The sonority hierarchy is a scale showing the relative strength of different phonemes based on their properties\cite{burquest2006}. Different phonemes have different amplitudes, and patterns in the amplitudes can be seen depending on the place and manner of articulation, as well as the phonation. It can be seen that syllables in many natural languages follow a structure whereby the nucleus has the most sonorant phonemes, and then the rest of the phonemes in the syllable decrease in sonority as they get further away from the nucleus. This is known as the \textit{sonority sequencing principle}. It can be seen in English by considering the initial consonant cluster \textipa{/pl\dots{}/} compared to \textipa{/lp\dots{}/} - the \textipa{/l/} is a lateral fricative, which is more sonorous than the obstruent stop \textipa{/p/}. Because of this, the cluster \textipa{/pl/} is much more common in onset consonant clusters. As the inverse of this, the cluster \textipa{/lp/} is much more common in coda consonant clusters globally than \textipa{/pl/}. In English, an example of initial cluster \textipa{/pl/} would be the word \textit{plant} (\textipa{/pl\ae{}nt/}), and an example of coda cluster \textipa{/lp/} would be the word \textit{help} (\textipa{/hElp/}).
 	
 	Applying the sonority hierarchy rules to the phoneme-picking algorithm will make a profound difference to the realism of the generated syllables. In order to implement the hierarchy in the code, every phoneme must be given a sonority value. Using the image in figure \ref{sonority hierarchy}, a value from 0 to 10 can be given to every single phoneme based on its type. In fact, the IPA and therefore \textit{yod} contains no complex plosives, so the values range is 0 to 9 inclusive.
 	
@@ -443,14 +448,14 @@
 
 	Figure \ref{fixed stress locations} shows the distribution of lexical stress positions in natural languages. Again, using a weighted random algorithm can assign the phonology a random lexical stress position from this list.
 	
-	As discussed earlier, \textit{yod}'s structure for phonemes contains a 'length' property, which has similar but distinct meanings depending on the type of the phoneme. In vowels, it refers to whether the vowel is long or not (e.g., the distinction between the words \textit{ferry} \textipa{/fe"\*ri/} and \textit{fairy} \textipa{/fe:"\*ri/} in Australian English). In consonants, it represents the gemination of the consonant.
+	As discussed earlier, \textit{yod}'s structure for phonemes contains a `length' property, which has similar but distinct meanings depending on the type of the phoneme. In vowels, it refers to whether the vowel is long or not (e.g., the distinction between the words \textit{ferry} \textipa{/fe"\*ri/} and \textit{fairy} \textipa{/fe:"\*ri/} in Australian English). In consonants, it represents the gemination of the consonant.
 	
 	In \textit{yod}'s syllable and word generation code, these features are determined \textit{after} a word is created. The phonology, when generated, randomly selects whether long vowels and geminate consonants are a part of the phonology. These features are separate, so a phonology can allow geminate consonants but not long vowels, or vice versa. Then when a word is constructed, it is scanned over to check for instances where two consecutive phonemes are identical. This can happen for two reasons: first, there is no unique restriction on vowel picking for the nucleus, so if a diphthong is generated there is a possibility for two identical vowels in sequence. For consonants, this approach does not apply, as generated onset clusters and coda clusters follow the sonority sequencing principle which forbids sequences of two consonants with the same sonority. However, since syllables are generated independently of each other, it is possible for the boundaries of two adjacent syllables to be the same consonant. That is, if a syllable ends with a consonant such as \textipa{/k/} and the next syllable happened to start with \textipa{/k/}, the resulting word would contain the consonant sequence \textipa{/\dots{}kk\dots{}/}.
 	
 	When a sequence of two identical phonemes is found, then those phonemes can either be reduced into one long vowel or geminate consonant, or one of the phonemes can be deleted. Figure \ref{convert to long phonemes examples} shows some examples of words before and after undergoing this process.
 	
 	\begin{figure}[h]
-		\caption{Process of converting identical phoneme sequences to 'long' phonemes}
+		\caption{Process of converting identical phoneme sequences to `long' phonemes}
 		\label{convert to long phonemes examples}
 		\begin{tcolorbox}
 			\begin{Large}
@@ -463,13 +468,14 @@
 		\end{tcolorbox}
 	\end{figure}
 
-	A final refinement to syllable generation is to employ another general phonotactic rule. It can be seen that the phonotactics of many languages have restrictions on what consonant clusters are permitted as syllable-initial and syllable-final. For example, in Serbo-Croatian, the phonology contains both the phoneme \textipa{/d/} and the phoneme \textipa{/S/}, represented by the grapheme \textit{\v{s}}. However, despite following the sonority sequencing principle, the sequence "\v{s}d" (\textipa{/Sd/}) is not permitted as an initial cluster in a syllable\cite{uzelac1971phonological}. English also has many phonotactic rules, some of which permit or allow certain initial and final consonant clusters\cite{chomsky1968sound}.
+	A final refinement to syllable generation is to employ another general phonotactic rule. It can be seen that the phonotactics of many languages have restrictions on what consonant clusters are permitted as syllable-initial and syllable-final. For example, in Serbo-Croatian, the phonology contains both the phoneme \textipa{/d/} and the phoneme \textipa{/S/}, represented by the grapheme \textit{\v{s}}. However, despite following the sonority sequencing principle, the sequence `\v{s}d' (\textipa{/Sd/}) is not permitted as an initial cluster in a syllable\cite{uzelac1971phonological}. English also has many phonotactic rules, some of which permit or allow certain initial and final consonant clusters\cite{chomsky1968sound}.
 	
 	While the rules governing clusters in these cases are quite complex, \textit{yod} approximates these systems by merely restricting coda and onset consonants to randomly selected subsets of the phonology's consonant set. On generation, both onset consonants and coda consonants independently have a chance to be restricted. The restriction occurs by selecting a subset of the consonants of a random length, between a minimum of 2 and a maximum of the length of the total set.
 	
 	Even though this concept has a very na\"{i}ve implementation, it introduces a large amount of variety and lends further realism to the generated languages.
 	
 	\section{Words}
+	\label{section: words}
 	
 	Most of the complexity involved in generating words is involved in the actual construction of syllables. As such, word generation in \textit{yod} is a relatively simple process. The range of possible word lengths in the language is decided when the phonology is generated - this range is in syllable length rather than phoneme length. A random value between the minimum and maximum of this range is then chosen.
 	
@@ -554,15 +560,109 @@
 
 	To generate an orthography for a generated language, then, a system must exist to assign each phoneme a grapheme or grapheme cluster. \textit{yod} handles this by having an object which maps each possible phoneme in the International Phonetic Alphabet to a list of possible symbols. This list was compiled as a default set of options - however, a user interacting with the library directly would be free to change this dictionary or add to it, in order to add more options. Of course, the user is also free to set the orthography directly to whatever level of specificity they desire.
 	
-	Many of the possible symbols in these lists are based off common grapheme representations for their respective phonemes in different languages. To increase the variety, these symbols are also included with different diacritics for many of the phonemes. For each list, the first value is the 'preferred' symbol, and will be chosen on average 85\% of the time. In the case of the preferred symbol not being picked, a random symbol from the rest of the list is picked.
+	Many of the possible symbols in these lists are based off common grapheme representations for their respective phonemes in different languages. To increase the variety, these symbols are also included with different diacritics for many of the phonemes. For each list, the first value is the `preferred' symbol, and will be chosen on average 85\% of the time, using default values. In the case of the preferred symbol not being picked, a random symbol from the rest of the list is picked. When generating a random orthography, the percentage chance of using the default symbol is able to be specified, which allows users to 
 	
 	Since many of the lists contain the same symbols, as the lists are primarily differentiated by having different preferred symbols, there is a small chance that the same symbol can be picked for different phonemes. However, as seen with the phonology of English, the same graphemes can sometimes represent many different phonemes, so if this occurs, it merely acts as another unique factor of the language. As long as phonemes get unique graphemes in a majority of instances, the language will not be overly ambiguous.
+	
+	The relatively simple act of creating an orthography lends a lot of `flavour' to a language, as two languages with identical phonologies and phonetic inventories can be distinguished through the use of radically different orthographies. Figure \ref{orthographised words} shows a sample of words that have been generated and then had the orthography from figure \ref{generated orthography example} applied to them.
+	
+	\begin{table}
+		\caption{Generated orthography example}
+		\label{generated orthography example}
+		\centering
+		\begin{tabular}{|l|l|} \hline
+			\rowcolor[HTML]{D8D8D8}Phoneme & Grapheme 		\\ \hline
+			\textipa{/p/} & ~ p \\
+			\textipa{/b/} & ~ p \\
+			\textipa{/\textseagull{t}/} & ~ \d{t} \\
+			\textipa{/\textseagull{d}/} & ~ dh \\
+			\textipa{/t/} & ~ t \\
+			\textipa{/d/} & ~ d \\
+			\textipa{/q/} & ~ q \\
+			\textipa{/G/} & ~ \b{g} \\
+			\textipa{/\textbarglotstop/} & ~ \~{q} \\
+			\textipa{/P/} & ~ - \\
+			\textipa{/z/} & ~ z \\
+			\textipa{/B/} & ~ \d{v} \\
+			\textipa{/\textseagull{D}/} & ~ dh' \\
+			\textipa{/D/} & ~ \textipa{\:t}h \\
+			\textipa{/\=*D/} & ~ \dh \\
+			\textipa{/\textraising{\textsubbar{\*r}}/} & ~ r \\
+			\textipa{/K/} & ~ \textipa{\:r} \\
+			\textipa{/\textbarrevglotstop/} & ~ r \\
+			\textipa{/\:h/} & ~ h \\
+			\textipa{/y/} & ~ u \\
+			\textipa{/\oe/} & ~ \v{e} \\
+			\textipa{/6/} & ~ \={o} \\
+			\textipa{/\:a/} & ~ \^{a} \\
+			\textipa{/2/} & ~ u \\ \hline
+		\end{tabular}
+	\end{table}
+
+	\begin{figure}
+		\caption{Orthographised words, using orthography from fig. \ref{generated orthography example}}
+		\label{orthographised words}
+		\begin{tcolorbox}
+			\begin{Large}
+			\^{a}dp b\v{e}rdh \u{e}rdh t\^{a}\dh{}'\~{q} h\^{a}dhq uzd \^{a}rd \^{a}ht tur\d{t} \v{e}z \={o} ru \={o}\b{g}\~{q} tudh\~{q} \={o}\textipa{\:r}dh du\dh{}q r\={a}dq \^{a} r\^{a}\dh{}'t hurd du\textipa{\:t}ht uhd \v{e} t\={o}\b{g}\d{t} durp d\^{a} u b\={o}\dh{} r\={o}dp bu\textipa{\:t}hd hu \={o}bt b\={o}\textipa{\:r}d
+			\end{Large}
+		\end{tcolorbox}
+	\end{figure}
 
 	\chapter{Grammar}
 	
+	Given the tools described so far, a large variety of realistic words and syllables can be generated and spoken - and, if desired, converted to a written form. However, such speakers would not be communicating any useful information between each other. This is because the words that have been generated do not have any intrinsic meaning, and this meaning must be assigned to them.
+	
+	The goal with \textit{yod} was to be able to translate sentences from English to a generated language. Initially this was planned to be a straight translation from plain English. However, multiple obstacles complicated the pursuit of this goal. It became clear that doing this translation would require parsing the English sentence in full, in order to translate each word from English to the new generated language. This parsing process is outside of the scope of the project, and so a different approach was required.
+	
+	Additionally, many languages, including English, encode information into words in the form of \textit{inflection}, where the word is modified somehow to express information about different grammatical categories. These categories include tense, case, voice, aspect (which refers to how a verb continues over time), person, number, gender and mood. In order to accurately translate a sentence, this information would need to be included in the translation process. Also, another goal was to encode some of this information in the final translated sentence that \textit{wasn't} in the original sentence. An example of this would be the addition of applicative grammatical cases - for example, in a language with `instrumental' case, the word for `crowbar' in the sentence `I opened the hatch with a crowbar' would be \textit{declined} to match the fact that the word is being used to represent a tool being used. This change could be represented by a suffix, morphologically changing the word to be `crowbar-[instrumental case suffix]'. There are many more grammatical cases than are contained in just the English language, and being able to add these to a generated language would create much more unique results that would differ from just straight translations of English.
+	
+	Another possible downside of translating from English is the problem of word order in sentences. Many languages use different orderings of subject, object and verb in their sentences\cite{wals-81}. Merely copying the word order from the supplied English sentence would result in sentence structures which were too familiar. Instead, a range of different structures was desired.
+	
+	These were the goals and obstacles related to being able to construct meaningful sentences with \textit{yod}. Much of these restrictions heavily shaped the structure of the program, and required some elements to be cut back in complexity to be able to make the program easily usable.
+	
 	\section{Lexicon}
 	
+	The first step towards generating and translating full sentences is to build a lexicon. A lexicon can be seen as a list of \textit{lexemes}, which in turn are the basic meaning-carrying elements of a language. In essence, a lexicon can be seen as a dictionary for the language which was generated, and each lexeme is a headword in that dictionary. The lexemes can also be referred to as words, which is closer to what one may imagine when thinking of the concept of a `word', but it is important to keep in mind the distinction between these units of meaning and the meaningless `words' generated by the phonology code previously. 
+	
+	In fact, in this case it is more apt to consider a lexicon as a bilingual dictionary, which people use to translate from one language to another. Each entry in such a dictionary has several properties which very easily map to properties in the code definition of lexemes.
+	
+	The first property of a lexeme is its `headword', or lemma. This is the base form of the word, without any inflections or other morphological processes applied to it. For example, the words `sing', `sung', `sang', `singing' and `sings' are all forms of the lemma `sing'. In dictionaries, this is often necessarily an orthographised form of the word - however, in code it is simpler to keep the phonetic information, and only orthographise when really necessary. Thus, the lemma of each of the lexemes contained in the language's lexicon will be `phonology words', which were described in section \ref{section: words} as ordered lists of syllables, each of which was an ordered list of phonemes.
+	
+	The next property is the `part of speech'. This shows which grammatical function a word plays in a sentence. This is essential information with regards to constructing meaningful sentences. It is also necessary to have this information when applying morphological processes to words, as the rules often differ depending on the part of speech. For example, in English, a past tense verb will usually have an `-ed' suffix, but there is no equivalent rule for nouns. Figure \ref{list of parts of speech} shows a list of every part of speech which is a part of \textit{yod}'s word tagging system, and its corresponding tag when serialised.
+	
+	\begin{table}
+		\caption{List of parts of speech recognised by \textit{yod} and their tags}
+		\label{list of parts of speech}
+		\centering
+		\begin{tabular}{|l|l|} \hline
+			\rowcolor[HTML]{D8D8D8} Part of speech & Tag  \\ \hline
+			Pronoun        & \texttt{PRON} \\
+			Noun           & \texttt{NOUN} \\
+			Verb           & \texttt{VERB} \\
+			Adverb         & \texttt{ADVB} \\
+			Conjunction    & \texttt{CONJ} \\
+			Preposition    & \texttt{PREP} \\
+			Adjective      & \texttt{ADJC} \\
+			Interjection   & \texttt{INTJ} \\
+			Determiner     & \texttt{DETM} \\
+			Relativiser    & \texttt{RLTV} \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Finally, each of the lemmas has a `translation'. In \textit{yod}, this is idiomatically in the form of a single English word, but it can actually be any string which does not contain a space. This information is used to translate from English words into words of the generated language.
+	
+	By necessity, when translating a sentence, all words in the sentence must have a corresponding entry in the lexicon, or they can not be translated. The lexicon containing all needed must be defined and passed to the library; for more general use, a larger lexicon containing many words could be used to prevent the user from having to define their own lexicon. This lexicon is given in the form of a JSON object, which can be deserialised from a file. This file contains a list for every part of speech, and in each of those lists is every needed word which is of that part of speech. When loaded, this gives us every word and its corresponding part of speech, and so a lemma can be generated for that word by the phonology.
+	
+	While testing the assignment of lemmas to words using this method, it became clear that this approach was insufficient for certain, commonly used words. It can be seen that common words in language frequently are shorter on average than less common words\cite{miller1958370}\cite{strauss2007word}. When this trend is not taken into account, it can lead to simple words like `be', `I' and `you' having an unwieldy amount of syllables. This makes the generated text significantly less realistic, especially if spoken - however, with no predetermined corpus to draw frequency data from, a different approach is needed. The method \textit{yod} uses is to allow the user to designate certain words as `common words.' When the lemma for these words is generated, their lengths are restricted to the minimum word length of the language. This ensures that common words are on the whole easier to speak, while still making sure that their lemmas fit within the phonological rules of the language.
+	
+	Another improvement to lexicon generation is to try to group similar words. Since language usually evolves over a long period of time, certain separate related words can be introduced to the language with similar roots. In the absence of a naturally developed language, these similarities must be introduced artificially. \textit{yod} uses a rather na\"ive approach to this, which nonetheless has a reasonable impact on the generated text. Similar to the way that common words are handled, the library allows the user to declare sets of related words in the lexicon file. The first time the lemma for a word in one of these sets is generated, it is generated normally. However, a list of all the groups is kept during the generation process, and this first lemma is set as the `base lemma' for that group of words. On subsequent words of that group, the base lemma is recalled and then slightly modified. This means that words in groups of related words will have related lemmas. While this is not much of a realistic procedure, it nonetheless results in a small amount of extra realism to the language, as it evokes the idea of the language evolving more naturally.
+	
 	\section{Phrase Structure Grammar}
+	
+	The phrase translation process is perhaps the most important section of \textit{yod}'s whole translation section. 
+	
+	\section{Inflection}
    
    \printbibliography
 \end{document}
