@@ -68,6 +68,10 @@ namespace yod.Phonology
 
         void ApplyStress()
         {
+            for (var i = 0; i < SyllableLength; i++)
+            {
+                Syllables[i].Stressed = false;
+            }
             if (SyllableLength == 1) return;
             var stressIndex = 0;
             switch (language.StressLocation)
@@ -87,11 +91,6 @@ namespace yod.Phonology
             }
             stressIndex = stressIndex < 0 ? 0 : stressIndex;
             stressIndex = stressIndex >= SyllableLength ? SyllableLength - 1 : stressIndex;
-
-            for (var i = 0; i < SyllableLength; i++)
-            {
-                Syllables[i].Stressed = false;
-            }
             Syllables[stressIndex].Stressed = true;
         }
 

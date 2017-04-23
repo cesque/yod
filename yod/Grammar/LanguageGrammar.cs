@@ -94,7 +94,7 @@ namespace yod.Grammar
         public static LanguageGrammar Generate()
         {
             var grammar = new LanguageGrammar();
-            grammar.Add(new PhraseStructureRule("S", Globals.Random.Next(100) > 80
+            grammar.Add(new PhraseStructureRule("S", Globals.Random.Next(100) > 75
                 ? new List<PhraseStructurePart>()
                 {
                     new PhraseStructurePart("VP", 0),
@@ -125,12 +125,17 @@ namespace yod.Grammar
             {
                 new PhraseStructurePart("NN", 0),
             }));
-            grammar.Add(new PhraseStructureRule("NP", new List<PhraseStructurePart>()
+            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(542+561) < 542 ?
+                new List<PhraseStructurePart>()
             {
                 new PhraseStructurePart("DETM", 0),
                 new PhraseStructurePart("NN", 0),
+            } : new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("NN", 0),
+                new PhraseStructurePart("DETM", 0),
             }));
-            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) < 80
+            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) < 75
                 ? new List<PhraseStructurePart>()
                 {
                     new PhraseStructurePart("NP", 0),
@@ -141,7 +146,7 @@ namespace yod.Grammar
                     new PhraseStructurePart("PP", 0),
                     new PhraseStructurePart("NP", 0),
                 }));
-            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) < 80
+            grammar.Add(new PhraseStructureRule("NP", Globals.Random.Next(100) < 75
                 ? new List<PhraseStructurePart>()
                 {
                     new PhraseStructurePart("NP", 0),
@@ -162,7 +167,7 @@ namespace yod.Grammar
             {
                 new PhraseStructurePart("VERB", 0),
             }));
-            grammar.Add(new PhraseStructureRule("VP", Globals.Random.Next(100) < 80
+            grammar.Add(new PhraseStructureRule("VP", Globals.Random.Next(100) < 75
                 ? new List<PhraseStructurePart>()
                 {
                     new PhraseStructurePart("VERB", 0),
@@ -210,10 +215,15 @@ namespace yod.Grammar
             {
                 new PhraseStructurePart("NOUN", 0),
             }));
-            grammar.Add(new PhraseStructureRule("NN", new List<PhraseStructurePart>()
+            grammar.Add(new PhraseStructureRule("NN", Globals.Random.Next(373+878) < 373 ?
+            new List<PhraseStructurePart>()
             {
                 new PhraseStructurePart("ADJC", 0),
                 new PhraseStructurePart("NN", 0),
+            } : new List<PhraseStructurePart>()
+            {
+                new PhraseStructurePart("NN", 0),
+                new PhraseStructurePart("ADJC", 0),
             }, Globals.Random.Next(100) > 50));
             grammar.Add(new PhraseStructureRule("NN", new List<PhraseStructurePart>()
             {

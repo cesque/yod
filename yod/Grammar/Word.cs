@@ -69,6 +69,8 @@ namespace yod.Grammar
             w.Lemma = Phonology.Word.Merge(word1.Lemma, word2.Lemma);
             w.Inflected = w.Lemma;
             w.Inflect(word2.AppliedInflections);
+
+            w.Inflected.Fix();
             return w;
         }
 

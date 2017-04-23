@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Newtonsoft.Json.Linq;
 using yod;
 using yod.Grammar;
@@ -21,9 +22,14 @@ namespace yodTest
 
         public Tests()
         {
-            Globals.Seed = 11;
+            //Globals.Seed = 11;
 
-            phonology = LanguagePhonology.FromJSON("./english.json");
+            phonology = LanguagePhonology.Generate();//LanguagePhonology.FromJSON("./english.json");
+            phonology.Phonemes.Consonants = ConsonantCollection.GenerateSubset(ConsonantCollection.EnglishConsonants, 4);
+            phonology.Phonemes.Consonants.Add(ConsonantCollection.IPAConsonants.First(x => x.Symbol == "r"));
+            phonology.Phonemes.Vowels = VowelCollection.GenerateSubset(VowelCollection.EnglishVowels);
+            phonology.OnsetConsonants = phonology.Phonemes.Consonants;
+            phonology.CodaConsonants = phonology.Phonemes.Consonants;
             orthography = LanguageOrthography.Generate(phonology);
             grammar = LanguageGrammar.Generate();
 
@@ -59,6 +65,35 @@ namespace yodTest
 
             var subjectSyllable = phonology.GetSyllable();
             var objectSyllable = phonology.GetSyllable();
+
+            List<Inflection> inflections = new List<Inflection>
+            {
+                new Inflection(phonology, PartOfSpeech.Noun, "GEN"),
+                new Inflection(phonology, PartOfSpeech.Noun, "OBJ"),
+                new Inflection(phonology, PartOfSpeech.Pronoun, "GEN"),
+                new Inflection(phonology, PartOfSpeech.Pronoun, "OBJ"),
+            };
+
+            phrase.InflectAll(inflections);
+            var flattened = phrase.Flatten();
+
+            var s = "";
+
+            flattened.ForEach(x => s += x.EnglishLemma + " ");
+            s += Environment.NewLine;
+            flattened.ForEach(x => s += orthography.Orthographize(x.Inflected) + " ");
+            s += Environment.NewLine;
+            s += "/";
+            flattened.ForEach(x => s += x.Inflected.ToString() + " ");
+            s += "/";
+
+            return s;
+        }
+
+        public string TestQuickBrownFox()
+        {
+            Phrase phrase = new Phrase(grammar, "./pangram.json");
+            phrase.Fill(lexicon);
 
             List<Inflection> inflections = new List<Inflection>
             {
@@ -169,6 +204,8 @@ namespace yodTest
 
             var tests = new List<Func<string>>
             {
+                TestQuickBrownFox,
+
                 TestBirthday,
 
                 TestPhrase,

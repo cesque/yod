@@ -10,6 +10,7 @@
 		"NOUN": [
 			"dog",
 			"cat",
+			"fox",
 			"human",
 			"book",
 			"house",
@@ -28,7 +29,14 @@
 			"like",
 			"love",
 			"dislike",
-			"hate"
+			"hate",
+			"jump",
+			"run",
+			"dance",
+			"walk",
+			"stop",
+			"cry",
+			"laugh"
 		],
 		"ADVB": [
 			"quickly",
@@ -41,6 +49,14 @@
 			"big",
 			"small",
 			"red",
+			"yellow",
+			"green",
+			"orange",
+			"brown",
+			"white",
+			"black",
+			"purple",
+			"pink",
 			"blue",
 			"old",
 			"young",
@@ -48,7 +64,9 @@
 			"bad",
 			"happy",
 			"sad",
-			"dear"
+			"dear",
+			"quick",
+			"lazy"
 		],
 		"CONJ": [
 			"or",
@@ -75,7 +93,10 @@
 			"with",
 			"outside",
 			"to",
-			"from"
+			"from",
+			"over",
+			"under",
+			"behind",
 		],
 		"RLTV": [
 			"that"

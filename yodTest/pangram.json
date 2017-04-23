@@ -1,0 +1,61 @@
+﻿{
+	"S": {
+		"NP": {
+			"DETM": {
+				"word": "the",
+				"tags": ""
+			},
+			"NN": {
+				"ADJC": {
+					"word": "quick",
+					"tags": ""
+				},
+				"NN": {
+					"ADJC": {
+						"word": "brown",
+						"tags": ""
+					},
+					"NN": {
+						"NOUN": {
+							"word": "fox",
+							"tags": "SG,SBJ"
+						},
+					}
+				}
+			}
+		},
+		"VP": {
+			"VERB": {
+				"word": "jump",
+				"tags": "PRS,SG,3"
+			},
+			"PP": {
+				"PREP": {
+						"word": "over",
+						"tags": ""
+				},
+				"NP": {
+					"DETM": {
+						"word": "the",
+						"tags": ""
+					},
+					"NN": {
+						"ADJC": {
+							"word": "lazy",
+							"tags": ""
+						},
+						"NN": {
+							"NOUN": {
+								"word": "dog",
+								"tags": "SG,OBJ"
+							}
+						}
+					}
+				}	
+			}	
+		}	
+	}
+}
+
+	
+

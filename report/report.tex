@@ -15,7 +15,7 @@
 \usepackage{algpseudocode}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \usepackage{fontspec}
-\usepackage{gb4e}
+\usepackage{expex}
 
 \setcounter{biburllcpenalty}{7000}
 \setcounter{biburlucpenalty}{8000}
@@ -39,6 +39,7 @@
    \maketitle
    
    \chapter{Introduction}
+   \label{chapter: introduction}
    \textit{yod} is a library, written in \Csh{}, designed to aid in the construction and generation of artificial languages. Artificial languages (also known as constructed languages or `conlangs') are probably most publicly well known through the popularisation of `fictional languages' - that is, languages designed for use in works of fiction, usually for adding depth to a fictional world. For example, J. R. R. Tolkien devised the languages of \textit{Sindarin} and \textit{Quenya} for use in his \textit{Lord of the Rings} series. Other popular fictional languages that have reached mainstream awareness include \textit{Star Trek}'s \textit{Klingon} and \textit{Game of Thrones}' \textit{Dothraki}.
    
    The creation of these languages has become an indispensable tool for writers to add depth and character to their worlds. However, constructed languages do not exist solely for creative uses. The language \textit{Esperanto} was developed by its creator L. L. Zamenhof with the goal of being a global language that was easy for people to learn\cite{unualibro}. Now it is reported that as many as 63,000 people worldwide can speak Esperanto to some degree\cite{esperanto}. The existence of Esperanto and other so-called `international auxiliary languages' (languages designed to simplify complication between people of different countries and cultures) shows that the usefulness of constructed languages extends into real-world applications as well as artistic uses.
@@ -56,6 +57,7 @@
    \todo{talk about structure}
    
    \chapter{Phonology}
+   \label{chapter: phonology}
    The `na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ the following example text can be generated.
    
    \begin{figure}[h]
@@ -73,8 +75,9 @@
    Because of these problems, it is obvious that merely stringing together random characters with no thought towards pronunciation is insufficient when it comes to creating realistic and varied languages. Therefore it is necessary to first create a phonology on which to base all of our language's words.
    
    \section{Phonetic inventory}
+   \label{section: phonetic inventory}
    
-   In its simplest form, a phonology is a list of every sound that is included in a language. \todo{cite (WALS)}English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the `Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
+   In its simplest form, a phonetic inventory is a list of every sound that is included in a language. \todo{cite (WALS)}English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the `Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
    
   \begin{table}[h]
   	\caption{Consonant inventory in English phonology}
@@ -287,6 +290,7 @@
 	By using these refinements for generating a phonetic inventory, a unique and varied, yet still realistic, phonology can begin to be generated. This phonology provides the basis upon which the rest of the language is built.
 
 	\section{Syllables}
+	\label{section: syllables}
 	
 	The next step towards a full phonology is building syllables out of the phonemes from the generated phonetic inventory.
 	
@@ -425,7 +429,7 @@
 	Figure \ref{sample syllables using sonority sequencing principle} shows a set of sample syllables generated using the sonority sequencing principle. These syllables are based on a generated syllable structure of (C)(C)V(V)(C)(C). This structure displays not only the fact that onset and coda generation follow the sonority hierarchy, but also the inclusion of diphthongs due to the V(V) nucleus structure.
 	
 	\section{Stress and Long/Geminate Phonemes}
-	
+	\label{section: stress and long/geminate phonemes}
 	In phonology, stress is when a syllable is given particular emphasis as part of a word. Stress in a syllable is denoted by an IPA symbol which is similar to an apostrophe, as seen in the second syllable of the word \textit{hello} (\textipa{/hE"l@U/}). Stress can be represented as a single boolean value in the \texttt{Syllable} object - if \texttt{true} then the syllable is stressed else it is unstressed.
 	
 	Particularly, lexical stress (stressed placed on a given syllable of a word) is important to the word generation process. A word can have one syllable with lexical stress, and the position of this syllable differs in different languages. For some languages the stress can fall on any syllable, and must be learned per-word. For languages with fixed stress, however, the position of the stress is determined by language-wide rules, and so can be easily chosen by algorithmic rules.
@@ -510,6 +514,7 @@
 	Figure \ref{example words english} shows three different sets of generated words, all using a subset of English phonemes. Figure \ref{example words all} also shows three sets of word, this time generated using different subsets of the full set of phonemes. Using the English phonology makes for words which are more easily pronounceable without much practice by English speakers - however, using the full set of phonemes produces much more varied and unique results.
 	
 	\chapter{Orthography}
+	\label{chapter: orthography}
 	
 	So far, the focus has been on creating a \textit{spoken} language, due to the fact that all written languages are based on spoken languages to begin with. For constructed languages, however, not having a way of writing the language is a large negative. People would not be able to communicate non-verbally in the language, and for fictional languages, it is likely that the creator would want to have a written form of the language to use in their work.
 	
@@ -566,6 +571,14 @@
 	
 	Since many of the lists contain the same symbols, as the lists are primarily differentiated by having different preferred symbols, there is a small chance that the same symbol can be picked for different phonemes. However, as seen with the phonology of English, the same graphemes can sometimes represent many different phonemes, so if this occurs, it merely acts as another unique factor of the language. As long as phonemes get unique graphemes in a majority of instances, the language will not be overly ambiguous.
 	
+	This process of picking which grapheme each phoneme is mapped to happens on the instantiation of a new \texttt{Orthography} object. This means that once defined, the orthography will give the same grapheme result for each phoneme, no matter how many times it is checked. This provides a consistent orthography for the language.
+	
+	Furthermore, since this process converts one phoneme to a string representing its related grapheme or grapheme cluster, and syllables can be treated as ordered lists of phonemes, an orthography can be applied to syllables by mapping the conversion function onto the phoneme list of a syllable. Since \texttt{yod} rarely uses individual graphemes past this point, it is more useful for the function to return a string representation of the orthographised syllable. Thus the list is folded with a concatenation function, concatenating the graphemes for each syllable.
+	
+	This concept also applies to words, which can be seen as lists of syllables. Because there now exists a way to apply an orthography to individual syllables, mapping this function over all the syllables in a word and folding the result with a concatenation function produces an orthographised, written string representation of the word.
+	
+	The \texttt{LanguageOrthography} class exposes an \texttt{Orthographise()} method which takes an input and returns a string representation of it with the given orthography. This method is overloaded to accept either a \texttt{Phoneme}, a \texttt{Syllable} or a \texttt{Word} as input, returning the respective converted string.
+		
 	The relatively simple act of creating an orthography lends a lot of `flavour' to a language, as two languages with identical phonologies and phonetic inventories can be distinguished through the use of radically different orthographies. Figure \ref{orthographised words} shows a sample of words that have been generated and then had the orthography from figure \ref{generated orthography example} applied to them.
 	
 	\begin{table}
@@ -600,7 +613,6 @@
 			\textipa{/2/} & ~ u \\ \hline
 		\end{tabular}
 	\end{table}
-
 	\begin{figure}
 		\caption{Orthographised words, using orthography from fig. \ref{generated orthography example}}
 		\label{orthographised words}
@@ -612,6 +624,7 @@
 	\end{figure}
 
 	\chapter{Grammar}
+	\label{chapter: grammar}
 	
 	Given the tools described so far, a large variety of realistic words and syllables can be generated and spoken - and, if desired, converted to a written form. However, such speakers would not be communicating any useful information between each other. This is because the words that have been generated do not have any intrinsic meaning, and this meaning must be assigned to them.
 	
@@ -624,6 +637,7 @@
 	These were the goals and obstacles related to being able to construct meaningful sentences with \textit{yod}. Much of these restrictions heavily shaped the structure of the program, and required some elements to be cut back in complexity to be able to make the program easily usable.
 	
 	\section{Lexicon}
+	\label{section: lexicon}
 	
 	The first step towards generating and translating full sentences is to build a lexicon. A lexicon can be seen as a list of \textit{lexemes}, which in turn are the basic meaning-carrying elements of a language. In essence, a lexicon can be seen as a dictionary for the language which was generated, and each lexeme is a headword in that dictionary. The lexemes can also be referred to as words, which is closer to what one may imagine when thinking of the concept of a `word', but it is important to keep in mind the distinction between these units of meaning and the meaningless `words' generated by the phonology code previously. 
 	
@@ -660,7 +674,8 @@
 	
 	Another improvement to lexicon generation is to try to group similar words. Since language usually evolves over a long period of time, certain separate related words can be introduced to the language with similar roots. In the absence of a naturally developed language, these similarities must be introduced artificially. \textit{yod} uses a rather na\"ive approach to this, which nonetheless has a reasonable impact on the generated text. Similar to the way that common words are handled, the library allows the user to declare sets of related words in the lexicon file. The first time the lemma for a word in one of these sets is generated, it is generated normally. However, a list of all the groups is kept during the generation process, and this first lemma is set as the `base lemma' for that group of words. On subsequent words of that group, the base lemma is recalled and then slightly modified. This means that words in groups of related words will have related lemmas. While this is not much of a realistic procedure, it nonetheless results in a small amount of extra realism to the language, as it evokes the idea of the language evolving more naturally.
 	
-	\section{Phrase Structure Grammar}
+	\section{Phrase Structure/Constituency Grammar}
+	\label{section: phrase structure/constituency grammar}
 	
 	The phrase translation process is perhaps the most important section of \textit{yod}'s whole translation section. The goal for this code is to take some representation of an English sentence and convert it into a sentence of a generated language, preserving its meaning. If the input is merely an English sentence (as a string) then in order to get information about the sentence structure and also the grammatical categories of each of the words, some amount of natural language processing (NLP) is required. As NLP is out of the scope of the project, an object structure which encodes all of this information is necessary.
 	
@@ -714,7 +729,7 @@
 	
 	The last addition to the phrase structure grammar file is not necessarily a part of the grammar itself but instead an instruction on how to construct certain phrases in the language. This property is a list of rules which should be `compounded'. When the final translated sentence is constructed, a space is added between each constituent. If a rule is set to be compounded, however, the constituents of the rule will be concatenated without a space between them. A good example of this type of rule is the English language, where noun-noun compounds are frequently created by taking two nouns and concatenating them without a space: $fire + place \rightarrow fireplace$, $wrist + watch \rightarrow wristwatch$.
 
-	An example phrase structure grammar which can be used to translate moderately complex English sentences is shown in figure \ref{example phrase structure grammar}.
+	An example phrase structure grammar which can be used to translate moderately complex English sentences is shown in figure \ref{example phrase structure grammar}, and a conversion of the sentence `I love my big dog' to \textit{yod}'s dependency tree format is shown in figure \ref{example phrase}.
 	
 	\begin{figure}
 		\caption{Example phrase structure grammar}
@@ -740,8 +755,108 @@
 			\end{lstlisting}
 		\end{tcolorbox}
 	\end{figure}
+
+	\begin{figure}
+	\caption{Example phrase for grammar shown in fig. \ref{example phrase structure grammar}}
+	\label{example phrase}
+	\begin{tcolorbox}
+		\begin{lstlisting}[breaklines=true,tabsize=2]
+{
+	"S": {
+		"NP": {
+			"PRON": { "word": "i", "tags": "1,SG,SBJ" }
+		},
+		"VP": {
+			"VERB": { "word": "love", "tags": "1,SG,PRS" },
+			"NP": {
+				"PS": {
+					"PRON": { "word": "i", "tags": "1,SG,OBJ,GEN" }
+				},
+				"NN": {
+					"ADJC": { "word": "big", "tags": "SBJ" },
+					"NN": {
+						"NOUN": { "word": "dog", "tags": "3,SG,OBJ" }
+					}
+				}
+			}
+		}
+	}
+}
+		\end{lstlisting}
+	\end{tcolorbox}
+	\end{figure}
+
+	When parsed, this example phrase will build into a tree of \texttt{Phrase} objects. Each of these objects holds information about its current phrase grammar rule, as well as a boolean value which says whether the phrase node is terminal or non-terminal. If a phrase is designated as non-terminal, it also contains a list of its sub-phrases - otherwise, it contains a reference to a \texttt{Word} object containing information about the word it represents.
+	
+	Once this tree structure is constructed, it can begin to be translated. The first step of this is to translate the lemma of each terminal node in the tree using the generated lexicon. The corresponding lexeme with matching lemma and part of speech for each word is looked up in the lexicon, and the translated word from the lexicon is then added to the node. The reason for indexing by lemma \textit{and} part of speech is that some words could have the same lemma but different parts of speech. An example of this is the distinction between the word `that' as a determiner (e.g., `I would like \textit{that} one') and the word `that' as a relativizer, which is a conjunction which introduces a relative clause (e.g., `I live in the house \textit{that} is on the corner'). These words are homonyms - that is, they are spelled and pronounced the same, but have different meanings - and uniquely identifying each word in the lexicon by its lemma \textit{and} part of speech avoids the ambiguity which comes with them.
+	
+	When each terminal node contains a translated word, the tree is then flattened to produce a list of terminal nodes. A recursive tree-flattening algorithm is run on the tree, which checks if a node is terminal or non-terminal. Terminal nodes merely return their word values (including English lemma, tags and parts of speech). Non-terminal node first flatten all of their children, and then concatenate these lists in the order specified by the node's grammar rule. For example, consider a \texttt{VP} (verb phrase) phrase which satisfies the rule \texttt{VP $\rightarrow$ VERB NP}. It is non-terminal, and contains a child of the type \texttt{VERB} and a child of the type \texttt{NP}. Both of these children are flattened, with \texttt{VERB} merely returning a list with one element. The rule then specifies that the lists should be concatenated in the order \texttt{VERB} followed by \texttt{NP}.
+	
+	Additionally, during this process the rule for each phrase is checked to see if it needs to be compounded. If so, a list fold will be applied to the final list which merges all of the words, producing a single-item list which contains a word representing a compounded version of the phrase's children. This folding process ensures that the compounding process is more robust than simply not adding spaces between the words when printing the sentence - the compounded nature of the phrase is reflected in the sentence data structure itself. Thus, a compound of the words `fire' and `truck' would result in a word element representing the whole noun-noun compound word `firetruck', with its own compounded translation. The part of speech and tags for the resulting compound are carried over from the final word in the compound, allowing the noun `truck' in this example to keep its part of speech as well as any possible applicable tags.
+	
+	The tree flatten function returns a list, which represents a sentence in the generated language. Each element in this list holds the following information:
+	\begin{enumerate}
+		\item English lemma
+		\item Translated lemma
+		\item Part of speech
+		\item List of grammatical categories (tags)
+	\end{enumerate}
+
+	In order to access the IPA representation of the full sentence, the list is folded which concatenated the translated lemmas of each element. If a written form is desired, then a \texttt{LanguageOrthography} must be specified - in this case, the same fold is applied but the \texttt{LanguageOrthography.Orthographise()} method is mapped onto the list first. Due to the overloaded nature of this method, as developed in chapter \ref{chapter: orthography}, the method can be applied to phonological \texttt{Word} objects directly, returning their orthographised string representations.
+
+	When flattened, it is feasible to imagine that the library could just return string representations of the phrase directly - for example, the full IPA transcription of the sentence. The reason for returning a list of \texttt{Word} structures instead is because this extra information is useful for showing that the sentence is a valid translation of the input. Linguists use a tool called an interlinear gloss to show the relationship between a source text and its translation\cite{bickel2008leipzig}. For \texttt{yod}'s output, the generated sentence is treated as the `source text' and the corresponding English is treated as the translation. Figure \ref{translated phrase} shows an interlinear gloss of the sentence `I love my big dog' in a language generated by \texttt{yod}, along with the relevant entries in the language's lexicon. 
+	
+	\begin{figure}
+		\caption{Sentence shown in fig. \ref{example phrase} using grammar from fig. \ref{example phrase structure grammar}}
+		\label{translated phrase}
+		\begin{tcolorbox}	
+			\begin{Large}
+				\ex 
+				\begingl
+				\gla \dj{}\^{a}h \dj{}um \dj{}\^{a}h mebgwu//
+				\glb \textipa{/\t{dZ}Ah} \textipa{\t{dZ}um} \textipa{\t{dZ}Ah} \textipa{m3bgw2/}//
+				\glc I love I big-dog//
+				\glft `I love my big dog'//
+				\endgl
+				\xe
+			\end{Large}
+
+		
+			Relevant lexicon entries:
+			\texttt{
+			\begin{itemize}
+				\item đȃh \textipa{/\t{dZ}Ah/} (pron) : I
+				\item gwu \textipa{/gw2/} (noun) : dog
+				\item đum \textipa{/\t{dZ}um/} (verb) : love
+				\item meb \textipa{/m3b/} (pron) : big
+			\end{itemize}
+			}
+		
+		\end{tcolorbox}
+	\end{figure}
+
+	This figure shows the result of the translation process being run on the phrase described in figure \ref{example phrase}, using the grammar in figure \ref{example phrase structure grammar}, as well as a generated orthography and a phonology based on that of English. It shows the translation of words using a lexicon, as well as the compounding feature shown using the compound adjective-noun `big-dog'.
+	
+	As described before, most classes in \texttt{yod} expose a \texttt{Generate()} method which creates an instance of that class with procedurally generated values in order to allow for varied and unique language generation. The grammar and word order of a language plays a large part in creating an identity for the language distinct from other languages. Because of this, it is desirable to create a unique grammar.
+	
+	However, generating a random grammar poses an interesting problem. This problem is that the input sentences to \texttt{yod} necessarily follow the grammar of the output language. Because of this, having different constituents in the grammar on separate runs of the creation process will mean that an input sentence could potentially not match a generated grammar. This is unwanted, since if a sentence doesn't match the grammar, it cannot be translated; if the user doesn't know if the sentence cannot be translated before running it through the library, this means the library cannot be relied upon for uses where a translated sentence in required without the chance of the library not returning a value (for example, in game development usages). Furthermore, the more varied the results of the grammar generation, the lower the chance of the sentence structure matching the grammar. For example, if the generated grammar does not allow verbs, most phrases would be untranslatable.
+	
+	To work around this, \texttt{yod} can generate unique grammars, but these grammars are all based on the default grammar shown in \ref{example phrase structure grammar}. This grammar allows for complex English sentences to be represented and translated. The randomisation aspect is implemented by randomising the order of many of the phrase rules. This means that, while the default structure defines the phrase rule \texttt{VP $\rightarrow$ VERB NP}, the generation algorithm can instead define the rule \texttt{VP $\rightarrow$ NP VERB}. This verb-final rule can be seen as similar to languages such as Japanese, where the object precedes the verb.
+	
+	Additionally, the compounding rules can be generated. In the example grammar, both rules \texttt{NN $\rightarrow$ ADJC NN} (for adjective-noun compounds) and \texttt{CN $\rightarrow$ NOUN-1 NOUN-2} are compounded. When generating the grammar, either of these rules can be set to compound or non-compound rules at random. This lends a small amount of extra variety to the produced grammars.
+	
+	One limitation of this generation strategy, and of constituency-based grammars in general, is that it does not lend itself well to following some statistical data about natural languages. Linguists have gathered much data about the order of different parts of sentences in languages from all cultures\cite{wals-81}. Some of these patterns can be represented in the generation code - for example, statistics about the order of demonstrative and noun\cite{wals-88} and the order of adjective and noun\cite{wals-87} can be represented by changing the order of the \texttt{NP $\rightarrow$ DETM NN} and \texttt{NN $\rightarrow$ ADJC NN} phrase rules respectively. These statistics are used to inform the probability of the different orders these rules can take. However, for some rules about sentence structure, such as the ordering of subject, object, verb and oblique\cite{wals-84}, the use of constituency-based grammars adds a lot more complexity. Specifically, creating a grammar where the object of a sentence and the verb were not adjacent would mean that the previously correct input structure would now not be able to fit into the grammar. This would happen because the grammar defines a \texttt{S $\rightarrow$ NP VP}, where S is a sentence. In this sentence structure, the noun phrase is necessarily the subject of the sentence, and the verb phrase contains both verb and potentially also another noun phrase which represents the object of the sentence. As the verb \textit{and} the object are children of the verb phrase in a tree constructed based on this grammar, they must necessarily be adjacent when the tree is flattened.
+	
+	An improvement to the grammar generation section of \texttt{yod} would therefore be to construct a more complicated English-based grammar which could potentially have the property of a verb-subject-object or object-subject verb structure, while still allowing input sentences to be structured in a relatively human-friendly format.
+	
+	By randomising the order of phrase rules, as well as compounding rules, languages with different sentence structure can be generated. This helps the translated sentences to differ from the structure of the input sentences, instead of merely being word-by-word translations. On top of this, the \texttt{LanguageGrammar.\-LoadFromJSON()} method is available for users who want to use more unique grammars and construct sentences which conform to those grammars. This means that a user who needs the complexity of custom grammars can have it, but a user who does not can still have a unique grammar which allows for complex sentence translation.
 	
 	\section{Inflection}
+	\label{section: inflection}
+	
+	Given the translated sentence in figure \ref{example phrase}, it can be seen that the pronouns `I' and `my' are both represented by the same translated word \textit{\dj{}}, despite being different in the English translation. The interlinear gloss indeed shows that both of these are reflecting the lemma form of the pronoun `I'. In order to fully express the same meaning as the sentence `I love my big dog', it needs to be somehow indicated that the second instance of the pronoun should be marked with genitive or possessive case.
+	
+	\texttt{yod} contains a basic inflection engine to accomplish this task. Inflection is the morphological modification of a word to reflect its grammatical categories\cite{crystal2011dictionary}, often through the use of an affix. An example in English would be the addition of the suffix `\'s' to a noun to indicate the possessive/genitive case.
    
    \printbibliography
 \end{document}

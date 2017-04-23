@@ -391,15 +391,26 @@ namespace yod.Phonology
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static ConsonantCollection GenerateSubset(ConsonantCollection collection)
         {
+            return ConsonantCollection.GenerateSubset(collection, Math.Max(2, Globals.Random.Next(collection.Count)));
+        }
+
+        /// <summary>
+        /// Generate a random ConsonantCollection that is a subset of another collection.
+        /// </summary>
+        /// <param name="collection">The collection to take a subset of. Must contain at least 2 or more consonants.</param>
+        /// <param name="count">The number of consonants that should be in the resulting collection</param>
+        /// <returns>A random ConsonantCollection</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static ConsonantCollection GenerateSubset(ConsonantCollection collection, int count)
+        {
             if (collection.Count < 2) throw new ArgumentOutOfRangeException("Consonant collection must have 2 or more consonants in order to generate subset.");
-            var num = Math.Max(2, Globals.Random.Next(collection.Count));
             var stack = new Stack<Consonant>(collection.OrderBy(x => Globals.Random.Next()));
             var list = new List<Consonant>();
-            for (var i = 0; i < num; i++)
+            for (var i = 0; i < count; i++)
             {
                 list.Add(stack.Pop());
             }
-            return new ConsonantCollection(new List<Predicate<Consonant>> {x => list.Contains(x)});
+            return new ConsonantCollection(new List<Predicate<Consonant>> { x => list.Contains(x) });
         }
 
         /// <summary>

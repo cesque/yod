@@ -283,7 +283,7 @@ namespace yod.Orthography
             return s;
         }
 
-        public static LanguageOrthography Generate(LanguagePhonology phonology) => Generate(phonology, 0.15f);
+        public static LanguageOrthography Generate(LanguagePhonology phonology) => Generate(phonology, 0.05f);
 
         public static LanguageOrthography Generate(LanguagePhonology phonology, float useRandomPercentage)
         {
