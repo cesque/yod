@@ -4,3 +4,5 @@
 various rules which can be supplied by the user, or a completely random language if no
 rules are specified. **yod** handles everything from phoneme inventory, to phonotactics
 to syllable structure, to creating a lexicon, to generating grammatically sound sentences.
+
+The source code for **yod** can be found at http://github.com/Cesque/yod/

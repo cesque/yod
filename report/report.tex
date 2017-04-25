@@ -10,15 +10,21 @@
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{todonotes}
-\usepackage{tcolorbox}
+\usepackage[breakable]{tcolorbox}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \usepackage{fontspec}
+\usepackage[inline]{enumitem}
+\usepackage{titlesec}
 \usepackage{expex}
 
 \setcounter{biburllcpenalty}{7000}
 \setcounter{biburlucpenalty}{8000}
+
+\titleformat{\chapter}
+{\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
+\titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
 \lstset{basicstyle=\ttfamily}
 
@@ -36,28 +42,75 @@
 \author{Daniel James}
 \date{April 2017}
 \begin{document}% %
-   \maketitle
+	\begin{titlepage}
+	  	\centering
+	  	{\scshape\LARGE School of Computer Science\par University of Birmingham \par}
+	  	\vspace{4cm}
+	  	{\huge\bfseries Creating a library to aid in constructed language generation\par}
+	  	\vspace{0cm}
+	  	{\Large\itshape Daniel James\par}
+	  	{\small Student ID: 1359814\par}
+	  	{\small Course: BSc Computer Science\par}
+	  	\vfill
+	  	supervised by\par
+	  	Dr. Ian Kenny
+	  	
+	  	\vspace{0.8cm}
+	  		
+	  	All software for this project can be found at\par\textit{https://github.com/Cesque/yod/}\par
+	  	\vspace{0.8cm}
+	  	% Bottom of the page
+	  	{\large \today\par}
+	\end{titlepage}
+	
+	\begin{abstract}
+		An artificial language is a language which has been purposely devised, in contrast to natural languages whose creation and evolution occurs over a very large time span.
+		
+		The goal of the project was to create a tool to assist users in the creation of artificial languages. It should be flexible, allowing users to adapt it to their use cases, and it should also create languages with a lot of variety and a high degree of randomisation. The languages should also have a degree of realism in their construction.
+		
+		This was achieved by creating a \Csh{} library which lets users either generate a completely random language, or give different inputs to shape the way they want the language to be generated. The library contains different algorithms for creating different aspects of language, which are informed by statistics about natural language in order to make them more realistic.
+	\end{abstract}
+	
+	\tableofcontents
+	
+	\listoffigures
+	
+	\listoftables
    
    \chapter{Introduction}
    \label{chapter: introduction}
-   \textit{yod} is a library, written in \Csh{}, designed to aid in the construction and generation of artificial languages. Artificial languages (also known as constructed languages or `conlangs') are probably most publicly well known through the popularisation of `fictional languages' - that is, languages designed for use in works of fiction, usually for adding depth to a fictional world. For example, J. R. R. Tolkien devised the languages of \textit{Sindarin} and \textit{Quenya} for use in his \textit{Lord of the Rings} series. Other popular fictional languages that have reached mainstream awareness include \textit{Star Trek}'s \textit{Klingon} and \textit{Game of Thrones}' \textit{Dothraki}.
+   \texttt{yod} is a library, written in \Csh{}, designed to aid in the construction and generation of artificial languages. It allows writers, game developers and other creatives to create realistic languages for their projects and translate sentences into these generated languages.
    
-   The creation of these languages has become an indispensable tool for writers to add depth and character to their worlds. However, constructed languages do not exist solely for creative uses. The language \textit{Esperanto} was developed by its creator L. L. Zamenhof with the goal of being a global language that was easy for people to learn\cite{unualibro}. Now it is reported that as many as 63,000 people worldwide can speak Esperanto to some degree\cite{esperanto}. The existence of Esperanto and other so-called `international auxiliary languages' (languages designed to simplify complication between people of different countries and cultures) shows that the usefulness of constructed languages extends into real-world applications as well as artistic uses.
+   Artificial languages (also known as constructed languages or `conlangs') are probably most publicly well known through the popularisation of `artistic' or `fictional languages' - that is, languages designed for use in works of fiction, usually for adding depth to a fictional world. For example, J. R. R. Tolkien devised the languages of \textit{Sindarin} and \textit{Quenya} for use in his \textit{Lord of the Rings} series. Other popular fictional languages that have reached mainstream awareness include \textit{Star Trek}'s \textit{Klingon} and \textit{Game of Thrones}' \textit{Dothraki}.
    
-   \textit{yod} was developed with a focus on artistic languages, and so the goal was to generate a large variety of languages which could suit many different worlds and fictional civilisations. However, due to the hierarchy of rules \textit{yod} uses to build languages, the languages are regular, in contrast to most natural languages, which means generated languages with certain features could be treated as auxiliary languages too.
+   The creation of these languages is a useful tool for writers to add depth and character to their worlds. However, constructed languages do not exist solely for fictional uses. The language \textit{Esperanto} was developed by its creator L. L. Zamenhof with the goal of being a global language that was easy for people to learn\cite{unualibro}. It is reported that as many as 63,000 people worldwide can now speak Esperanto to some degree\cite{esperanto}. The existence of Esperanto and other so-called `international auxiliary languages' (languages designed to simplify complication between people of different countries and cultures) shows that the usefulness of constructed languages extends into real-world applications.
    
-   As a library, \textit{yod} provides interfaces to easily generate any part of a language, including phonology, orthography and grammar and sub-parts thereof. This works by having each class which represents a randomisable constituent exposing a \texttt{Generate()} method which creates a new instance of that class from scratch with procedurally generated properties. If necessary, this sometimes also means recursively generating that objects constituent members. Writing these generator methods in a way that takes into account certain restrictions or statistics allows for much more realistic values for the object.
+   One such example of a tool with a similar goal to \texttt{yod} is the online service `gleb', which generates a random set of sounds for a language and rules regarding those sounds\cite{gleb}. This tool has a powerful phonology engine, and also generates some sample words, but lacks a system to use these words in sentences. It also does not handle converting the words to a written form. It was the goal of \texttt{yod} to offer similar phonology generation services, but also be able to translate sentences in such a way that their meaning is preserved.
+   
+   \texttt{yod} was developed with a focus on artistic languages, and so the goal was to generate a large variety of languages which could suit many different worlds and fictional civilisations. However, due to the hierarchy of rules \texttt{yod} uses to build languages, the languages are regular, in contrast to most natural languages, which means generated languages with certain features could be treated as auxiliary languages too.
+   
+   As a library, \texttt{yod} provides interfaces to generate any part of a language, including phonology, orthography and grammar and sub-parts thereof. This works by having each class which represents a randomisable constituent exposing a \texttt{Generate()} method which instantiates a new object of that class from scratch with procedurally generated properties. If necessary, this sometimes also means recursively generating constituent members of that object. Writing these generator methods in a way that takes into account certain restrictions or statistics allows for much more realistic values to be generated based on the type of the object.
    
    Merely generating a new language every time the library is used, however, would not allow for enough control over the language generation process for users who are more experienced with the concept of `conlangs' and the construction thereof. It also does not allow for iterative language-building, wherein the user keeps features of a generated language that they like, but re-generates the rest of the features. This would allow a user to quickly and easily refine their language until it suited their use case.
    
-   To facilitate this, \textit{yod} uses a data-driven approach which allows almost every class that can be randomly generated to also be serialised to and deserialised from external data files. These data files are written in JSON to allow for them to be altered or loaded by other tools, or if necessary, by hand. Provided is a basic command line interface to the library which can handle almost every step of the generation process. This is a simple example of a tool which can load and create the data files produced by the library, and utilise the library's API. Providing the language-generation tools as a library allow for more complex tools to grow which implement and interact with the code.
+   To facilitate this, \texttt{yod} uses a data-driven approach which allows almost every class that can be randomly generated to also be serialised to and deserialised from external data files. These data files are written in JSON to allow for them to be altered or loaded by other tools, or if necessary, by hand. Provided is a basic command line interface to the library which can handle almost every step of the generation process. This is a simple example of a tool which can load and create the data files produced by the library, and utilise the library's API. Providing the language-generation tools as a library allow for more complex tools to grow which implement and interact with the code.
    
-   The library format also allows for software which might have a need for `conlangs' to generate them directly and use them immediately, as opposed to generating one and then using the output files as input for the program. One such example could be in the case of a video game which requires a cohesive strategy for naming places, characters, flavour text etc. These entities could have their text generated on the fly, without any input from the game developer or writers. The \textit{yod} library also allows the random number generator (which provides random values for all of the rest of the code) to be given a seed, meaning it will produce the same output every time. Thus, the objects in the aforementioned game could have different text every time the game was run, or the developer could choose a seed that gave output that suited them and keep that the same, without having to copy text from the output of the script into the game's script and data files.
+   It is also designed in a modular format so that it can be used to the level desired by a user. At its simplest, \texttt{yod} can output a phonology for a generated language; at its most complex, \texttt{yod} can translate phrases into this generated language using a generated grammar, and create an orthography to represent the language in a written format.
    
-   \todo{talk about structure}
+   Also, at any point \texttt{yod}'s random number generator can be seeded which means that subsequent calls will always return the same value given the same seed. This means that a user who wants to generate the same language features can merely use the same seed value without having to serialise all of the features and the deserialise then again.
+   
+   The library format also allows for software which might have a need for `conlangs' to generate them directly and use them immediately, as opposed to generating one and then using the output files as input for the program. One such example could be in the case of a video game which requires a cohesive strategy for naming places, characters, flavour text etc. These entities could have their text generated on the fly, without any input from the game developer or writers. The \texttt{yod} library also allows the random number generator (which provides random values for all of the rest of the code) to be given a seed, meaning it will produce the same output every time. Thus, the objects in the aforementioned game could have different text every time the game was run, or the developer could choose a seed that gave output that suited them and keep that the same, without having to copy text from the output of the script into the game's script and data files.
+   
+   The chapters of this report will detail the structure of the library and the strategies used to create languages which are varied and realistic. Since the library is composed into three modules which operate independently, the chapters will discuss each module in turn.
+   
+   Since it revolves around the use of language, it is necessary that much of the research for this project regards not just computer science, but also linguistics. Many of the linguistic concepts have been explained, but a full discussion of them is outside the scope of the project. Furthermore, much research about the intersection of language and computer science so far has been about parsing and analysing existing languages. Instead, \texttt{yod} reverses this process and uses statistics and information gained from this analysis to construct a system which can create languages instead.
    
    \chapter{Phonology}
    \label{chapter: phonology}
+   A \textit{phonology} is, essentially, the fundamental `sound system' of a language. This encompasses several different aspects, but these can be abstracted by saying that a phonology refers to the way that different sounds are used in a language to put together units of meaning. 
+   
+   The goal of the phonology in \texttt{yod} is to create a series of systems which will be able to produce `words' of a language which are consistent in their adherence to the rules of the language, but varied in their realisation. This chapter discusses many of the restrictions which are put upon sound sequences in natural languages, and how these restrictions are utilised in code to refine the generation process.
+   
    The `na\"{\i}ve' method of building words is by taking an alphabet (for example, the Latin alphabet) and concatenating random characters until the sequence reaches a random length between a minimum and maximum. For example, given $min = 3$ and $max = 8$ the following example text can be generated.
    
    \begin{figure}[h]
@@ -70,14 +123,14 @@
    
    Several problems can be immediately seen with this generated text. First, many of the words are difficult to pronounce and unrealistic with regards to their consonant clusters - for example, words like \verb|jvxx| and \verb|rppfj| are unlikely to exist in any natural languages. Generating words in this manner will also not produce very much variation in languages, as each letter has an equal probability to be picked.
    
-   We also quickly run into the problem of representing language in text. \todo{cite}Written languages are based on spoken languages, so generating a written language first without basing it on a spoken one will lead to an unrealistic language. Furthermore, it is hard to say how our generated words are pronounced - one can apply English pronunciations to some of the words (for example \verb|tawz| becomes \textipa{/tO:z/} and \verb|axdut| becomes \textipa{/"\ae ks.d2t/}), but this results in a very Anglo-centric phonology, as we are biased to only use phonemes that exist in our own language while pronouncing unknown words.
+   We also quickly run into the problem of representing language in text. Written languages are based on spoken languages, so generating a written language first without basing it on a spoken one will lead to an unrealistic language. Furthermore, it is hard to say how our generated words are pronounced - one can apply English pronunciations to some of the words (for example \verb|tawz| becomes \textipa{/tO:z/} and \verb|axdut| becomes \textipa{/"\ae ks.d2t/}), but this results in a very Anglo-centric phonology, as we are biased to only use phonemes that exist in our own language while pronouncing unknown words.
    
    Because of these problems, it is obvious that merely stringing together random characters with no thought towards pronunciation is insufficient when it comes to creating realistic and varied languages. Therefore it is necessary to first create a phonology on which to base all of our language's words.
    
    \section{Phonetic inventory}
    \label{section: phonetic inventory}
    
-   In its simplest form, a phonetic inventory is a list of every sound that is included in a language. \todo{cite (WALS)}English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the `Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
+   In its simplest form, a phonetic inventory is a list of every sound that is included in a language. English phonology, for example, contains around 24 consonants (with more or less depending on dialect) and anywhere between 7 and 14 vowels, again depending heavily on dialect. The phonology for the `Received Pronunciation' dialect of English can be seen in \ref{english consonants} and \ref{english vowels}.
    
   \begin{table}[h]
   	\caption{Consonant inventory in English phonology}
@@ -114,7 +167,7 @@
 
 	Other languages have different phonemic inventories, with varying numbers of consonants and vowels. Some, for example, have as few as 3 vowels, or as many as 84 or more consonants, depending on the method of counting\cite{leverbeoubykh}. A very large factor in the variety of languages generated is the phonology, as it restricts the type of sounds which often has a profound impact on how it is perceived. Therefore the first step towards a completed language should be a randomly generated, unique phonology.
 	
-	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the `end result' of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \textit{yod} can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
+	The International Phonetic Alphabet (IPA) is an alphabet created by the International Phonetic Association for phonetic representation of speech and language\cite{ipahandbook}. It contains (or aims to contain) distinct symbols for each unique sound possible to create that is part of a language. As such, it provides a perfect way to convey the `end result' of generation process, since it can describe precisely how every word in the language is pronounced. The IPA also includes markers for syllable stress and other important factors which can be included in speech. In order to avoid the user from having to infer the pronunciation of a word from its orthography (how it is written), \texttt{yod} can produce an IPA transcription of its output, which shows exactly how to pronounce it without ambiguity.
 	
 	However, the IPA can also be used as a basis for \textit{creating} a phonology. It lists every sound possible in a language, so as a na\"{\i}ve approach would be to randomly choose sounds from this set to build words. This approach is similar to the approach which was taken before, which involved choosing random letters from the Latin alphabet. However this time the words are being generated via sound directly rather than generating a written word, then trying to create a spoken representation of that.
 	
@@ -185,7 +238,7 @@
 		\end{tcolorbox}
 	\end{figure}
 
-	A vowels characteristics are formed from the position of the tongue in the mouth and the rounding of the lips. The height of a vowel refers to the height of the tongue, and the backness is the forward/back position of the tongue. Roundedness is the state of the lips in pronouncing the vowel - either rounded or unrounded. This unrounded/rounded distinction can be seen in the difference between the two open mid-back vowels \textipa{/2/} and \textipa{/O/} (compare \textit{shut} \textipa{/S2t/} and \textit{short} \textipa{/SO:t/}). The word \textit{short} \textipa{/SO:t/} also shows a good example of a long vowel (although there is no long/short vowel distinction in most English dialects\todo{cite?}).
+	A vowels characteristics are formed from the position of the tongue in the mouth and the rounding of the lips. The height of a vowel refers to the height of the tongue, and the backness is the forward/back position of the tongue. Roundedness is the state of the lips in pronouncing the vowel - either rounded or unrounded. This unrounded/rounded distinction can be seen in the difference between the two open mid-back vowels \textipa{/2/} and \textipa{/O/} (compare \textit{shut} \textipa{/S2t/} and \textit{short} \textipa{/SO:t/}). The word \textit{short} \textipa{/SO:t/} also shows a good example of a long vowel (although there is no long/short vowel distinction in most English dialects).
 	
 	In fact, both height and backness are defined by the formant frequency of the voice, which are produced by the tongue's position. A spoken vowel can be represented with two formants \textit{F1 = height} and \textit{F2 = backness}. Roundness also has an effect on these formants, usually being seen as a decrease in \textit{F2} as well as a small decrease in \textit{F1}.
 	
@@ -207,7 +260,7 @@
 	
 	It is more useful, however, to distinguish between the set of vowels and the set of consonants. Thus the two classes \texttt{ConsonantCollection} and \texttt{VowelCollection} can act as lists of their respective type of phoneme, with a \texttt{PhonemeCollection} being formed out of a union of the two sets of phonemes. Each class's \texttt{Generate()} method can then be used to create a unique set of each type of phoneme.
 	
-	Using statistics from the World Atlas of Language Structures, the realism of our phonology generation can be increased by roughly following the range distribution of numbers of vowels and consonants in natural languages. For vowels, the distribution is shown in figure \ref{vowel quality inventories}. By using these numbers as weights for a weighted random algorithm, the vowel inventory in the generated phonology will be similar in size to natural languages' vowel inventories. The result of the weighted random algorithm is a range (minimum value and a maximum value). Using \textit{yod}'s global random number generator, a value between these maximum and minimum can be chosen as the goal number of vowels. Then that amount of unique vowel sounds can be randomly chosen from the full set to complete the vowel inventory.
+	Using statistics from the World Atlas of Language Structures, the realism of our phonology generation can be increased by roughly following the range distribution of numbers of vowels and consonants in natural languages. For vowels, the distribution is shown in figure \ref{vowel quality inventories}. By using these numbers as weights for a weighted random algorithm, the vowel inventory in the generated phonology will be similar in size to natural languages' vowel inventories. The result of the weighted random algorithm is a range (minimum value and a maximum value). Using \texttt{yod}'s global random number generator, a value between these maximum and minimum can be chosen as the goal number of vowels. Then that amount of unique vowel sounds can be randomly chosen from the full set to complete the vowel inventory.
 	
 	\begin{table}[]
 		\centering
@@ -245,7 +298,7 @@
 	
 	For consonants, however, it does not need to be as simple as choosing random consonants from the set of all consonants in the IPA. There are approaches that can be used to pick consonants in a smarter way which will result in better consonant inventories.
 	
-	Given a goal number of consonants that need to be added to the phonology, the aim is procedurally get as close to that number while taking into account extra statistics for which consonants to pick. Adding and removing whole places or manners of articulation tends to be more natural than choosing consonants at random\todo{cite - only thing i know about this is that one Artifexian video}, so a way of modelling this would be to add places and manners of articulation until the intersection of them results in the right amount of consonants. The algorithm would therefore work something like this:
+	Given a goal number of consonants that need to be added to the phonology, the aim is procedurally get as close to that number while taking into account extra statistics for which consonants to pick. Adding and removing whole places or manners of articulation tends to be more natural than choosing consonants at random, so a way of modelling this would be to add places and manners of articulation until the intersection of them results in the right amount of consonants. The algorithm would therefore work something like this:
 	
 	\begin{algorithm}
 		\caption{Consonant inventory generation algorithm}
@@ -308,7 +361,7 @@
 
 	Figure \ref{syllable structure} shows the structure of a syllable. A syllable is formed out of two parts - the \textit{onset} and the \textit{rime}. Furthermore, the rime consists of a usually required \textit{nucleus} and a \textit{coda}. Both the onset and coda can be consonants or consonant clusters. The nucleus consists of a vowel or vowels (monophthong or diphthong).
 	
-	The role of \textit{yod} is to construct syllables that fit this structure and then form them into words. The simplest method of generating syllables is by taking random phonemes from the pre-generated phoneme inventory and filling the onset, nucleus and coda with them. This method can be easily refined by not always filling all the parts of the syllable - the onset and coda can both be optional, so adding them in every instance is less realistic.
+	The role of \texttt{yod} is to construct syllables that fit this structure and then form them into words. The simplest method of generating syllables is by taking random phonemes from the pre-generated phoneme inventory and filling the onset, nucleus and coda with them. This method can be easily refined by not always filling all the parts of the syllable - the onset and coda can both be optional, so adding them in every instance is less realistic.
 	
 	Another simple improvement that can be made is allowing for consonant clusters and diphthongs, which is done by picking multiple phonemes when filling a section. In order to vary the results, this should not be done every time, but should vary in frequency. The addition of clusters and diphthongs allows for more complex syllables to be created.
 	
@@ -316,7 +369,7 @@
 	
 	This representation also shows variable structures where some phonemes are optional - that is, the number of phonemes in a segment can differ. For this, bracket notation is used to denote an optional phoneme. For example, the syllable structure of the English language is cited as being (C)(C)(C)V(C)(C)(C)(C). This represents a syllable structure where the onset can have 0-3 consonants, the nucleus always contains a vowel, and the coda can have 0-4 consonants. While it is rare in English for a syllable to have the largest possible onset \textit{and} coda clusters at the same time, examples can still be seen; the monosyllabic word \textit{strengths} can be transcribed as \textipa{/st\*rENkTs/}. This word displays an onset cluster of length 3 (\textipa{/st\*r/}) and a coda cluster of length 4 (\textipa{/NkTs/}).
 	
-	In order to generate a syllable structure in its most basic form, a minimum and maximum cluster value can be defined for onset, nucleus and coda. This yields a decently varied set of possible structures. To augment this, weights can be assigned to each possible value from the minimum to maximum, meaning that some lengths of phoneme clusters will be rarer than others. As in the case of the English language's 4-length coda consonant cluster, which is uncommonly seen, some clusters in the generated language will be less common. Not only does this increase variety in the languages that \textit{yod} generates, but it also is more realistic, as it would be unusual to have all possible cluster lengths equally probable.
+	In order to generate a syllable structure in its most basic form, a minimum and maximum cluster value can be defined for onset, nucleus and coda. This yields a decently varied set of possible structures. To augment this, weights can be assigned to each possible value from the minimum to maximum, meaning that some lengths of phoneme clusters will be rarer than others. As in the case of the English language's 4-length coda consonant cluster, which is uncommonly seen, some clusters in the generated language will be less common. Not only does this increase variety in the languages that \texttt{yod} generates, but it also is more realistic, as it would be unusual to have all possible cluster lengths equally probable.
 	
 	Now, with a syllable structure for the language decided, a syllable can be created based on it. First, a syllable structure is needed for this syllable - this can be randomly generated from the phonology's structure. For example, given English's (C)(C)(C)V(C)(C)(C)(C) structure, there are many possible subsets of structures that a syllable could have and still be considered valid. At its most complex, a syllable could match the above structure exactly, and at its simplest the syllable could just have the structure V. Most syllables will lie somewhere inbetween these two extremes. Treating the onset, nucleus and coda separately, a random value can be selected using a weighted random algorithm on our weighted set of possible values. Then a number of phonemes equal to the chosen number for each section can be chosen. By concatenating the onset phonemes, the nucleus and the nucleus phonemes in that order, a syllable is created.
 	
@@ -334,11 +387,11 @@
 
 	Both syllables that match the most complex possible structure in this phonology (\textipa{/\t{dZ}tU\t{dZ}d/} and \textipa{/pb6hm/}) and the least complex possible structure (\textipa{/3/} and \textipa{/6/} can be seen in this selection, showing the range of the syllable generation code. If each syllable in this sample is considered to be a monosyllabic word, the results from this code are already noticeably more realistic than the words generated in figures \ref{random letters from latin alphabet} and \ref{random subset of all phonemes} (although in this sample only the phonemes from the English phonology are used, which can give a false sense of `realism'). The structure of building clusters of consonants around a central vowel base creates realistic syllables.
 	
-	However, there are still some instances where unrealistic phoneme sequences can be spotted, even in this short sample of results. For example, the initial cluster of \textipa{/pb/} in the word \textipa{/pb6hm/} consists of two successive stops - both the voiced and unvoiced bilabial plosive. For a word to contain multiple plosives in a row already makes it harder to pronounce, and the fact that they are both bilabial plosives only increases that difficult. Either both are audibly released, which results in a long, difficult to pronounce cluster, or the first consonant will be deleted completely\todo{cite}. The generated syllable \textipa{/6kk/} also provides some trouble, as `double consonants' are rare in IPA transcriptions of natural languages. Usually when a double consonant appears in a transcription, it will either be across a syllable boundary (e.g., a sequence \textipa{/\dots{}kk\dots{}/} is likely to represent the coda of one syllable and the onset of another syllable \textipa{/\dots{}k.k\dots{}/}) or the gemination of the consonant (e.g., \textipa{/\dots{}kk\dots{}/} is another way of writing \textipa{/\dots{}k:\dots{}/}). However, these uses are rare, and most commonly a single consonant would be used in their place, or the IPA symbol for gemination inserted.
+	However, there are still some instances where unrealistic phoneme sequences can be spotted, even in this short sample of results. For example, the initial cluster of \textipa{/pb/} in the word \textipa{/pb6hm/} consists of two successive stops - both the voiced and unvoiced bilabial plosive. For a word to contain multiple plosives in a row already makes it harder to pronounce, and the fact that they are both bilabial plosives only increases that difficult. Either both are audibly released, which results in a long, difficult to pronounce cluster, or the first consonant will be deleted completely. The generated syllable \textipa{/6kk/} also provides some trouble, as `double consonants' are rare in IPA transcriptions of natural languages. Usually when a double consonant appears in a transcription, it will either be across a syllable boundary (e.g., a sequence \textipa{/\dots{}kk\dots{}/} is likely to represent the coda of one syllable and the onset of another syllable \textipa{/\dots{}k.k\dots{}/}) or the gemination of the consonant (e.g., \textipa{/\dots{}kk\dots{}/} is another way of writing \textipa{/\dots{}k:\dots{}/}). However, these uses are rare, and most commonly a single consonant would be used in their place, or the IPA symbol for gemination inserted.
 	
 	In order to solve the problem of unrealistic consonant clusters, syllables can be built based on a `sonority hierarchy'. The sonority hierarchy is a scale showing the relative strength of different phonemes based on their properties\cite{burquest2006}. Different phonemes have different amplitudes, and patterns in the amplitudes can be seen depending on the place and manner of articulation, as well as the phonation. It can be seen that syllables in many natural languages follow a structure whereby the nucleus has the most sonorant phonemes, and then the rest of the phonemes in the syllable decrease in sonority as they get further away from the nucleus. This is known as the \textit{sonority sequencing principle}. It can be seen in English by considering the initial consonant cluster \textipa{/pl\dots{}/} compared to \textipa{/lp\dots{}/} - the \textipa{/l/} is a lateral fricative, which is more sonorous than the obstruent stop \textipa{/p/}. Because of this, the cluster \textipa{/pl/} is much more common in onset consonant clusters. As the inverse of this, the cluster \textipa{/lp/} is much more common in coda consonant clusters globally than \textipa{/pl/}. In English, an example of initial cluster \textipa{/pl/} would be the word \textit{plant} (\textipa{/pl\ae{}nt/}), and an example of coda cluster \textipa{/lp/} would be the word \textit{help} (\textipa{/hElp/}).
 	
-	Applying the sonority hierarchy rules to the phoneme-picking algorithm will make a profound difference to the realism of the generated syllables. In order to implement the hierarchy in the code, every phoneme must be given a sonority value. Using the image in figure \ref{sonority hierarchy}, a value from 0 to 10 can be given to every single phoneme based on its type. In fact, the IPA and therefore \textit{yod} contains no complex plosives, so the values range is 0 to 9 inclusive.
+	Applying the sonority hierarchy rules to the phoneme-picking algorithm will make a profound difference to the realism of the generated syllables. In order to implement the hierarchy in the code, every phoneme must be given a sonority value. Using the image in figure \ref{sonority hierarchy}, a value from 0 to 10 can be given to every single phoneme based on its type. In fact, the IPA and therefore \texttt{yod} contains no complex plosives, so the values range is 0 to 9 inclusive.
 	
 	\begin{figure}
 		\caption{Sonority hierarchy\cite{glossaryoflinguisticterms}}
@@ -409,7 +462,7 @@
 		\end{algorithmic}
 	\end{algorithm}
 
-	The pseudocode in algorithms \ref{onset generation algorithm} and \ref{coda generation algorithm} show how \textit{yod} pieces together these segments. The similarities can be seen, with small changes due to the fact that the coda algorithm is essentially the same as the onset algorithm except it is building it in reverse order.
+	The pseudocode in algorithms \ref{onset generation algorithm} and \ref{coda generation algorithm} show how \texttt{yod} pieces together these segments. The similarities can be seen, with small changes due to the fact that the coda algorithm is essentially the same as the onset algorithm except it is building it in reverse order.
 	
 	The reason for defining the minimum sonority value as 2 (or in the case of the onset algorithm, $2 + (length - 1)$) is that 2 is the lowest possible value that a consonant can gave, based on the data in figure \ref{sonority hierarchy assigned values}. This means that the algorithm does not need to factor in the value of the nucleus vowels, as they can all be assumed to be between 0 and 2 (the range of values that a vowel can have).
 	
@@ -454,9 +507,9 @@
 
 	Figure \ref{fixed stress locations} shows the distribution of lexical stress positions in natural languages. Again, using a weighted random algorithm can assign the phonology a random lexical stress position from this list.
 	
-	As discussed earlier, \textit{yod}'s structure for phonemes contains a `length' property, which has similar but distinct meanings depending on the type of the phoneme. In vowels, it refers to whether the vowel is long or not (e.g., the distinction between the words \textit{ferry} \textipa{/fe"\*ri/} and \textit{fairy} \textipa{/fe:"\*ri/} in Australian English). In consonants, it represents the gemination of the consonant.
+	As discussed earlier, \texttt{yod}'s structure for phonemes contains a `length' property, which has similar but distinct meanings depending on the type of the phoneme. In vowels, it refers to whether the vowel is long or not (e.g., the distinction between the words \textit{ferry} \textipa{/fe"\*ri/} and \textit{fairy} \textipa{/fe:"\*ri/} in Australian English). In consonants, it represents the gemination of the consonant.
 	
-	In \textit{yod}'s syllable and word generation code, these features are determined \textit{after} a word is created. The phonology, when generated, randomly selects whether long vowels and geminate consonants are a part of the phonology. These features are separate, so a phonology can allow geminate consonants but not long vowels, or vice versa. Then when a word is constructed, it is scanned over to check for instances where two consecutive phonemes are identical. This can happen for two reasons: first, there is no unique restriction on vowel picking for the nucleus, so if a diphthong is generated there is a possibility for two identical vowels in sequence. For consonants, this approach does not apply, as generated onset clusters and coda clusters follow the sonority sequencing principle which forbids sequences of two consonants with the same sonority. However, since syllables are generated independently of each other, it is possible for the boundaries of two adjacent syllables to be the same consonant. That is, if a syllable ends with a consonant such as \textipa{/k/} and the next syllable happened to start with \textipa{/k/}, the resulting word would contain the consonant sequence \textipa{/\dots{}kk\dots{}/}.
+	In \texttt{yod}'s syllable and word generation code, these features are determined \textit{after} a word is created. The phonology, when generated, randomly selects whether long vowels and geminate consonants are a part of the phonology. These features are separate, so a phonology can allow geminate consonants but not long vowels, or vice versa. Then when a word is constructed, it is scanned over to check for instances where two consecutive phonemes are identical. This can happen for two reasons: first, there is no unique restriction on vowel picking for the nucleus, so if a diphthong is generated there is a possibility for two identical vowels in sequence. For consonants, this approach does not apply, as generated onset clusters and coda clusters follow the sonority sequencing principle which forbids sequences of two consonants with the same sonority. However, since syllables are generated independently of each other, it is possible for the boundaries of two adjacent syllables to be the same consonant. That is, if a syllable ends with a consonant such as \textipa{/k/} and the next syllable happened to start with \textipa{/k/}, the resulting word would contain the consonant sequence \textipa{/\dots{}kk\dots{}/}.
 	
 	When a sequence of two identical phonemes is found, then those phonemes can either be reduced into one long vowel or geminate consonant, or one of the phonemes can be deleted. Figure \ref{convert to long phonemes examples} shows some examples of words before and after undergoing this process.
 	
@@ -476,14 +529,14 @@
 
 	A final refinement to syllable generation is to employ another general phonotactic rule. It can be seen that the phonotactics of many languages have restrictions on what consonant clusters are permitted as syllable-initial and syllable-final. For example, in Serbo-Croatian, the phonology contains both the phoneme \textipa{/d/} and the phoneme \textipa{/S/}, represented by the grapheme \textit{\v{s}}. However, despite following the sonority sequencing principle, the sequence `\v{s}d' (\textipa{/Sd/}) is not permitted as an initial cluster in a syllable\cite{uzelac1971phonological}. English also has many phonotactic rules, some of which permit or allow certain initial and final consonant clusters\cite{chomsky1968sound}.
 	
-	While the rules governing clusters in these cases are quite complex, \textit{yod} approximates these systems by merely restricting coda and onset consonants to randomly selected subsets of the phonology's consonant set. On generation, both onset consonants and coda consonants independently have a chance to be restricted. The restriction occurs by selecting a subset of the consonants of a random length, between a minimum of 2 and a maximum of the length of the total set.
+	While the rules governing clusters in these cases are quite complex, \texttt{yod} approximates these systems by merely restricting coda and onset consonants to randomly selected subsets of the phonology's consonant set. On generation, both onset consonants and coda consonants independently have a chance to be restricted. The restriction occurs by selecting a subset of the consonants of a random length, between a minimum of 2 and a maximum of the length of the total set.
 	
 	Even though this concept has a very na\"{i}ve implementation, it introduces a large amount of variety and lends further realism to the generated languages.
 	
 	\section{Words}
 	\label{section: words}
 	
-	Most of the complexity involved in generating words is involved in the actual construction of syllables. As such, word generation in \textit{yod} is a relatively simple process. The range of possible word lengths in the language is decided when the phonology is generated - this range is in syllable length rather than phoneme length. A random value between the minimum and maximum of this range is then chosen.
+	Most of the complexity involved in generating words is involved in the actual construction of syllables. As such, word generation in \texttt{yod} is a relatively simple process. The range of possible word lengths in the language is decided when the phonology is generated - this range is in syllable length rather than phoneme length. A random value between the minimum and maximum of this range is then chosen.
 	
 	Given this random value as the length of the word, that many syllables are then generated in order. Following this, both the stress-placing process and the long vowel/gemination are applied to the word, as described in the previous section. 
 	
@@ -513,16 +566,27 @@
 
 	Figure \ref{example words english} shows three different sets of generated words, all using a subset of English phonemes. Figure \ref{example words all} also shows three sets of word, this time generated using different subsets of the full set of phonemes. Using the English phonology makes for words which are more easily pronounceable without much practice by English speakers - however, using the full set of phonemes produces much more varied and unique results.
 	
+	\section{Improvements}
+	\label{section: improvements}
+	
+	\texttt{yod}'s word building toolkit is quite strong due to having multiple elements in combination with each other to create words based on a phonology. However, there are more systems which could be put in place to improve the realism and variety of the output.
+	
+	One major improvement would be to implement a phoneme frequency table which held frequencies of all the phonemes in all natural languages. Such data was not found during research, and constructing the data set as part of the project would be an insurmountable task. Having access to frequencies of different phonemes would mean that those frequencies could be factored into the probability of choosing each phoneme when the phonology is constructed. Since some phonemes are very rarely found in natural languages, they would be hard for users to distinguish and pronounce - having these phonemes be a lot rarely chosen for generated phonetic inventories would make the resulting languages a lot more realistic and easy to pronounce. As the library operates currently, using the full set of phonemes available results in some generated languages containing a large amount of uncommon phonemes.
+
+	\texttt{yod} is restricted from loading pre-generated words into any of its modules due to the fact that converting a \texttt{Word} object into IPA form is essentially a `lossy' conversion - that is, some information is lost when the conversion takes place. In this case, the lost information largely regards syllable placement. When parsing an IPA sequence such as \textipa{/hEl@U/}, it is impossible to determine whether the syllable break lies before or after the `l' (i.e., \textipa{/hE.l@U/} versus \textipa{/hEl.@U/}). This places restrictions on other modules where it might be desirable to load in a predefined word. One possible solution to this would be to allow for words with the IPA syllable break marker to be deserialised. This would also mean that words could be serialised in such a way that they could also be deserialised, by including the syllable information with this method. However, care would need to be taken when outputting IPA transcriptions for users to read themselves, as the syllable break marker is usually not seen between \textit{every} syllable of a transcribed text.
+	
+	Another possible improvement would be to add sound change rules, such as found in the online tool `gleb'\cite{gleb}. These rules would further simulate language evolution by introducing patterns where certain sounds change form before or after other sounds. The structure of words as lists of syllables (which are lists of phonemes) would make this sound change task easier, as each possible sound change would merely consist of a linear scan through the phonemes checking for certain sequences.
+	
 	\chapter{Orthography}
 	\label{chapter: orthography}
 	
 	So far, the focus has been on creating a \textit{spoken} language, due to the fact that all written languages are based on spoken languages to begin with. For constructed languages, however, not having a way of writing the language is a large negative. People would not be able to communicate non-verbally in the language, and for fictional languages, it is likely that the creator would want to have a written form of the language to use in their work.
 	
-	Therefore the generation of an orthography is desired. An orthography concerns the way a language is represented by different symbols, or graphemes, in writing. There are three main types of orthography: \textit{syllabic}, with a grapheme representing each syllable, \textit{logographic}, with a grapheme representing each morpheme/word, and \textit{alphabetic}, where each grapheme roughly represents a phoneme. \textit{yod} is restricted to creating alphabetic orthographies - however the nature of the organisation of the library means that it would be a relatively easy task to take the output of the phonology generation and use that to create a logographic or syllabic orthography.
+	Therefore the generation of an orthography is desired. An orthography concerns the way a language is represented by different symbols, or graphemes, in writing. There are three main types of orthography: \textit{syllabic}, with a grapheme representing each syllable, \textit{logographic}, with a grapheme representing each morpheme/word, and \textit{alphabetic}, where each grapheme roughly represents a phoneme. \texttt{yod} is restricted to creating alphabetic orthographies - however the nature of the organisation of the library means that it would be a relatively easy task to take the output of the phonology generation and use that to create a logographic or syllabic orthography.
 	
 	An alphabetic orthography can be seen as a map of each phoneme in the phonetic inventory of a generated language to a randomly chose grapheme, or rarely multiple graphemes. The orthography of Croatian, seen in figure \ref{orthography of the croatian language}, is a good example of this mapping. It was created in 1835 by Croatian linguist Ljudevit Gaj to give Croatia a unified way of writing the language. The right column shows the phonemes included in the language and the left column shows to which grapheme (or in some cases, digraph) the phoneme maps.
 	
-	In English, such a table would be much more complex, as in English a phoneme can have many different written representations, and many graphemes or grapheme clusters represent multiple phonemes depending on context. Languages where there is a more complex mapping such as English are said to have a \textit{deep orthography}, in contrast to the \textit{shallow orthography} of Croatian, as well as the languages generated by \textit{yod}.
+	In English, such a table would be much more complex, as in English a phoneme can have many different written representations, and many graphemes or grapheme clusters represent multiple phonemes depending on context. Languages where there is a more complex mapping such as English are said to have a \textit{deep orthography}, in contrast to the \textit{shallow orthography} of Croatian, as well as the languages generated by \texttt{yod}.
 	
 	\begin{table}
 		\caption{Orthography of the Croatian language}
@@ -565,7 +629,7 @@
 		\end{tabular}
 	\end{table}
 
-	To generate an orthography for a generated language, then, a system must exist to assign each phoneme a grapheme or grapheme cluster. \textit{yod} handles this by having an object which maps each possible phoneme in the International Phonetic Alphabet to a list of possible symbols. This list was compiled as a default set of options - however, a user interacting with the library directly would be free to change this dictionary or add to it, in order to add more options. Of course, the user is also free to set the orthography directly to whatever level of specificity they desire.
+	To generate an orthography for a generated language, then, a system must exist to assign each phoneme a grapheme or grapheme cluster. \texttt{yod} handles this by having an object which maps each possible phoneme in the International Phonetic Alphabet to a list of possible symbols. This list was compiled as a default set of options - however, a user interacting with the library directly would be free to change this dictionary or add to it, in order to add more options. Of course, the user is also free to set the orthography directly to whatever level of specificity they desire.
 	
 	Many of the possible symbols in these lists are based off common grapheme representations for their respective phonemes in different languages. To increase the variety, these symbols are also included with different diacritics for many of the phonemes. For each list, the first value is the `preferred' symbol, and will be chosen on average 85\% of the time, using default values. In the case of the preferred symbol not being picked, a random symbol from the rest of the list is picked. When generating a random orthography, the percentage chance of using the default symbol is able to be specified, which allows users to 
 	
@@ -628,13 +692,13 @@
 	
 	Given the tools described so far, a large variety of realistic words and syllables can be generated and spoken - and, if desired, converted to a written form. However, such speakers would not be communicating any useful information between each other. This is because the words that have been generated do not have any intrinsic meaning, and this meaning must be assigned to them.
 	
-	The goal with \textit{yod} was to be able to translate sentences from English to a generated language. Initially this was planned to be a straight translation from plain English. However, multiple obstacles complicated the pursuit of this goal. It became clear that doing this translation would require parsing the English sentence in full, in order to translate each word from English to the new generated language. This parsing process is outside of the scope of the project, and so a different approach was required.
+	The goal with \texttt{yod} was to be able to translate sentences from English to a generated language. Initially this was planned to be a straight translation from plain English. However, multiple obstacles complicated the pursuit of this goal. It became clear that doing this translation would require parsing the English sentence in full, in order to translate each word from English to the new generated language. This parsing process is outside of the scope of the project, and so a different approach was required.
 	
 	Additionally, many languages, including English, encode information into words in the form of \textit{inflection}, where the word is modified somehow to express information about different grammatical categories. These categories include tense, case, voice, aspect (which refers to how a verb continues over time), person, number, gender and mood. In order to accurately translate a sentence, this information would need to be included in the translation process. Also, another goal was to encode some of this information in the final translated sentence that \textit{wasn't} in the original sentence. An example of this would be the addition of applicative grammatical cases - for example, in a language with `instrumental' case, the word for `crowbar' in the sentence `I opened the hatch with a crowbar' would be \textit{declined} to match the fact that the word is being used to represent a tool being used. This change could be represented by a suffix, morphologically changing the word to be `crowbar-[instrumental case suffix]'. There are many more grammatical cases than are contained in just the English language, and being able to add these to a generated language would create much more unique results that would differ from just straight translations of English.
 	
 	Another possible downside of translating from English is the problem of word order in sentences. Many languages use different orderings of subject, object and verb in their sentences\cite{wals-81}. Merely copying the word order from the supplied English sentence would result in sentence structures which were too familiar. Instead, a range of different structures was desired.
 	
-	These were the goals and obstacles related to being able to construct meaningful sentences with \textit{yod}. Much of these restrictions heavily shaped the structure of the program, and required some elements to be cut back in complexity to be able to make the program easily usable.
+	These were the goals and obstacles related to being able to construct meaningful sentences with \texttt{yod}. Much of these restrictions heavily shaped the structure of the program, and required some elements to be cut back in complexity to be able to make the program easily usable.
 	
 	\section{Lexicon}
 	\label{section: lexicon}
@@ -645,10 +709,10 @@
 	
 	The first property of a lexeme is its `headword', or lemma. This is the base form of the word, without any inflections or other morphological processes applied to it. For example, the words `sing', `sung', `sang', `singing' and `sings' are all forms of the lemma `sing'. In dictionaries, this is often necessarily an orthographised form of the word - however, in code it is simpler to keep the phonetic information, and only orthographise when really necessary. Thus, the lemma of each of the lexemes contained in the language's lexicon will be `phonology words', which were described in section \ref{section: words} as ordered lists of syllables, each of which was an ordered list of phonemes.
 	
-	The next property is the `part of speech'. This shows which grammatical function a word plays in a sentence. This is essential information with regards to constructing meaningful sentences. It is also necessary to have this information when applying morphological processes to words, as the rules often differ depending on the part of speech. For example, in English, a past tense verb will usually have an `-ed' suffix, but there is no equivalent rule for nouns. Figure \ref{list of parts of speech} shows a list of every part of speech which is a part of \textit{yod}'s word tagging system, and its corresponding tag when serialised.
+	The next property is the `part of speech'. This shows which grammatical function a word plays in a sentence. This is essential information with regards to constructing meaningful sentences. It is also necessary to have this information when applying morphological processes to words, as the rules often differ depending on the part of speech. For example, in English, a past tense verb will usually have an `-ed' suffix, but there is no equivalent rule for nouns. Figure \ref{list of parts of speech} shows a list of every part of speech which is a part of \texttt{yod}'s word tagging system, and its corresponding tag when serialised.
 	
 	\begin{table}
-		\caption{List of parts of speech recognised by \textit{yod} and their tags}
+		\caption{List of parts of speech recognised by \texttt{yod} and their tags}
 		\label{list of parts of speech}
 		\centering
 		\begin{tabular}{|l|l|} \hline
@@ -666,18 +730,22 @@
 		\end{tabular}
 	\end{table}
 	
-	Finally, each of the lemmas has a `translation'. In \textit{yod}, this is idiomatically in the form of a single English word, but it can actually be any string which does not contain a space. This information is used to translate from English words into words of the generated language.
+	Finally, each of the lemmas has a `translation'. In \texttt{yod}, this is idiomatically in the form of a single English word, but it can actually be any string which does not contain a space. This information is used to translate from English words into words of the generated language.
 	
 	By necessity, when translating a sentence, all words in the sentence must have a corresponding entry in the lexicon, or they can not be translated. The lexicon containing all needed must be defined and passed to the library; for more general use, a larger lexicon containing many words could be used to prevent the user from having to define their own lexicon. This lexicon is given in the form of a JSON object, which can be deserialised from a file. This file contains a list for every part of speech, and in each of those lists is every needed word which is of that part of speech. When loaded, this gives us every word and its corresponding part of speech, and so a lemma can be generated for that word by the phonology.
 	
-	While testing the assignment of lemmas to words using this method, it became clear that this approach was insufficient for certain, commonly used words. It can be seen that common words in language frequently are shorter on average than less common words\cite{miller1958370}\cite{strauss2007word}. When this trend is not taken into account, it can lead to simple words like `be', `I' and `you' having an unwieldy amount of syllables. This makes the generated text significantly less realistic, especially if spoken - however, with no predetermined corpus to draw frequency data from, a different approach is needed. The method \textit{yod} uses is to allow the user to designate certain words as `common words.' When the lemma for these words is generated, their lengths are restricted to the minimum word length of the language. This ensures that common words are on the whole easier to speak, while still making sure that their lemmas fit within the phonological rules of the language.
+	While testing the assignment of lemmas to words using this method, it became clear that this approach was insufficient for certain, commonly used words. It can be seen that common words in language frequently are shorter on average than less common words\cite{miller1958370}\cite{strauss2007word}. When this trend is not taken into account, it can lead to simple words like `be', `I' and `you' having an unwieldy amount of syllables. This makes the generated text significantly less realistic, especially if spoken - however, with no predetermined corpus to draw frequency data from, a different approach is needed. The method \texttt{yod} uses is to allow the user to designate certain words as `common words.' When the lemma for these words is generated, their lengths are restricted to the minimum word length of the language. This ensures that common words are on the whole easier to speak, while still making sure that their lemmas fit within the phonological rules of the language.
 	
-	Another improvement to lexicon generation is to try to group similar words. Since language usually evolves over a long period of time, certain separate related words can be introduced to the language with similar roots. In the absence of a naturally developed language, these similarities must be introduced artificially. \textit{yod} uses a rather na\"ive approach to this, which nonetheless has a reasonable impact on the generated text. Similar to the way that common words are handled, the library allows the user to declare sets of related words in the lexicon file. The first time the lemma for a word in one of these sets is generated, it is generated normally. However, a list of all the groups is kept during the generation process, and this first lemma is set as the `base lemma' for that group of words. On subsequent words of that group, the base lemma is recalled and then slightly modified. This means that words in groups of related words will have related lemmas. While this is not much of a realistic procedure, it nonetheless results in a small amount of extra realism to the language, as it evokes the idea of the language evolving more naturally.
+	Another improvement to lexicon generation is to try to group similar words. Since language usually evolves over a long period of time, certain separate related words can be introduced to the language with similar roots. In the absence of a naturally developed language, these similarities must be introduced artificially. \texttt{yod} uses a rather na\"ive approach to this, which nonetheless has a reasonable impact on the generated text. Similar to the way that common words are handled, the library allows the user to declare sets of related words in the lexicon file. The first time the lemma for a word in one of these sets is generated, it is generated normally. However, a list of all the groups is kept during the generation process, and this first lemma is set as the `base lemma' for that group of words. On subsequent words of that group, the base lemma is recalled and then slightly modified. This means that words in groups of related words will have related lemmas. While this is not much of a realistic procedure, it nonetheless results in a small amount of extra realism to the language, as it evokes the idea of the language evolving more naturally.
+	
+	It is worth noting that the International Organization for Standardization (ISO) has a standard for defining lexicons for natural language processing uses\cite{francopoulo2008language}. Much of the design of the structure of the lexicon informed the data structures in \texttt{yod} - however, this format was not used when serialising the lexicon as it was not user-friendly enough. Instead, the lexicon can be serialised to a text file which details all of its lemmas (optionally also orthographised), their parts of speech and their English meanings. These are serialised to text rather than JSON because the JSON format is used in \texttt{yod} only when the data can be fed back into the library as input for another module. Due to parsing difficulties with reading IPA words into sets of syllables, loading a serialised lexicon was deemed impossible without making the serialised file too complicated to be human-editable.
+	
+	The inability to parse arbitrary words in IPA format (see section \ref{section: improvements}) also means that proper nouns can not be contained in a lexicon, due to the fact that they would require a valid representation in memory as lists of phonemes for the rules of the language to be able to act upon them.
 	
 	\section{Phrase Structure/Constituency Grammar}
 	\label{section: phrase structure/constituency grammar}
 	
-	The phrase translation process is perhaps the most important section of \textit{yod}'s whole translation section. The goal for this code is to take some representation of an English sentence and convert it into a sentence of a generated language, preserving its meaning. If the input is merely an English sentence (as a string) then in order to get information about the sentence structure and also the grammatical categories of each of the words, some amount of natural language processing (NLP) is required. As NLP is out of the scope of the project, an object structure which encodes all of this information is necessary.
+	The phrase translation process is perhaps the most important section of \texttt{yod}'s whole translation section. The goal for this code is to take some representation of an English sentence and convert it into a sentence of a generated language, preserving its meaning. If the input is merely an English sentence (as a string) then in order to get information about the sentence structure and also the grammatical categories of each of the words, some amount of natural language processing (NLP) is required. As NLP is out of the scope of the project, an object structure which encodes all of this information is necessary.
 	
 	There are two different types of parse tree used in natural language processing for representing sentence structures: dependency-based parse trees and constituency-based parse trees. Both tree structures represent the same data, but in different ways.
 	
@@ -710,18 +778,16 @@
 			[.VP [.VERB [.love ] ] [.NP [.DETM [.the ] ] [.NOUN [.dog  ] ] ] ]
 		]
 	\end{figure}
-
-	\todo{fix graphs}
 	
-	Figure \ref{parse tree in dependency-based grammar} shows a sentence (`I love the dog') parsed into a dependency tree. Each node in the tree directly maps to a word in the sentence. Figure \ref{parse tree in constituency-based grammar} shows the same sentence in constituency tree format. Dependency grammars can be more useful in some circumstances because of their simpler nature - however, constituency grammars (or `phrase structure grammars') contain a lot more information about the phrase structure of the sentence, and so are better for the translation process. As such, \textit{yod}'s sentence input is given in constituency tree format.
+	Figure \ref{parse tree in dependency-based grammar} shows a sentence (`I love the dog') parsed into a dependency tree. Each node in the tree directly maps to a word in the sentence. Figure \ref{parse tree in constituency-based grammar} shows the same sentence in constituency tree format. Dependency grammars can be more useful in some circumstances because of their simpler nature - however, constituency grammars (or `phrase structure grammars') contain a lot more information about the phrase structure of the sentence, and so are better for the translation process. As such, \texttt{yod}'s sentence input is given in constituency tree format.
 	
-	The tree input is represented as a JSON file, with properties of the object representing roots of subtrees of the current node. An input must be a single constituent of the tree, meaning the root must be a single node; the translation process can act on any node of the tree. The terminal nodes are represented by an object containing a \texttt{word} property which represents the English lemma of the word to be translated. This value is necessarily not inflected due to the fact that the lemma is needed to get a translation from the lexicon, and getting the lemma from an inflected English word is not necessarily a trivial task. Thus, preparing a sentence into the structure required by \textit{yod} requires a bit of manual editing, or a tool designed to use natural language processing to convert English sentences into this format. The JSON format was chosen over other forms of serialisation largely to allow for easy hand editing as well as compatibility with other software.
+	The tree input is represented as a JSON file, with properties of the object representing roots of subtrees of the current node. An input must be a single constituent of the tree, meaning the root must be a single node; the translation process can act on any node of the tree. The terminal nodes are represented by an object containing a \texttt{word} property which represents the English lemma of the word to be translated. This value is necessarily not inflected due to the fact that the lemma is needed to get a translation from the lexicon, and getting the lemma from an inflected English word is not necessarily a trivial task. Thus, preparing a sentence into the structure required by \texttt{yod} requires a bit of manual editing, or a tool designed to use natural language processing to convert English sentences into this format. The JSON format was chosen over other forms of serialisation largely to allow for easy hand editing as well as compatibility with other software.
 	
 	The object which represents a terminal node also has a property which is a list of `tags' which represent different grammatical categories. This allows grammatical information to be carried through to the translation process, and allows for the possibility of morphological changes to be applied to generated words based on their grammatical categories. 
 	
 	The part of speech of the terminal node is represented by the key of its parent. When loading in a phrase from a JSON object, this information as well as all the information contained in the node is used to construct a logical representation of the sentence.
 	
-	This logical representation depends on the exact structure of the grammar required. \textit{yod} allows users to specify their own phrase structure grammar, as a full grammar of English would be too complicated for a user to be able to parse their sentences into, hindering the ease of use of the library. Allowing for custom grammars also allows users to devise more complex and unique languages - for example, if a writer wanted to create an alien language which lacked verbs, an English constituent grammar would not be sufficient. More complicated and unusual sentence structures can be permitted through a data-driven approach to creating a grammar. The grammar object should be thought of as representing the generated language's grammar, rather than an English grammar.
+	This logical representation depends on the exact structure of the grammar required. \texttt{yod} allows users to specify their own phrase structure grammar, as a full grammar of English would be too complicated for a user to be able to parse their sentences into, hindering the ease of use of the library. Allowing for custom grammars also allows users to devise more complex and unique languages - for example, if a writer wanted to create an alien language which lacked verbs, an English constituent grammar would not be sufficient. More complicated and unusual sentence structures can be permitted through a data-driven approach to creating a grammar. The grammar object should be thought of as representing the generated language's grammar, rather than an English grammar.
 	
 	Grammars are also serialised and deserialised as JSON objects or files containing JSON objects. These objects have a very simple structure: the object contains a key called \texttt{rules} which then contains a key for each non-terminal constituent in the grammar. For each of these constituents, there is a list of phrases that it can be expanded to. Each of these phrases consists of a list of constituents, terminal or otherwise, which is ordered such that when a sentence is translated, the elements of the phrase will be appended to the final sentence in that order.
 	
@@ -729,7 +795,7 @@
 	
 	The last addition to the phrase structure grammar file is not necessarily a part of the grammar itself but instead an instruction on how to construct certain phrases in the language. This property is a list of rules which should be `compounded'. When the final translated sentence is constructed, a space is added between each constituent. If a rule is set to be compounded, however, the constituents of the rule will be concatenated without a space between them. A good example of this type of rule is the English language, where noun-noun compounds are frequently created by taking two nouns and concatenating them without a space: $fire + place \rightarrow fireplace$, $wrist + watch \rightarrow wristwatch$.
 
-	An example phrase structure grammar which can be used to translate moderately complex English sentences is shown in figure \ref{example phrase structure grammar}, and a conversion of the sentence `I love my big dog' to \textit{yod}'s dependency tree format is shown in figure \ref{example phrase}.
+	An example phrase structure grammar which can be used to translate moderately complex English sentences is shown in figure \ref{example phrase structure grammar}, and a conversion of the sentence `I love my big dog' to \texttt{yod}'s dependency tree format is shown in figure \ref{example phrase}.
 	
 	\begin{figure}
 		\caption{Example phrase structure grammar}
@@ -854,9 +920,401 @@
 	\section{Inflection}
 	\label{section: inflection}
 	
-	Given the translated sentence in figure \ref{example phrase}, it can be seen that the pronouns `I' and `my' are both represented by the same translated word \textit{\dj{}}, despite being different in the English translation. The interlinear gloss indeed shows that both of these are reflecting the lemma form of the pronoun `I'. In order to fully express the same meaning as the sentence `I love my big dog', it needs to be somehow indicated that the second instance of the pronoun should be marked with genitive or possessive case.
+	Given the translated sentence in figure \ref{example phrase}, it can be seen that the pronouns `I' and `my' are both represented by the same translated word \textit{\dj{}\^{a}h}, despite being different in the English translation. The interlinear gloss indeed shows that both of these are reflecting the lemma form of the pronoun `I'. In order to fully express the same meaning as the sentence `I love my big dog', it needs to be somehow indicated that the second instance of the pronoun should be marked with genitive or possessive case.
 	
 	\texttt{yod} contains a basic inflection engine to accomplish this task. Inflection is the morphological modification of a word to reflect its grammatical categories\cite{crystal2011dictionary}, often through the use of an affix. An example in English would be the addition of the suffix `\'s' to a noun to indicate the possessive/genitive case.
+	
+	This system is implemented through the use of the word `tags' seen in previous examples. Looking at figure \ref{example phrase}, several different tags can be seen:
+	\begin{itemize}
+		\item \texttt{1} - refers to a word in first person.
+		\item \texttt{3} - refers to a word in third person.
+		\item \texttt{SG} - refers to a word of grammatical number 1 (`singular').
+		\item \texttt{PRS} - refers to a verb in present tense.
+		\item \texttt{SBJ} - refers to a word which is the subject of a sentence.
+		\item \texttt{OBJ} - refers to a word which is the object of a sentence.
+		\item \texttt{GEN} - refers to a word in genitive case.
+	\end{itemize}
+
+	There are obviously many other tags which could exist referring to different grammatical categories. \texttt{yod} does not treat these tags as a closed category - in fact, they are treated as strings the whole way through the program - so any tag a user could want to assign to a word in a sentence can be assigned.
+	
+	These tags, along with a part of speech, are used to uniquely identify different inflection rules. When a phrase is loaded and converted into tree format, it is first `filled' with translated wordforms, and then the \texttt{Phrase.InflectAll()} method is called, which takes a list of `Inflection's. Each of these inflection objects contains a part of speech and a list of tags. They also contain a wordform which is treated as a suffix for words which match the part of speech and all of the tags. The \texttt{InflectAll()} method recursively applies itself to the tree, and when a terminal node is found, it checks the part of speech and list of tags, and if a match is found, it modifies the word by appending the suffix.
+	
+	Merely appending the suffix is insufficient, however, as it breaks many of the rules which govern words in the phonology. For example, appending a suffix which begins with \textipa{/k\dots/} to a word which ends with \textipa{/\dots{}k/} will result in the word containing the sequences \textipa{/kk/}. As discussed in section \ref{section: stress and long/geminate phonemes}, these adjacent identical phonemes are not permitted. Therefore the process described in that section is applied again after the suffix is appended, which replaces these sequences with geminate consonants or long vowels. Also, if the stress rule of the language says that the stress must fall on the final syllable or penultimate syllable, adding a suffix breaks this rule. Thus the existing stress on a word must be cleared and recalculated. Going through this process of fixing inflected words will create words which obey the rules of the language again.
+	
+	This inflection engine in \texttt{yod} means that sentences such as the above can be translated more accurately. Figure \ref{inflected phrase} shows the example phrase `I love my big dog' from figure \ref{example phrase}, but processed using a set of simple inflections.
+	
+	\begin{figure}
+		\caption{Translated phrase from fig. \ref{example phrase} with inflection}
+		\label{inflected phrase}
+		\begin{tcolorbox}
+			\begin{small}
+				\ex 
+				\begingl
+				\gla thru\dh{} \v{z}ael\dj{}y\^{a}ory\v{e} frimthrae\v{z}vmud \v{z}ael //
+				\glb \textipa{/T\*r2D} \textipa{Z\ae{}el"\t{dZ}jAO\*rj2@} \textipa{f\*rIm"T\*r\ae{}eZvmUd} \textipa{Z\ae{}el/}//
+				\glc Love-\textsc{1-SG-PRS} I-\textsc{1-SG-OBJ-GEN} big-dog-\textsc{3-SG-OBJ} I-\textsc{1-SG-SBJ}//
+				\glft `I love my big dog'//
+				\endgl
+				\xe
+			\end{small}
+		\end{tcolorbox}
+	\end{figure}
+
+	The affixation system can support both agglutinative and fusional languages. In an agglutinative language, a word can have many affixes where each one represents one grammatical category. In \texttt{yod}, this is achieved by having a list of \texttt{Inflections} which each have only one tag in their list of applicable tags. This means words with multiple tags gain an affix for each tag to represent their grammatical categories. Contrast this with a fusional language, where affixes usually represent a combination of different grammatical categories - for example, there can be a suffix for singular 3rd person nouns in the subject case, which is distinct to the suffix for plural 3rd person nouns in the subject case. Fusional languages usually only have one affix per word which represents all of its grammatical categories. This is achieved by having each \texttt{Inflection} have a list of multiple tags which must be matched. Because the tags of the word must exactly match the tags of the inflection, the affixes are very specific to different combinations of grammatical categories.
+
+	Despite adding a decent amount of complexity to the translated sentences, the inflection system is simple. There are several improvements which would be made to make this system more realistic and dynamic. For example, matching all of the tags becomes a problem when sentences are more tagged in more complex way. The tags for words could become overly specific which would lead to words not getting the right affixes. A system which allowed for more `fuzzy' matching of tags, as well as being able to specify tags which should \textit{not} be in the tags of the word, could solve this problem. 
+	
+	Another simple improvement would be to enable the use of other types of affixes, e.g., prefixes. This is a small change, but could increase the variety of generated languages.
+	
+	For a more robust word modification system, \textit{ablaut} can be applied to words as well as affixation. Ablaut (also known as `apophony') is the process of modifying words by applying regular changes to the sounds in the word. An example of this is the modification of the English lemma `sing' to its simple past tense form `sang' - the vowel in the word has been changed. Writing a system which allowed for ablaut word changes to occur would be more complex than just using affixation, as \texttt{yod} currently does, but would still be possible due to the structure of the representation of words as groups of syllables made out of phonemes.
+
+	\chapter{Evaluation}
+	\label{chapter: evaluation}
+	
+	In order to evaluate \texttt{yod}, a survey was created which asked potential users to rate the suitability of different languages generated by the program. The potential user base of the library, and systems built on the library, largely consists of creators of fictional media and consumers thereof. These users would most likely not be knowledgeable about the linguistic concepts upon which \texttt{yod} is based. This means that they will not be able to evaluate the realism of the languages created.
+	
+	Similarly, it can not be assumed that a user will have programming knowledge and be comfortable with using the library directly. The library is created in such a way that interfaces can be built on top of it which allow a user to interface with the library in a user-friendly way - however, writing such an interface was not in the scope of the project, so currently there exists no such way for users without programming or knowledge to use it, other than the sample command line application. However, using the command line application still requires quite a bit of computer competency.
+	
+	Because of these problems, the best way for the desired user base to be able to evaluate the output of the program is to generate some sample output and display it for them. Because \texttt{yod} can output both spoken and written text (see chapter \ref{chapter: orthography}), both of these can be evaluated independently. Thus a selection of 4 different texts were generated, of a few sentences each. For each of these texts, the written form was presented first, and users were asked to evaluate its suitability in \begin{enumerate*}[label=\alph*)]
+		\item media which they consume, and
+		\item media which they create, if applicable
+	\end{enumerate*}, on a scale of 1 (not suitable) to 2 (suitable). Then the user is asked to listen to a recording of a spoken form of the texts, and then asked the same questions about its suitability. Then the user is given two more optional questions about the language. The first of these questions asks for any thoughts on the suitability of either the written or spoken texts in different media. The second question relates to the language more generally, and asks for any thought which the user did not consider to fit into the previous question.
+
+	By having four questions which require an input over a range of values, and then two longer form, multi-line text input questions, data can be gathered about the suitability of the languages in an easily quantifiable format, while also gathering more qualitative data.
+	
+	An example of a full question is shown in figure \ref{example question from evaluation survey}.
+	
+	\begin{figure}
+		\caption{Example question from evaluation survey}
+		\label{example question from evaluation survey}
+		\centering
+		\begin{tcolorbox}
+			\begin{Large}Example language 1\end{Large}
+			\footnotesize
+			\textit{These questions concern the following generated text:}
+			
+			"U \'{c}u zon\v{z}viuwb yo\dh{}b \dh{}iyr\dj{} uvi yo\dh{} b. Kuhpm\-{o}rst\-{o} ars e. Un \'{c}arƒt\-{o}u m\-{o}rst\-{o} etha. \-{O}wv me\v{s}kolng\v{z}\-{o} udtviisg me\v{s}k."
+			
+			\vspace{0.3cm}
+			
+			\textit{If you can read IPA, a phonetic transcription is also supplied:}
+			
+			\textipa{/u \t{tS}2 zOnZ"vIuwb jODb Dij\*r"\t{dZ}Uvi jODb. k2hp"m6\*rst6 \ae{}\*rs e. 2n \t{tS}\ae{}\*rft62 "m6\*rst6 "eT:\ae{}. Awv meSk"OlNZ6 udt"vIisg meSk/}
+			
+			\vspace{0.3cm}
+			
+			\begin{Large}Questions\end{Large}
+			
+			1. How suitable would this written text be if it was in a piece of media?
+			\begin{small}
+				i.e. if you read fantasy novels, how well would this language fit into a fantasy scenario?
+			\end{small}
+		
+			\begin{center}
+				\texttt{1 (Unsuitable) - 2 - 3 - 4 - 5 (Suitable)}
+			\end{center}
+			
+			\vspace{0.3cm}
+			
+			2. How suitable would this written text be for the media which you create (if applicable)?
+			\begin{small}
+				i.e. if you were creating a game, how suitable would this language be in the game?
+			\end{small}
+		
+			\begin{center}
+				\texttt{1 (Unsuitable) - 2 - 3 - 4 - 5 (Suitable)}
+			\end{center}
+		
+			\vspace{0.3cm}
+		
+			\begin{Large}Spoken language\end{Large}
+		
+			\textit{Now listen to a recording of the text above:} \verb|[link to sound file]|
+			
+			\vspace{0.3cm}
+			
+			\begin{Large}Questions\end{Large}
+			
+			3. How suitable would this spoken text be if it was in a piece of media?
+			\begin{small}
+				i.e. if you write fantasy scripts for screen, how well would this language fit into a fantasy scenario?
+			\end{small}
+			
+			\begin{center}
+				\texttt{1 (Unsuitable) - 2 - 3 - 4 - 5 (Suitable)}
+			\end{center}
+			
+			\vspace{0.3cm}
+			
+			4. How suitable would this spoken text be for the media which you create (if applicable)?
+			\begin{small}
+				i.e. if you were creating a game, how suitable would this language be in the game?
+			\end{small}
+			
+			\begin{center}
+				\texttt{1 (Unsuitable) - 2 - 3 - 4 - 5 (Suitable)}
+			\end{center}
+			
+%			\end{tcolorbox}
+%			\clearpage
+%			\begin{tcolorbox}
+			
+			\begin{Large}Extra questions\end{Large}
+			
+			5. If you have any thoughts about the suitability of this language for different media or want to expand on your choices above, please write them here.
+			
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\vspace{0.3cm}
+			
+			6. If you have any other thoughts about this language or the recording, please enter them here.
+			
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			
+		\end{tcolorbox}
+	\end{figure}
+
+	The four generated texts are chosen in order to give a range of different phonologies and structures. This way the some of the variety of the library's output can be shown. Furthermore, 3 of the samples are generated based on phonologies which have phonetic inventories which are subsets of English, and the other is generated using a completely generated phonology. The samples will be referred to as samples \textsc{A, B, C} and \textsc{D}, with sample \textsc{D} being the sample generated with the subset of the full IPA.
+	
+	Before the user takes the survey, they are asked which of the following they feel describes them:
+	
+	\begin{itemize}
+		\item Fantasy fiction author
+		\item Fantasy fiction reader
+		\item Science fiction author
+		\item Science fiction reader
+		\item Gamer
+		\item Game developer/game writer
+		\item Constructed language enthusiast
+		\item Tabletop RPG player
+		\item Tabletop RPG creator
+		\item Other creative
+	\end{itemize}
+
+	The user can pick multiple of these roles, and all of them represent someone in the user base of the program. This question exists to inform the statistics about the type of language requirements which are needed for different media, as well as distinguishing consumers of media from creators of said media.
+	
+	After the four samples are evaluated, users are asked to expand on several details about the constructed languages in general, as well as any extra thoughts they might have about the samples they were shown. These final questions are shown in figure \ref{final questions from evaluation survey}.
+	
+	\begin{figure}
+		\caption{Final questions from evaluation survey}
+		\label{final questions from evaluation survey}
+		\centering
+		\begin{tcolorbox}
+			\begin{Large}Overall evaluation\end{Large}
+			
+			1. Do you feel that realistic constructed languages improve the media you consume?
+			
+			\begin{itemize}
+				\item Yes
+				\item No
+				\item Other \underline{\hspace{5cm}}
+			\end{itemize}
+			
+			\vspace{0.3cm}
+		
+			2. What features do you think such generated languages should have in order to be suitable?
+			
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\vspace{0.3cm}
+			
+			3. Given a tool to generate constructed languages, what features do you think this tool should have?
+			
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\vspace{0.3cm}
+			
+			4. If such a tool was useful for you, how would you use it (if applicable)?
+			
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\vspace{0.3cm}
+			
+			5. If you have any other thoughts about the languages shown in the survey, or anything else, please enter them here.
+			
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\underline{\hspace{10cm}}
+			\vspace{0.3cm}
+		\end{tcolorbox}
+	\end{figure}
+
+	By asking about the use case for a tool which can generate languages, it can be more easily seen whether the \textit{concept} for \texttt{yod} is sound, and whether it will be useful for more people than just constructed language enthusiasts.
+	
+	\begin{table}[h]
+		\caption{Text suitability (consumer)}
+		\label{suitability text consumer}
+		\centering
+		\begin{tabular}{|l|l|l|l|}
+			\hline
+			\rowcolor[HTML]{D8D8D8}Sample & Median & Average & Mode \\ \hline
+			A      & 4      & 4.22    & 4    \\
+			B      & 4      & 3.78    & 3    \\
+			C      & 4      & 3.67    & 4    \\
+			D      & 2      & 2       & 2    \\ \hline
+		\end{tabular}
+	\end{table}
+	\quad
+	\begin{table}[h]
+		\caption{Text suitability (creative)}
+		\label{suitability text creative}
+		\centering
+		\begin{tabular}{|l|l|l|l|}
+			\hline
+			\rowcolor[HTML]{D8D8D8}Sample & Median & Average & Mode \\ \hline
+			A      & 4      & 3.87    & 4    \\
+			B      & 3      & 3.43    & 3    \\
+			C      & 4      & 3.85    & 4    \\
+			D      & 2      & 2.29    & 1    \\ \hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}[h]
+		\caption{Spoken suitability (consumer)}
+		\label{suitability spoken consumer}
+		\centering
+		\begin{tabular}{|l|l|l|l|}
+			\hline
+			\rowcolor[HTML]{D8D8D8}Sample & Median & Average & Mode \\ \hline
+			A      & 4      & 4		  & 5    \\
+			B      & 4      & 4.11    & 5    \\
+			C      & 4      & 4.44    & 4    \\
+			D      & 3      & 2.88    & 2    \\ \hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}[h]
+		\caption{Spoken suitability (creative)}
+		\label{suitability spoken creative}
+		\centering
+		\begin{tabular}{|l|l|l|l|}
+			\hline
+			\rowcolor[HTML]{D8D8D8}Sample & Median & Average & Mode \\ \hline
+			A      & 4      & 4    & 4    \\
+			B      & 4      & 4.14    & 4    \\
+			C      & 5      & 4.14    & 5    \\
+			D      & 2      & 2.29    & 2    \\ \hline
+		\end{tabular}
+	\end{table}
+
+	Tables \ref{suitability text consumer} and \ref{suitability text creative} show the data from the first section of each language sample, regarding the written text form of the sentences. They show that the written form of sample D was consistently rated as less suitable than samples A, B and C. Similarly, tables \ref{suitability spoken consumer} and \ref{suitability spoken creative} show the same data for the spoken samples of each language. In the questions about the suitability of these spoken samples, it can be seen that sample D was also given ratings which are around 2 points lower than the other samples.
+	
+	A hypothesis for this discrepancy is that, as described before, sample D is the sample which is based on a phonology generated by \texttt{yod} where the phonetic inventory is generated using the whole International Phonetic Alphabet as its set of possible phonemes. As discussed in section \ref{section: improvements}, using the whole set of phonemes without a frequency table produces a higher incidence of rare phonemes than usually found in natural languages. This means that such languages seem more unusual and are harder to pronounce. On top of this, the reason why the \textit{written} form would be considered more unsuitable is that the default graphemes in the orthography for these rare phonemes are more unusual than the default graphemes for more common phonemes. Because the `default' graphemes are defined in the code, this could be improved by tweaking these graphemes for certain phonemes which have unusual graphemes associated with them (for example, if their default associated letters have diacritics, or are clusters).
+	
+	This hypothesis can be verified by seeing the comments made about sample D in the survey. One quote was that `\textit{the words are very hard to read as an english-only speaker, not enough vowels, many repeated consonants and not enough shape to the words}.' Another user opined that the language had `\textit{similar symbols next to each other (tt, bb)}' and that it was `\textit{a stranger language}'. This corroborates the theory about the structure of the orthography causing the language to look more unusual.
+	
+	The feedback on the spoken form of this sample was more mixed. One user criticised the recording as being `\textit{disconnected}', and another called it a `\textit{cobbled grouping of phonetic sounds}' and criticised the way the words did not seem distinct from one another in their boundaries. However, another user said that the language `\textit{conjures up ideas of southern-eastern european kind of regions (Georgia-y) and a tiny bit of indian mixed with a bit of russian in the later part of the sentence.}[sic]' which means that the language still has realistic features despite the flaws in phonology and orthography generation.
+	
+	It should be noted that criticisms of the recording itself should also be viewed as criticisms of the language. This means that if a user comments on the recording being indistinct or not having a good flow, this means that the language was hard enough to pronounce that the person recording the sample struggled to make it seem natural. As such, quotes such as the above show flaws in the language itself as well as the recording.
+	
+	The other samples were evaluated more favourably. Sample C was compared to `\textit{Tolkien's Dwarvish}' and a user said it sounded `\textit{very easten}[sic].' Comparisons to both natural languages and constructed languages benefit \texttt{yod} as its goal was to create languages which seem realistic in order to be used for fictional uses.
+	
+	Three separate people compared sample A to Nordic languages, such as Swedish or Norwegian. This comparison shows that the human perception of a language's `flavour' is consistent, which is useful for fictional uses where a writer may need a language which represents a certain culture.
+	
+	The final few questions of the survey also reveal quite a lot of important information regarding the requirements users have of a tool like \texttt{yod} and of languages in general. When asked about what features an ideal constructed language should have, users pinpointed two main points: cultural context and consistency. 
+	
+	It is easy to show that \texttt{yod}'s generated languages are consistent due to the programmatic way which they are created. A language which is set to contain a certain set of phonemes will only have words which \textit{only} contain those phonemes and no others. Furthermore, the use of a regular phrase structure grammar ensures that the grammar of the language can be complex but still consistent.
+	
+	Cultural context is harder to judge since it requires a language's features to fit with their use in whichever medium they are being used in. This can be a problem since a constructed language's `flavour' is largely informed by similar natural language's cultures as well as their geography. \texttt{yod} currently does nothing to ensure that a generated language fits a certain culture better than others. The only solution to this problem currently is for the user to supply their own phonology, orthography and/or grammar through the use of JSON files. This helps them to specify the restrictions they want to put on the generation process, but is still not perfect. To improve this, an option could be added to the library to generate languages which fit certain cultures by using data from existing language groups to inform their randomisation. For example, a stereotypical fantasy setting usually carries heavy Nordic influences. When generating a language for a fantasy setting, a user could set \texttt{yod} to mostly use phonemes which are present in the different Nordic language, as well as their syllable and word structures.
+	
+	Users were also asked specifically about tools for language generation, the features they would desire in these tools, and how they would use those features in media they created. This provides a good way to see if \texttt{yod} is meeting the requirements of the user or not.
+	
+	Users generally agreed that constructed languages were useful for being able to `\textit{enrich a world}' by generating text for many different uses in their media. There were many different systems which users desired from a language generation tool for this purpose. One user expressed the wish for the following feature:
+	
+	\begin{quote}
+		``\textit{it should have a map that you can select regions of the world to customise where you want the language you are making to come from so you can use different local phonetic typesets if you wanted a slavic or baltic sounding language crossed with a japanese sound you could choose that region and then pick from that region types of letters or sounds you want. and then do the same by clicking on japan and constructing aspects from each language you want.}''
+	\end{quote}
+
+	As a library, \texttt{yod} is unable to offer any kind of map interface, but it is feasible that such a user interface could be built in a way which interfaces with the library. The system for specifying the `culture' of a generated language, described previously, could then be used to allow for users to specify this data. The quote also expands upon this idea, suggesting that the library should be able to blend the language features of different cultures by taking different aspects from each. This could be implemented by writing a system which takes a list of different languages and their features and then picks different features (for example, phonetic inventory, or syntax rules) from each of them to construct a new language. With this system, the use case of `passing a culture and generating a language based on it' would be abstracted to the above but providing a single-item list, so all the features would be taken from the same language.
+	
+	Another desired feature was the ability to `[choose]\textit{what letters/sounds/character sets can be used in the construction of the language,}' as well as to `[choose]\textit{the average word length and possibly influencing the amount of consonants compared to vowels}.' Both phoneme sets and word length can be set in the JSON configuration files, or set directly when interfacing with the library. Since there exists data about the consonant to vowel ratio across natural languages\cite{wals-3}, the ability to set consonant:vowel ratio would allow for more realistic languages to be created by default. It would also allow for more varied and unusual languages if this ratio was specified by a user to be at some extreme end of its possible range.
+	
+	Users also desired the ability to `\textit{vary the sentence structure and flow of the spoken language}.' The `flow' of a language most likely refers to some element of its spoken phonology, but is quite hard to define. It is possible that a better `flow' could come from a user getting more comfortable with speaking a language which had similar phonological rules and a similar phonetic inventory to their own first language.
+	
+	Varying the sentence structure, however, has already been well defined and discussed in section \ref{section: phrase structure/constituency grammar}. To reiterate, \texttt{yod} has a system for generation random sentence structures, although these structures only differ in order and not in their more cord structural aspects. When discussing the need for a varied sentence structure, another user mentioned the concept of a `\textit{subject, object and verb},' which is somewhat supported by the library. With its current base structure, the syntax generation code can randomly produce four out of the six possible SVO permutations (these being the structures where the verb and object constituents are adjacent in the sentence). Ideas for creating a system which supports all of the permutations are discussed in that chapter.
+	
+	The need for a `\textit{transliteral dictionary}' was also mentioned. This dictionary already exists in the form of the \texttt{Lexicon} class, which can also output its data in a text format. Similarly, the ability to `\textit{translate sentences from one language to its own}' exists as part of the grammar module of the library.
+	
+	These were the main points raised by potential users evaluating the output. Due to the problems described at the start of this section, the only interaction with \texttt{yod} these users had was through the generated sample texts. It is encouraging, therefore, that several of the its features were explicitly mentioned as desirable features in such a tool. Several other features, including an ability to use heuristic learning to learn how language change has affected natural language and be able to apply it to the generated languages, would be extremely interesting and novel additions to a second iteration of the library.
+	
+	To summarise the data which was learned from the evaluation, the need for a tool which creates constructed languages, and which allows for sentence translation into these languages, was validated. \texttt{yod} meets this goal by providing a system which generates languages based on basic principles from the field of linguistics, along with data about natural languages. Many users expressed a desire to be able to shape these languages to meet their needs. This feature is offered through the use of JSON files which can be deserialised by the library in order to specify certain features. However, a more general method of customisation could also be useful for users who are less knowledgeable about precisely what features they want in their generated language, but have a rough idea about the style of language which they want. Some of the features which were discussed in answers to the survey were implemented in some form, but limited due to their method of implementation. Overall, creators were reasonably willing to use languages generated by \texttt{yod} in their work, given refinement on phonological and orthographic features. Consumers of media which would possibly contain constructed languages also reflected that such languages were important for creating realistic and varied worlds and that the samples provided by \texttt{yod} in the survey would be suitable for this purpose.
+	
+	\chapter{Conclusion}
+	\label{chapter: conclusion}
+	
+	The goal with this project was to create a tool which allowed users to generate language. Additionally, there should be a large variety in languages generated, and said languages should be reasonably realistic (within a range acceptable for fictional uses, which often allow for more unrealistic features in languages). The user should also be able to use the library to different levels, depending on their use case, and have some degree of control over the randomisation process if they desire.
+	
+	\texttt{yod} achieves this by supplying a library which can be implemented and used in many different ways. Various restrictions are described in chapter \ref{chapter: phonology} which are applied to the generation of a phonology in order to select realistic values while randomly generating it. Similarly, orthographies are randomly generated with a view to giving them some random elements which will distinguish them from one another, while still being readable by the user base.
+	
+	The library also supplies a method to represent input sentences in a way that makes them translatable into the generated language. This means that given the right grammar, English sentences can be translated into the language with meaning intact. A sentence with this property would be able to be translated back into English by hand.
+	
+	One problem encountered during the research and development of \texttt{yod} was the subjectivity of evaluation some of the outputs while the library was being worked on. Specifically, judging the quality of the generated languages can be harder from a monolingual, English-speaking point of view. Language structures which deviate too far from those of English can be seen as too unusual to be valid output. This Anglocentric approach was largely avoided by prioritising variety over realism where such a choice arose. Due the user being able to refine their generation parameters, any potential downsides from this strategy can be avoided by setting more strict restrictions on the generation process.
+	
+	In order to create language in a realistic way, much of the research revolved around different linguistic concepts. These concepts then had to be represented in a programmatic way in the code using different algorithms and data structures. The object-oriented nature of \Csh{} suited many of the structures, particularly with regards to building a phonology; every object in the phonology was built up out of smaller parts.
+	
+	Similarly, several sections of the library use statistical data to generate more realistic values. For this data, the \textit{World Atlas of Language Structures} (\textsc{WALS}) was an indispensable resource due to its worldwide data about language phonologies and grammars. If the library was expanded upon, more of this data could be used to further refine the random generation processes.
+	
+	The outcome of the development process was a success in that a library was produced which allows users to create languages, as well as translate sentences into the generated language automatically. The choice to create a library allows for \begin{enumerate*}[label=\alph*)]
+		\item the language generation process to be integrated into other software where it is needed `on the fly', such as in fantasy or science fiction video games which might require constructed languages for procedurally generated world building, and
+		\item larger applications to be built upon it which can provide more user friendly interface to the language generation tools
+	\end{enumerate*}.
    
    \printbibliography
+   
+   \newpage
+   
+   \appendix
+   \chapter{Appendix}
+   \section{Zip structure}
+   The supplied archive file \texttt{NAME} has the following format:
+   \begin{itemize}
+   	\item \texttt{yod/} - a folder containing the whole source code for the project.
+	   	\begin{itemize}
+	   		\item \texttt{yod/} - the library project itself.
+	   		\item \texttt{yodTest/} - a simple application project which writes an amount of test data to a file.
+	   		\item \texttt{yodCmd/} - a command line application project for interacting with the library.
+	   	\end{itemize}
+   	\item \texttt{information.txt} - a file containing the URL of the source code repository.
+   \end{itemize}
+
+   \section{Using the library}
+   As a library, \texttt{yod} requires some setup to interact with directly. However, also supplied are two projects which allow for easier interaction with the library from the command line.
+   
+   \subsection{\texttt{yodTest}}
+   \texttt{yodTest} is an application which, when run, completes some basic tests of the \texttt{yod} library. These include making a phonology, orthography and grammar, and then translating various sentences using these modules. It also outputs information about the phonology and the orthography, as well as the entire lexicon. All of this information is written to a file in the same folder as the executable named \texttt{output.txt}. After writing, the application will also open the file in Notepad (if running in Windows). The project can be set to either use the default English-based phonology (loaded from \texttt{english.json} in the same folder as the executable), or generating a completely new phonology from scratch.
+   
+   \textbf{To run this project, navigate to} \texttt{yod/yodTest/bin/Release} \textbf{in the command line and execute the file} \texttt{./yodTest.exe}.
+   
+   \textbf{To generate a completely new phonology, instead run the command} \texttt{./yodTest.exe --all} \textbf{on the command line in the above folder}.
+   
+   \subsection{\texttt{yodCmd/yodc}}
+   	
+   \texttt{yodCmd/yodc} is a command line application which acts as an interface to the \texttt{yod} library. It can generate data and serialise it to files in the \texttt{output/} directory, as well as being able to deserialise these same files as input. By default, running \texttt{yodc} writes three files to the output directory:
+   \begin{enumerate}
+   	\item \texttt{phonology.json} - a generated phonology.
+   	\item \texttt{orthography.json} - a generated orthography.
+   	\item \texttt{grammar.json} - a generated grammar.
+   \end{enumerate}
+
+	These files are the outputs it is possible to generate given no input. In order to test sentence translation, the \texttt{demo/} folder contains some samples of different inputs. These files can be loaded using the command line arguments of the \texttt{yodc} program. The files are as follows:
+	\begin{enumerate}
+		\item \texttt{english.json} - a sample, English-based phonology.
+		\item \texttt{englishorth.json} - an orthography for the above phonology.
+		\item \texttt{grammar.json} - a default grammar.
+		\item \texttt{dictionary.json} - a sample dictionary to be loaded to create a lexicon
+		\item \texttt{dog.json} - a sentence file representing the sentence `Every dog is a good dog.'
+		\item \texttt{hello.json} - a sentence file representing the sentence `The quick brown fox jumps over the lazy dog.'
+	\end{enumerate}
+	
+	\textbf{To run this project, navigate to} \texttt{yod/yodCmd/bin/Release} \textbf{in the command line and execute the file} \texttt{./yodc.exe}.
+	
+	\textbf{To supply input files, use the command line arguments as specified when running} \texttt{./yodc.exe --help}.
+	
+	
 \end{document}

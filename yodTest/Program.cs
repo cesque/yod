@@ -6,7 +6,9 @@ namespace yodTest
     {
         static void Main(string[] args)
         {
-            var tests = new Tests();
+            var b = true;
+            if (args.Length > 0 && args[0] == "--all") b = false;
+            var tests = new Tests(b);
             tests.Run();
         }
     }

@@ -9,10 +9,10 @@
 			"VERB": { "word": "be", "tags": "PRS" },
 			"NP": {
 				"PS": {
-					"NOUN": { "word": "Daniel", "tags": "3,SG,OBJ,GEN" }
+					"PRON": { "word": "you", "tags": "2,SG,OBJ,GEN" }
 				},
 				"NN": {
-					"NOUN": { "word": "birthday", "tags": "3,SG,OBJ" }
+					"NOUN": { "word": "birthday", "tags": "2,SG,OBJ" }
 				}
 			}
 		}

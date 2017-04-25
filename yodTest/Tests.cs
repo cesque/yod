@@ -20,16 +20,11 @@ namespace yodTest
         
         Lexicon lexicon;
 
-        public Tests()
+        public Tests(bool english)
         {
             //Globals.Seed = 11;
 
-            phonology = LanguagePhonology.Generate();//LanguagePhonology.FromJSON("./english.json");
-            phonology.Phonemes.Consonants = ConsonantCollection.GenerateSubset(ConsonantCollection.EnglishConsonants, 4);
-            phonology.Phonemes.Consonants.Add(ConsonantCollection.IPAConsonants.First(x => x.Symbol == "r"));
-            phonology.Phonemes.Vowels = VowelCollection.GenerateSubset(VowelCollection.EnglishVowels);
-            phonology.OnsetConsonants = phonology.Phonemes.Consonants;
-            phonology.CodaConsonants = phonology.Phonemes.Consonants;
+            phonology = english ? LanguagePhonology.FromJSON("./english.json") : LanguagePhonology.Generate();
             orthography = LanguageOrthography.Generate(phonology);
             grammar = LanguageGrammar.Generate();
 
@@ -39,6 +34,7 @@ namespace yodTest
 
         public string TestPhrase()
         {
+            
             Phrase phrase = new Phrase(grammar, "./inflectioninput.json");
 
             phrase.Fill(lexicon);
@@ -46,8 +42,8 @@ namespace yodTest
             var flattened = phrase.Flatten();
 
             var s = "";
-
-            flattened.ForEach(x => s += x.EnglishLemma + " ");
+            s += "[not inflected]" + Environment.NewLine;
+            flattened.ForEach(x => s += x.ToGlossString() + " ");
             s += Environment.NewLine;
             flattened.ForEach(x => s += orthography.Orthographize(x.Inflected) + " ");
             s += Environment.NewLine;
@@ -78,8 +74,8 @@ namespace yodTest
             var flattened = phrase.Flatten();
 
             var s = "";
-
-            flattened.ForEach(x => s += x.EnglishLemma + " ");
+            s += "[inflected]" + Environment.NewLine;
+            flattened.ForEach(x => s += x.ToGlossString() + " ");
             s += Environment.NewLine;
             flattened.ForEach(x => s += orthography.Orthographize(x.Inflected) + " ");
             s += Environment.NewLine;
@@ -108,7 +104,7 @@ namespace yodTest
 
             var s = "";
 
-            flattened.ForEach(x => s += x.EnglishLemma + " ");
+            flattened.ForEach(x => s += x.ToGlossString() + " ");
             s += Environment.NewLine;
             flattened.ForEach(x => s += orthography.Orthographize(x.Inflected) + " ");
             s += Environment.NewLine;
@@ -154,20 +150,26 @@ namespace yodTest
             var flattened1 = birthday1.Flatten();
             var flattened2 = birthday2.Flatten();
 
+            var gloss1 = String.Join(" ", flattened1.Select(x => x.ToGlossString()));
             var line1 = "/" + String.Join(" ", flattened1.Select(x => x.Inflected.ToString())) + "/";
             var orth1 = String.Join(" ", flattened1.Select(x => orthography.Orthographize(x.Inflected)));
+            var gloss2 = String.Join(" ", flattened2.Select(x => x.ToGlossString()));
             var line2 = "/" + String.Join(" ", flattened2.Select(x => x.Inflected.ToString())) + "/";
             var orth2 = String.Join(" ", flattened2.Select(x => orthography.Orthographize(x.Inflected)));
 
             var s = "";
             s += orth1 + Environment.NewLine;
             s += line1 + Environment.NewLine;
+            s += gloss1 + Environment.NewLine;
             s += orth1 + Environment.NewLine;
             s += line1 + Environment.NewLine;
+            s += gloss1 + Environment.NewLine;
             s += orth2 + Environment.NewLine;
             s += line2 + Environment.NewLine;
+            s += gloss2 + Environment.NewLine;
             s += orth1 + Environment.NewLine;
             s += line1 + Environment.NewLine;
+            s += gloss1 + Environment.NewLine;
             return s;
         }
 
